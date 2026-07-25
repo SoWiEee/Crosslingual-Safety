@@ -19,6 +19,7 @@ class ModelConfig(BaseModel):
     endpoint_type: Literal["chat", "completion"]
     concurrency: int = Field(gt=0)
     requests_per_minute: int = Field(gt=0)
+    timeout_seconds: float = Field(default=60.0, gt=0)
     test_only: bool = False
     fake_status: GenerationStatus | None = None
     fake_response: str = "fake response"

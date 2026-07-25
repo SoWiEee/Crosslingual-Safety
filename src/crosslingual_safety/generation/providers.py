@@ -99,11 +99,13 @@ class _OpenAICompatibleProvider:
         provider_id: str,
         base_url: str,
         api_key: str,
+        timeout_seconds: float = 60.0,
         transport: httpx.AsyncBaseTransport | None = None,
     ) -> None:
         self.provider_id = provider_id
         self.base_url = base_url.rstrip("/")
         self._api_key = api_key
+        self._timeout_seconds = timeout_seconds
         self._transport = transport
 
     def _payload(self, request: GenerationRequest) -> dict[str, object]:
@@ -115,7 +117,10 @@ class _OpenAICompatibleProvider:
     async def generate(self, request: GenerationRequest) -> GenerationResult:
         started = time.perf_counter()
         try:
-            async with httpx.AsyncClient(transport=self._transport, timeout=60.0) as client:
+            async with httpx.AsyncClient(
+                transport=self._transport,
+                timeout=self._timeout_seconds,
+            ) as client:
                 response = await client.post(
                     f"{self.base_url}/{self.endpoint_path}",
                     headers={"Authorization": f"Bearer {self._api_key}"},

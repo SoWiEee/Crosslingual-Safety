@@ -1,4 +1,5 @@
 import hashlib
+import json
 from dataclasses import dataclass
 from pathlib import Path
 from string import Template
@@ -19,6 +20,7 @@ class JailbreakContext:
     wrapper_language: str
     intent: str
     category: str | None
+    role: str | None = None
 
 
 @dataclass(frozen=True)
@@ -29,6 +31,7 @@ class JailbreakResult:
     template_version: str
     template_sha256: str
     wrapper_language: str | None
+    metadata_json: str = "{}"
 
 
 class JailbreakMethod(Protocol):
@@ -108,10 +111,84 @@ class TemplateJailbreak:
         )
 
 
-JAILBREAK_REGISTRY: dict[str, type[IdentityJailbreak] | type[TemplateJailbreak]] = {
+class GraphRoleplayJailbreak:
+    def __init__(
+        self,
+        attack_id: str,
+        family: str,
+        version: str,
+        default_role: str,
+        templates: dict[str, str],
+        personas: dict[str, dict[str, object]],
+    ) -> None:
+        if default_role not in personas:
+            raise ValueError(f"unknown default GRA role: {default_role}")
+        self.attack_id = attack_id
+        self.attack_family = family
+        self.version = version
+        self.default_role = default_role
+        self.templates = templates
+        self.personas = personas
+        self.catalog_json = json.dumps(
+            personas,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+        self.catalog_sha256 = _sha256(self.catalog_json)
+
+    def supports_language(self, language: str) -> bool:
+        return language in self.templates
+
+    def render(self, payload: str, context: JailbreakContext) -> JailbreakResult:
+        if not self.supports_language(context.wrapper_language):
+            raise ValueError(f"unsupported wrapper language: {context.wrapper_language}")
+        role_id = context.role or self.default_role
+        if role_id not in self.personas:
+            raise ValueError(f"unknown GRA role: {role_id}")
+        persona = self.personas[role_id]
+        display_name = str(persona["display_name"])
+        expertise_by_language = persona.get("expertise")
+        if not isinstance(expertise_by_language, dict):
+            raise ValueError(f"GRA role {role_id} has invalid expertise configuration")
+        expertise = expertise_by_language.get(context.wrapper_language)
+        if not isinstance(expertise, str):
+            raise ValueError(
+                f"GRA role {role_id} has no expertise text for {context.wrapper_language}"
+            )
+        template = self.templates[context.wrapper_language]
+        rendered = Template(template).substitute(
+            persona=display_name,
+            expertise=expertise,
+            payload=payload,
+        )
+        metadata = {
+            "catalog_sha256": self.catalog_sha256,
+            "role_id": role_id,
+            "selection_method": "manual",
+        }
+        metadata_json = json.dumps(metadata, sort_keys=True, separators=(",", ":"))
+        return JailbreakResult(
+            rendered_prompt=rendered,
+            attack_id=self.attack_id,
+            attack_family=self.attack_family,
+            template_version=self.version,
+            template_sha256=_sha256(
+                f"{template}\x1f{json.dumps(persona, ensure_ascii=False, sort_keys=True)}"
+            ),
+            wrapper_language=context.wrapper_language,
+            metadata_json=metadata_json,
+        )
+
+
+JAILBREAK_REGISTRY: dict[
+    str,
+    type[IdentityJailbreak] | type[TemplateJailbreak] | type[GraphRoleplayJailbreak],
+] = {
     "none": IdentityJailbreak,
     "academic_authority_v1": TemplateJailbreak,
     "roleplay_v1": TemplateJailbreak,
+    "gra_v1": GraphRoleplayJailbreak,
 }
 
 
@@ -131,6 +208,22 @@ def load_jailbreaks(path: Path) -> dict[str, JailbreakMethod]:
                 attack_id=attack_id,
                 family=str(config["family"]),
                 version=str(config["version"]),
+            )
+            continue
+        if registered is GraphRoleplayJailbreak:
+            persona_group = str(config["personas"])
+            persona_values = raw.get("personas", {})
+            if persona_group not in persona_values:
+                raise ValueError(f"missing persona configuration: {persona_group}")
+            methods[attack_id] = GraphRoleplayJailbreak(
+                attack_id=attack_id,
+                family=str(config["family"]),
+                version=str(config["version"]),
+                default_role=str(config["default_role"]),
+                templates={str(key): str(value) for key, value in config["templates"].items()},
+                personas={
+                    str(key): dict(value) for key, value in persona_values[persona_group].items()
+                },
             )
             continue
         wrapper_name = str(config["wrapper"])
@@ -182,6 +275,7 @@ def register_jailbreak_commands(app: typer.Typer) -> None:
         output: Annotated[Path, typer.Option(file_okay=True, dir_okay=False)] = Path(
             "data/variants/prompt_variants.parquet"
         ),
+        role: Annotated[str | None, typer.Option(help="Manual GRA role ID")] = None,
     ) -> None:
         if wrapper_language_mode not in {"same-as-payload", "english"}:
             raise typer.BadParameter("--wrapper-language-mode must be same-as-payload or english")
@@ -222,6 +316,7 @@ def register_jailbreak_commands(app: typer.Typer) -> None:
                     wrapper_language=wrapper_language,
                     intent=case.intent,
                     category=case.category,
+                    role=role,
                 )
                 try:
                     rendered = method.render(payload, context)
@@ -243,6 +338,7 @@ def register_jailbreak_commands(app: typer.Typer) -> None:
                     rendered.template_version,
                     rendered.template_sha256,
                     rendered.wrapper_language or "",
+                    rendered.metadata_json,
                 )
                 variants.append(
                     PromptVariant(
@@ -260,6 +356,7 @@ def register_jailbreak_commands(app: typer.Typer) -> None:
                         rendered_prompt=rendered.rendered_prompt,
                         template_version=rendered.template_version,
                         template_sha256=rendered.template_sha256,
+                        attack_metadata_json=rendered.metadata_json,
                     )
                 )
         output.parent.mkdir(parents=True, exist_ok=True)

@@ -94,7 +94,12 @@ def _provider(model: ModelConfig) -> ProviderAdapter:
         if model.endpoint_type == "chat"
         else OpenAICompatibleCompletionProvider
     )
-    return provider_type(model.provider, base_url, api_key)
+    return provider_type(
+        model.provider,
+        base_url,
+        api_key,
+        timeout_seconds=model.timeout_seconds,
+    )
 
 
 def _atomic_write_text(path: Path, content: str) -> None:

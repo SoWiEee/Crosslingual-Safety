@@ -124,6 +124,7 @@ class PromptVariant(BaseModel):
     rendered_prompt: str
     template_version: str
     template_sha256: str
+    attack_metadata_json: str = "{}"
 
 
 GenerationStatus = Literal[

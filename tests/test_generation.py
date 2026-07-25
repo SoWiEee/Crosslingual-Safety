@@ -166,6 +166,33 @@ def test_provider_redacts_api_key_if_response_echoes_it() -> None:
     assert "secret-value" not in result.raw_response_json
 
 
+def test_chat_provider_applies_model_timeout() -> None:
+    captured: dict[str, object] = {}
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        captured.update(request.extensions["timeout"])
+        return httpx.Response(
+            200,
+            json={
+                "model": "actual-model",
+                "choices": [{"message": {"content": "ok"}, "finish_reason": "stop"}],
+            },
+        )
+
+    provider = OpenAICompatibleChatProvider(
+        provider_id="remote",
+        base_url="https://example.invalid/v1",
+        api_key="secret",
+        timeout_seconds=180,
+        transport=httpx.MockTransport(handler),
+    )
+
+    result = __import__("asyncio").run(provider.generate(_request()))
+
+    assert result.status == "success"
+    assert captured == {"connect": 180, "read": 180, "write": 180, "pool": 180}
+
+
 def _write_experiment(tmp_path: Path, fake_status: str = "success") -> Path:
     variants_path = tmp_path / "variants.parquet"
     variant = PromptVariant(

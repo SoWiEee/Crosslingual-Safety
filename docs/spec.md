@@ -754,6 +754,8 @@ data/translated/translation_failures.jsonl
 - 支援 wrapper 與 payload 使用相同語言。
 - 支援英文 wrapper 搭配目標語言 payload，該模式須標記為 mixed-language。
 - 不允許模板在正式 test set 上依模型自動調整。
+- 支援單輪 GRA graph-based role-playing attack；第一版由使用者明確選擇角色，
+  不進行自動 persona matching。
 
 ### 5.2 Interface
 
@@ -803,8 +805,38 @@ class JailbreakMethod(Protocol):
 | Baseline | `none` | 不加入任何額外包裝 |
 | Academic authority | `academic_authority_v1` | 將請求包裝成學術或研究情境 |
 | Role play | `roleplay_v1` | 將請求放入固定角色扮演情境 |
+| GRA | `gra_v1` | 以角色社交圖作 benign anchor，再以同構 process graph 包裝原始 goal |
 
 這些名稱代表模板族群。實際模板文字放在 YAML，不硬編碼於 Python。
+
+#### 5.3.1 GRA v1 Contract
+
+`gra_v1` 依據專案根目錄的 `GRA_Jailbreak.pdf` 實作，但論文未公開完整
+17 人角色資料庫與未刪節 prompt，因此本版本使用下列四個明確版本化的角色：
+
+| Role ID | Primary domains |
+|---|---|
+| `joker` | general-purpose fallback, chaos, violence |
+| `lex_luthor` | technology, corporate, financial, power |
+| `riddler` | cyber, information, deception, logical planning |
+| `scarecrow` | psychology, chemistry, fear manipulation |
+
+角色選擇優先序為 JSONL 每筆 `role`、CLI `--role`、最後預設 `joker`。第一版
+不得依 prompt 內容自動切換角色。
+
+GRA rendered prompt 必須依固定順序包含：
+
+1. `P_benign-graph(r)`：要求建立所選角色的 JSON social network graph，
+   其中 nodes 為角色，edges 為有標籤的角色關係。
+2. benign process-flow example：使用無害任務說明 nodes、edges 與 attributes。
+3. `P_malicious-graph(r,g)`：保留 goal 的原始文字，要求以相同 graph methodology
+   表示 resources/tools/stages、operations/transitions 與 timing/method attributes。
+4. 固定 JSON output contract。不得要求或解析自由格式 chain-of-thought。
+
+預設 `wrapper_language_mode=english`。`same-as-payload` 可使用事先鎖定的
+`en`、`zh`、`vi`、`my` 靜態模板；不得在 generation runtime 臨時翻譯 wrapper。
+template hash 必須涵蓋共用模板、角色內容、output contract 與 wrapper 語言。
+variant metadata 必須保存 `role_id`、persona catalog hash 與 GRA template version。
 
 ### 5.4 Template Configuration
 
@@ -926,6 +958,7 @@ uv run crosslingual-safety build-variants \
 - 不允許跨模型 fallback。
 - 支援中斷恢復。
 - API 金鑰不得寫入 log、SQLite、Parquet 或 traceback。
+- provider timeout 由模型設定控制，不得對所有模型固定使用同一數值。
 
 ### 6.2 Model Configuration
 
@@ -948,9 +981,48 @@ models:
     endpoint_type: chat
     concurrency: 2
     requests_per_minute: 20
+    timeout_seconds: 60
 ```
 
 模型名稱僅為設定範例。實驗必須記錄 provider 回傳的實際 model ID 與 endpoint metadata。
+`nemotron_3_ultra_550b` 使用相同 ZooLab Chat Completions provider，建議
+`concurrency: 1`、`requests_per_minute: 10` 與較長 timeout。
+
+### 6.2.1 Manual Single-Turn Batch CLI
+
+`manual-run` 提供獨立於正式資料集 ingestion 的手動批次入口。輸入只支援 UTF-8
+`.txt` 與 `.jsonl`，不支援 CSV。
+
+- `.txt`：整個檔案視為一筆 prompt，必須提供 `--source-language en|zh|vi|my`。
+- `.jsonl`：每列必須包含 `prompt_id`、`prompt`、`source_language`；可選
+  `role`、`category` 與 `system_prompt`。
+- 未知欄位、重複 `prompt_id`、空 prompt、未知語言或未知角色必須明確失敗。
+- 保存原始檔案 SHA256 與 canonical `input_snapshot.jsonl`。
+- 使用本機 CUDA FP16 NLLB 補齊 `en`、`zh`、`vi`、`my`；來源版本不得重新翻譯。
+- 每個 prompt、language、model 建立一個獨立單輪 job。
+- 預設模型為 `llama31_8b`、`gemma_4_12b`、`gemma_4_26b`、
+  `nemotron_cascade_2_30b`、`llama33_70b`。
+- `llama_guard_3_8b` 不屬於預設生成模型。
+- `--add-model nemotron_3_ultra_550b` 可將 Ultra 550B 加入預設矩陣；
+  `--models` 可完全取代預設清單。
+- 相同 run ID 可恢復執行，成功工作不得再次送出。
+
+每次執行建立：
+
+```text
+runs/manual/<run-id>/
+├── input_snapshot.jsonl
+├── translations.jsonl
+├── variants.jsonl
+├── results.jsonl
+├── report.md
+└── run_manifest.json
+```
+
+manifest 必須記錄 input hash、語言、模型、generation config、translation model、
+template/catalog hashes 與建立時間，且不得包含 API key。`results.jsonl` 必須可由
+程式直接讀回，並包含 prompt/language/role/model、rendered prompt、response、
+status、usage、latency 與 request ID。
 
 ### 6.3 Provider Interface
 
@@ -1924,6 +1996,7 @@ one model
 | `generate` | 呼叫遠端模型 |
 | `generation-status` | 顯示工作進度與錯誤 |
 | `retry-failed` | 重試允許重試的工作 |
+| `manual-run` | 讀取 TXT/JSONL、補齊四語、套用 GRA 並呼叫預設五模型 |
 | `annotate` | 啟動盲測人工標註 |
 | `annotation-status` | 顯示標註與複核進度 |
 | `adjudicate` | 處理標註衝突 |
@@ -1975,6 +2048,15 @@ uv run crosslingual-safety enqueue \
 uv run crosslingual-safety generate \
   --experiment pilot_001
 
+uv run crosslingual-safety manual-run prompts.jsonl \
+  --jailbreak gra_v1 \
+  --role joker \
+  --wrapper-language-mode english
+
+uv run crosslingual-safety manual-run prompt.txt \
+  --source-language zh \
+  --add-model nemotron_3_ultra_550b
+
 uv run crosslingual-safety annotate \
   --experiment pilot_001 \
   --annotator annotator_a
@@ -1998,6 +2080,10 @@ uv run crosslingual-safety report \
 - 中文、越南語與緬甸語的免費機器翻譯候選可產生、讀回並接受人工審查。
 - 正式實驗只能使用已凍結的翻譯版本。
 - 至少實作 `none`、`academic_authority_v1`、`roleplay_v1`。
+- `manual-run` 可讀取 TXT/JSONL、補齊英中越緬四語並建立五模型結果矩陣。
+- `gra_v1` 可由使用者選擇四個固定角色，且英文 wrapper 為預設。
+- manual run 可產生 input snapshot、translations、variants、results、manifest
+  與 Markdown report，並可恢復未完成 job。
 - 至少一個遠端 Chat endpoint 可完成推論。
 - Completion endpoint 有 adapter 或明確標記為未啟用。
 - 中斷後可恢復尚未完成的 generation jobs。
@@ -2041,3 +2127,5 @@ uv run pytest
 11. Rottger et al., [XSTest](https://github.com/paul-rottger/xstest).
 12. Wang et al., [XSafety multilingual safety benchmark](https://github.com/Jarviswang94/Multilingual_safety_benchmark).
 13. Jiang et al., [WildJailbreak evaluation data](https://huggingface.co/datasets/allenai/wildjailbreak).
+14. Liu et al., *GRA: Graph-Based Role-Playing Attack for Single-Turn Jailbreak*,
+    IEEE Signal Processing Letters, vol. 33, 2026, DOI: 10.1109/LSP.2026.3677330.

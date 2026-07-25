@@ -18,6 +18,7 @@ from crosslingual_safety.ingest import (
     write_parquet,
 )
 from crosslingual_safety.jailbreaks import register_jailbreak_commands
+from crosslingual_safety.manual_commands import register_manual_commands
 from crosslingual_safety.raw_contracts import RAW_SNAPSHOT_CONTRACTS
 from crosslingual_safety.schemas import PromptCase
 from crosslingual_safety.translation.commands import register_translation_commands
@@ -26,6 +27,7 @@ app = typer.Typer(no_args_is_help=True)
 register_translation_commands(app)
 register_jailbreak_commands(app)
 register_generation_commands(app)
+register_manual_commands(app)
 
 
 def _validate_or_fail(repo_root: Path, contract_name: str, input_path: Path | None = None) -> Path:

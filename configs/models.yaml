@@ -68,3 +68,4 @@ models:
     endpoint_type: chat
     concurrency: 1
     requests_per_minute: 10
+    timeout_seconds: 180
