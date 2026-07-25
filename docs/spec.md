@@ -112,6 +112,7 @@ flowchart TD
 - 提交 `uv.lock`，確保團隊使用相同依賴版本。
 - 所有指令透過 `uv run` 執行。
 - 開發工具放在 `dev` dependency group。
+- 免費線上備援翻譯使用 runtime dependency `deep-translator`。
 - Google Cloud Translation 依賴放在 `translation-google` optional dependency。
 - 本地 NLLB 翻譯依賴放在 `translation-nllb` optional dependency。
 - API 金鑰只允許透過環境變數載入。
@@ -124,7 +125,7 @@ cd crosslingual-safety
 
 uv python pin 3.11
 
-uv add pydantic typer rich pyyaml polars pyarrow
+uv add pydantic typer rich pyyaml polars pyarrow deep-translator
 uv add openai httpx tenacity aiolimiter
 uv add scipy statsmodels
 
@@ -183,9 +184,9 @@ Crosslingual-Safety/
 - 不維護 `requirements.txt` 作為主要依賴來源。
 - `pyproject.toml` 與 `uv.lock` 必須一併提交。
 - CI 與團隊環境使用 `uv sync --frozen`。
-- 不需要產生新翻譯時，執行 `uv sync`。
 - 使用 Google Cloud Translation 時，執行 `uv sync --extra translation-google`。
-- 使用 NLLB 對照翻譯時，執行 `uv sync --extra translation-nllb`。
+- 使用預設 NLLB 翻譯時，執行 `uv sync --extra translation-nllb`；Windows/Linux
+  的 PyTorch wheel 固定由官方 CUDA 12.8 index 取得。
 - 不允許程式在 runtime 自動安裝套件。
 
 ### 2.5 Basic Commands
@@ -408,14 +409,15 @@ data/normalized/duplicate_candidates.parquet
 
 - 翻譯器透過 `Translator` 介面切換。
 - 優先使用資料集已有的人工翻譯。
-- 缺少語言時，主要使用 Google Cloud Translation Advanced v3 的標準 NMT。
-- NLLB 保留為可選翻譯器，用於方法比較或離線 fallback。
+- 缺少語言時，預設使用本機 GPU 的 NLLB-200 distilled 600M。
+- `deep-translator` Google backend 保留為免費 online fallback。
+- Google Cloud Translation Advanced v3 保留為 optional paid provider。
 - 受測 LLM 不得同時充當該次實驗的翻譯器。
 - 每次翻譯保存模型名稱、版本、語言代碼與 decoding config。
 - 翻譯結果必須通過人工品質檢查，才能進入正式實驗。
 - 原始文字及 Unicode 正規化文字分開保存。
 - 正式實驗一旦凍結翻譯，不得在執行期間重新呼叫翻譯 API。
-- 不宣稱雲端翻譯具有逐字節決定性；可重現性由不可變快取與內容雜湊提供。
+- 不宣稱外部翻譯服務具有逐字節決定性或 SLA；可重現性由不可變快取與內容雜湊提供。
 
 ### 4.2 Language Configuration
 
@@ -499,10 +501,14 @@ class TranslationRecord(BaseModel):
 ```python
 from typing import Protocol
 
+from crosslingual_safety.translation.providers import ProviderTranslation
+
 
 class Translator(Protocol):
     translator_id: str
     version: str
+    method: str
+    decoding_config: dict[str, object]
 
     def supports(
         self,
@@ -516,7 +522,7 @@ class Translator(Protocol):
         text: str,
         source_language: str,
         target_language: str,
-    ) -> str:
+    ) -> ProviderTranslation:
         ...
 ```
 
@@ -524,12 +530,13 @@ class Translator(Protocol):
 
 ```text
 DatasetTranslationProvider
+DeepTranslatorGoogleTranslator
 GoogleCloudNMTTranslator
 NLLBTranslator
 ManualTranslationProvider
 ```
 
-`DatasetTranslationProvider` 從 MultiJail 既有平行資料取值。`ManualTranslationProvider` 匯入人工翻譯 CSV。Google NMT 與 NLLB 都只負責產生候選翻譯，不能自動標記為 `accepted`。
+`DatasetTranslationProvider` 從 MultiJail 既有平行資料取值。`ManualTranslationProvider` 匯入人工翻譯 CSV。`deep-translator`、Google Cloud NMT 與 NLLB 都只負責產生候選翻譯，不能自動標記為 `accepted`。
 
 ### 4.5 Translation Provider Decision
 
@@ -542,29 +549,39 @@ NLLB-200 是 encoder-decoder 翻譯模型，沒有 system、developer、user 等
 - 長輸入遭到截斷。
 - 相同模型因軟體版本或執行環境產生差異。
 
-Google Cloud Translation 可以減少本地模型、tokenizer、decoding 與硬體環境變因，但服務端模型可能更新。Google 的 release notes 曾記錄 NMT 模型更新，因此不得假設 API 長期輸出完全固定。
+本機 NLLB 避免免費 web endpoint 的限流與介面變更，並可由 checkpoint、套件版本與 decoding config 重建執行條件。`deep-translator` 不需要 API key，但只作為非官方 online fallback；Google Cloud Translation 則是 optional paid provider。
 
 本專案採以下決策：
 
 1. MultiJail 既有人工翻譯保持最高優先權。
-2. 缺少翻譯時，預設使用 Cloud Translation Advanced v3。
-3. 明確選擇標準 NMT `general/nmt`。
+2. 缺少翻譯時，預設使用 `facebook/nllb-200-distilled-600M`。
+3. 專案語言代碼使用 `configs/languages.yaml` 的 NLLB code。
 4. 不使用 Translation LLM 作為主要翻譯器。
-5. 明確指定 `source_language_code`，停用自動語言偵測。
-6. 使用 `text/plain`，避免 HTML parser 改寫內容。
+5. 明確指定來源與目標語言，使用 CUDA FP16 與 deterministic decoding。
+6. CUDA 不可用或 GPU 推論失敗時明確中止，不靜默切換 CPU。
 7. 每個翻譯結果立即落盤並計算 SHA256。
 8. 人工通過後設為 `frozen=true`。
 9. 正式 generation 只能讀取 frozen translations。
 
-### 4.6 Google Cloud NMT Configuration
+### 4.6 Translation Provider Configuration
 
 ```yaml
 translation:
-  primary_provider: google_cloud_nmt_v3
+  primary_provider: nllb
   cache_policy: immutable
   require_human_review: true
 
+  deep_translator_google:
+    enabled: false
+    backend: google
+    source_language: en
+    language_code_overrides:
+      zh: zh-CN
+      jv: jw
+    retry_delays_seconds: [1.0, 2.0]
+
   google_cloud_nmt_v3:
+    enabled: false
     project_id_env: GOOGLE_CLOUD_PROJECT
     location: global
     model: general/nmt
@@ -574,65 +591,38 @@ translation:
     credentials: application_default_credentials
 
   nllb:
-    enabled: false
+    enabled: true
     checkpoint: facebook/nllb-200-distilled-600M
     local_files_only: false
+    device: cuda
+    dtype: float16
     do_sample: false
     num_beams: 5
-    max_input_tokens: 512
+    max_input_tokens: 1024
 ```
 
-Cloud Translation Advanced v3 使用 IAM 與 Application Default Credentials。正式程式不得接受 service account JSON 內容作為 CLI argument，也不得將 credential path 寫入 experiment manifest。
+預設 NLLB provider 不讀取 credential。若明確啟用 Cloud Translation Advanced v3，則使用 IAM 與 Application Default Credentials；正式程式不得接受 service account JSON 內容作為 CLI argument，也不得將 credential path 寫入 experiment manifest。
 
-### 4.7 Google Cloud NMT Implementation
+### 4.7 Local NLLB GPU Implementation
 
 ```python
-import os
-from google.cloud import translate_v3
+class NLLBTranslator:
+    translator_id = "nllb"
+    version = "facebook/nllb-200-distilled-600M"
 
-
-class GoogleCloudNMTTranslator:
-    translator_id = "google_cloud_nmt_v3"
-    version = "general/nmt"
-
-    def __init__(self) -> None:
-        self.project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
-        self.location = "global"
-        self.client = translate_v3.TranslationServiceClient()
-
-    def supports(
-        self,
-        source_language: str,
-        target_language: str,
-    ) -> bool:
-        return source_language != target_language
-
-    def translate(
-        self,
-        text: str,
-        source_language: str,
-        target_language: str,
-    ) -> str:
-        parent = (
-            f"projects/{self.project_id}/"
-            f"locations/{self.location}"
-        )
-        model = f"{parent}/models/general/nmt"
-
-        response = self.client.translate_text(
-            request={
-                "parent": parent,
-                "contents": [text],
-                "mime_type": "text/plain",
-                "source_language_code": source_language,
-                "target_language_code": target_language,
-                "model": model,
-            }
-        )
-        return response.translations[0].translated_text
+    def __init__(self, languages: dict[str, LanguageConfig]) -> None:
+        if not torch.cuda.is_available():
+            raise RuntimeError(
+                "CUDA is required for NLLB translation but is unavailable"
+            )
+        self.tokenizer = AutoTokenizer.from_pretrained(self.version)
+        self.model = AutoModelForSeq2SeqLM.from_pretrained(
+            self.version,
+            dtype=torch.float16,
+        ).to("cuda").eval()
 ```
 
-實際實作需在啟動時查詢 API 支援語言，確認目標語言當下仍受支援。Google 官方語言清單目前包含中文、緬甸語與爪哇語，但語言支援狀態應保存於 experiment manifest。
+實際實作保存 checkpoint、PyTorch/Transformers 版本、device、dtype、NLLB 語言代碼與 decoding config。encoded tensors 必須移至 CUDA，generation 使用 inference mode；不支援的語言、超過模型原生 1024-token limit、空白結果與 CUDA runtime failure 都要明確拒絕。批次遇到超限輸入時不得截斷，必須寫入 `translation_failures.jsonl`、標記需要人工翻譯，並繼續其餘 case。中文 `zh`、越南語 `vi`、緬甸語 `my` 必須有單元測試及 GPU live smoke 驗證。
 
 ### 4.8 Immutable Translation Cache
 
@@ -663,7 +653,7 @@ SHA256(
 人工修訂後的 `translator_id` 應標記為：
 
 ```text
-google_cloud_nmt_v3+human_revision
+nllb+human_revision
 ```
 
 原始 API 輸出仍需保留，不能被人工修訂結果覆蓋。
@@ -673,8 +663,8 @@ google_cloud_nmt_v3+human_revision
 ```text
 1. Existing human translation in the dataset
 2. Team member or verified external human translation
-3. Google Cloud NMT candidate followed by human revision
-4. NLLB candidate followed by human revision
+3. Local NLLB candidate followed by human revision
+4. deep-translator Google or Google Cloud NMT candidate followed by human revision
 5. Unsupported or unverified translation remains excluded
 ```
 
@@ -711,13 +701,12 @@ ambiguity_added = no
 
 ```bash
 uv run crosslingual-safety translate \
-  --languages zh,jv,my \
-  --translator google-cloud-nmt-v3
+  --languages zh,vi,my
 
 uv run crosslingual-safety translate \
-  --languages zh,jv,my \
-  --translator nllb \
-  --candidate-set nllb-comparison
+  --languages zh,vi,my \
+  --translator deep-translator-google \
+  --candidate-set online-fallback
 
 uv run crosslingual-safety export-translation-review \
   --output runs/pilot/translation_review.csv
@@ -737,13 +726,14 @@ uv run crosslingual-safety freeze-translations \
 data/translated/translations.parquet
 data/translated/translation_reviews.parquet
 data/translated/rejected_translations.parquet
+data/translated/translation_failures.jsonl
 ```
 
 ### 4.13 Phase Acceptance Criteria
 
 - 每個 accepted translation 都有人工 review。
 - MultiJail 既有人工翻譯沒有被 NLLB 覆寫。
-- MultiJail 既有人工翻譯也沒有被 Google NMT 覆寫。
+- MultiJail 既有人工翻譯也沒有被 `deep-translator` 或 Google NMT 覆寫。
 - 翻譯器、requested model 與 request config 可追蹤。
 - 相同翻譯設定重跑不會建立重複 translation。
 - 未通過審查的翻譯不會進入正式 experiment。
@@ -1877,8 +1867,9 @@ Add remaining adapters and deduplication
 Phase 2
 Import MultiJail native translations
 Implement translation review
-Add Google Cloud NMT candidate translation
-Keep NLLB as an optional comparison provider
+Add local NLLB GPU candidate translation
+Keep deep-translator as a free online fallback
+Keep Google Cloud NMT as an optional paid provider
 
 Phase 3
 Implement none
@@ -1960,8 +1951,7 @@ uv run crosslingual-safety ingest \
 uv run crosslingual-safety deduplicate
 
 uv run crosslingual-safety translate \
-  --languages zh,jv,my \
-  --translator google-cloud-nmt-v3
+  --languages zh,vi,my
 
 uv run crosslingual-safety validate-translations
 
@@ -2005,7 +1995,7 @@ uv run crosslingual-safety report \
 
 - 三個資料集至少各有一個可運作 adapter。
 - MultiJail 英文、中文、爪哇語能保持平行配對。
-- 緬甸語 Google NMT 候選翻譯可產生並接受人工審查。
+- 中文、越南語與緬甸語的免費機器翻譯候選可產生、讀回並接受人工審查。
 - 正式實驗只能使用已凍結的翻譯版本。
 - 至少實作 `none`、`academic_authority_v1`、`roleplay_v1`。
 - 至少一個遠端 Chat endpoint 可完成推論。
@@ -2043,10 +2033,11 @@ uv run pytest
 3. Chao et al., [JailbreakBench](https://github.com/JailbreakBench/jailbreakbench).
 4. Mazeika et al., [HarmBench](https://github.com/centerforaisafety/HarmBench).
 5. Meta AI, [No Language Left Behind](https://ai.meta.com/research/no-language-left-behind/).
-6. Google Cloud, [Cloud Translation API overview](https://cloud.google.com/translate/docs/api-overview).
-7. Google Cloud, [Neural Machine Translation model](https://cloud.google.com/translate/docs/advanced/nmt-model).
-8. Google Cloud, [Supported languages](https://cloud.google.com/translate/docs/languages).
-9. Google Cloud, [Cloud Translation release notes](https://cloud.google.com/translate/docs/release-notes).
-10. Rottger et al., [XSTest](https://github.com/paul-rottger/xstest).
-11. Wang et al., [XSafety multilingual safety benchmark](https://github.com/Jarviswang94/Multilingual_safety_benchmark).
-12. Jiang et al., [WildJailbreak evaluation data](https://huggingface.co/datasets/allenai/wildjailbreak).
+6. deep-translator, [Usage documentation](https://deep-translator.readthedocs.io/en/stable/usage.html).
+7. Google Cloud, [Cloud Translation API overview](https://cloud.google.com/translate/docs/api-overview).
+8. Google Cloud, [Neural Machine Translation model](https://cloud.google.com/translate/docs/advanced/nmt-model).
+9. Google Cloud, [Supported languages](https://cloud.google.com/translate/docs/languages).
+10. Google Cloud, [Cloud Translation release notes](https://cloud.google.com/translate/docs/release-notes).
+11. Rottger et al., [XSTest](https://github.com/paul-rottger/xstest).
+12. Wang et al., [XSafety multilingual safety benchmark](https://github.com/Jarviswang94/Multilingual_safety_benchmark).
+13. Jiang et al., [WildJailbreak evaluation data](https://huggingface.co/datasets/allenai/wildjailbreak).

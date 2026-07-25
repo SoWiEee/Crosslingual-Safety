@@ -1,4 +1,5 @@
 import csv
+import json
 from pathlib import Path
 from typing import Annotated
 
@@ -10,10 +11,12 @@ from crosslingual_safety.schemas import PromptCase, TranslationReview
 from crosslingual_safety.translation.languages import load_languages
 from crosslingual_safety.translation.providers import (
     DatasetTranslationProvider,
+    DeepTranslatorGoogleTranslator,
     FakeTranslator,
     GoogleCloudNMTTranslator,
     ManualTranslationProvider,
     NLLBTranslator,
+    TranslationInputTooLongError,
     Translator,
 )
 from crosslingual_safety.translation.service import TranslationService
@@ -62,12 +65,15 @@ def _translator(
         if manual_input is None:
             raise typer.BadParameter("--manual-input is required for translator=manual")
         return ManualTranslationProvider.from_csv(manual_input)
+    if name == "deep-translator-google":
+        return DeepTranslatorGoogleTranslator()
     if name == "google-cloud-nmt-v3":
         return GoogleCloudNMTTranslator()
     if name == "nllb":
         return NLLBTranslator(load_languages(languages_config))
     raise typer.BadParameter(
-        "--translator must be one of: dataset, manual, google-cloud-nmt-v3, nllb, fake"
+        "--translator must be one of: dataset, manual, deep-translator-google, "
+        "google-cloud-nmt-v3, nllb, fake"
     )
 
 
@@ -75,7 +81,7 @@ def register_translation_commands(app: typer.Typer) -> None:
     @app.command("translate")
     def translate_command(
         languages: Annotated[str, typer.Option(help="Comma-separated target language codes")],
-        translator: Annotated[str, typer.Option()] = "google-cloud-nmt-v3",
+        translator: Annotated[str, typer.Option()] = "nllb",
         cases_path: Annotated[Path, typer.Option(file_okay=True, dir_okay=False)] = Path(
             "data/normalized/cases.parquet"
         ),
@@ -107,6 +113,7 @@ def register_translation_commands(app: typer.Typer) -> None:
         service = TranslationService(store)
         created = 0
         preserved_native = 0
+        failures: list[dict[str, object]] = []
         try:
             for case in cases:
                 for target_language in target_languages:
@@ -136,6 +143,20 @@ def register_translation_commands(app: typer.Typer) -> None:
                             force_retranslate=force_retranslate,
                         )
                         created += len(store.translations()) - before
+                    except TranslationInputTooLongError as error:
+                        failures.append(
+                            {
+                                "case_id": case.case_id,
+                                "error_code": "input_too_long",
+                                "max_input_tokens": error.max_input_tokens,
+                                "requires_manual_translation": True,
+                                "source_language": case.source_language,
+                                "target_language": target_language,
+                                "token_count": error.token_count,
+                                "translator_id": selected_provider.translator_id,
+                            }
+                        )
+                        continue
                     except ValueError as error:
                         if (
                             selected_provider.translator_id == "native_dataset"
@@ -145,8 +166,15 @@ def register_translation_commands(app: typer.Typer) -> None:
                         raise
         finally:
             store.flush()
+        failures_path = output_dir / "translation_failures.jsonl"
+        failures_path.parent.mkdir(parents=True, exist_ok=True)
+        failures_path.write_text(
+            "".join(f"{json.dumps(failure, sort_keys=True)}\n" for failure in failures),
+            encoding="utf-8",
+        )
         typer.echo(
-            f"created {created} translations; preserved {preserved_native} native translations"
+            f"created {created} translations; preserved {preserved_native} native translations; "
+            f"failed {len(failures)}"
         )
 
     @app.command("export-translation-review")

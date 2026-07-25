@@ -178,9 +178,7 @@ def register_jailbreak_commands(app: typer.Typer) -> None:
         config_path: Annotated[Path, typer.Option(file_okay=True, dir_okay=False)] = Path(
             "configs/jailbreaks.yaml"
         ),
-        selection_path: Annotated[Path, typer.Option(file_okay=True, dir_okay=False)] = Path(
-            "data/normalized/variant_case_selection.parquet"
-        ),
+        selection_path: Annotated[Path | None, typer.Option(file_okay=True, dir_okay=False)] = None,
         output: Annotated[Path, typer.Option(file_okay=True, dir_okay=False)] = Path(
             "data/variants/prompt_variants.parquet"
         ),
@@ -193,9 +191,13 @@ def register_jailbreak_commands(app: typer.Typer) -> None:
         method = methods[jailbreak]
         requested_languages = [value.strip() for value in languages.split(",") if value.strip()]
         cases = [PromptCase.model_validate(row) for row in pq.read_table(cases_path).to_pylist()]
-        if selection_path.is_file():
+        resolved_selection_path = selection_path or cases_path.with_name(
+            "variant_case_selection.parquet"
+        )
+        if resolved_selection_path.is_file():
             selected_case_ids = {
-                row["selected_case_id"] for row in pq.read_table(selection_path).to_pylist()
+                row["selected_case_id"]
+                for row in pq.read_table(resolved_selection_path).to_pylist()
             }
             cases = [case for case in cases if case.case_id in selected_case_ids]
         translations = _translation_payloads(translations_path)

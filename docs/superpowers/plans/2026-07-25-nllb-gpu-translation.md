@@ -15,7 +15,8 @@
 - CUDA dtype is `torch.float16`.
 - Initial translation batch size remains one.
 - Deterministic decoding uses `do_sample=false` and `num_beams=5`.
-- Maximum input length is 512 tokens.
+- Maximum input length is 1024 tokens; longer inputs are reported for manual
+  translation without truncation.
 - Project language mappings are `en=eng_Latn`, `zh=zho_Hans`, `vi=vie_Latn`, and `my=mya_Mymr`.
 - Immutable cache, human review, and freeze contracts remain unchanged.
 - Existing unrelated worktree changes must not be reverted or included in implementation commits.
@@ -205,4 +206,3 @@ uv run pytest
 ```
 
 Expected: all commands pass.
-

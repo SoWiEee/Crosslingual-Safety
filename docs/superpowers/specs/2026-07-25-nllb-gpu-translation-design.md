@@ -25,7 +25,7 @@ the CLI default. It loads:
 - device: `cuda`
 - dtype: `torch.float16`
 - deterministic decoding: `do_sample=false`, `num_beams=5`
-- maximum input length: 512 tokens
+- maximum input length: 1024 tokens
 
 The provider records checkpoint, device, dtype, decoding parameters, package
 versions, and configured NLLB language codes in `decoding_config`. Translation
@@ -37,6 +37,10 @@ inference mode. It verifies that the source and target language are configured,
 rejects inputs exceeding the token limit, and rejects empty decoded output.
 CUDA out-of-memory errors are reported with the language pair and checkpoint,
 without embedding source prompt content in the error message.
+
+Inputs above the checkpoint's native 1024-token limit are not truncated. Batch
+translation records them in `translation_failures.jsonl` with
+`requires_manual_translation=true` and continues with the remaining cases.
 
 ## Language Mapping
 
@@ -84,4 +88,3 @@ uv run ruff check .
 uv run mypy src
 uv run pytest
 ```
-

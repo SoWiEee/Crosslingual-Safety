@@ -5,6 +5,7 @@ description = "Reproducible cross-lingual LLM safety experiments"
 readme = "README.md"
 requires-python = "==3.11.*"
 dependencies = [
+    "deep-translator>=1.11.4",
     "httpx>=0.28.1",
     "pyarrow>=18.0.0",
     "pydantic>=2.10.0",
@@ -23,6 +24,16 @@ translation-nllb = [
 
 [project.scripts]
 crosslingual-safety = "crosslingual_safety.cli:app"
+
+[tool.uv.sources]
+torch = [
+    { index = "pytorch-cu128", marker = "sys_platform == 'win32' or sys_platform == 'linux'" },
+]
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
 
 [dependency-groups]
 dev = [
@@ -45,6 +56,7 @@ testpaths = ["tests"]
 [tool.ruff]
 target-version = "py311"
 line-length = 100
+extend-exclude = ["data/raw", "docs"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP"]
@@ -54,5 +66,14 @@ files = ["src"]
 strict = true
 
 [[tool.mypy.overrides]]
-module = ["google.cloud", "google.cloud.*", "pyarrow", "pyarrow.*", "transformers"]
+module = [
+    "deep_translator",
+    "google.cloud",
+    "google.cloud.*",
+    "pyarrow",
+    "pyarrow.*",
+    "torch",
+    "torch.*",
+    "transformers",
+]
 ignore_missing_imports = true

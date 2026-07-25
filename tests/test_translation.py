@@ -1,6 +1,9 @@
 import csv
 import json
+import sys
+from contextlib import nullcontext
 from pathlib import Path
+from types import SimpleNamespace
 
 import pyarrow.parquet as pq
 import pytest
@@ -9,7 +12,14 @@ from typer.testing import CliRunner
 from crosslingual_safety.cli import app
 from crosslingual_safety.schemas import PromptCase, TranslationReview
 from crosslingual_safety.translation.commands import REVIEW_FIELDS
-from crosslingual_safety.translation.providers import FakeTranslator
+from crosslingual_safety.translation.languages import load_languages
+from crosslingual_safety.translation.providers import (
+    DeepTranslatorGoogleTranslator,
+    FakeTranslator,
+    NLLBTranslator,
+    ProviderTranslation,
+    TranslationInputTooLongError,
+)
 from crosslingual_safety.translation.service import TranslationService
 from crosslingual_safety.translation.storage import TranslationStore
 
@@ -240,19 +250,195 @@ def test_phase2_cli_runs_offline_with_fake_translator(tmp_path: Path) -> None:
     assert len(manifest["translation_hashes"]) == 2
 
 
-def test_translate_defaults_to_google_provider(
+def test_deep_translator_google_maps_project_language_codes(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls: list[tuple[str, str]] = []
+
+    class StubGoogleTranslator:
+        def __init__(self, source: str, target: str) -> None:
+            calls.append((source, target))
+
+        def get_supported_languages(self, as_dict: bool = False) -> dict[str, str]:
+            assert as_dict
+            return {
+                "english": "en",
+                "chinese (simplified)": "zh-CN",
+                "javanese": "jw",
+                "myanmar (burmese)": "my",
+                "vietnamese": "vi",
+            }
+
+        def translate(self, text: str) -> str:
+            return f"translated: {text}"
+
+    monkeypatch.setattr(
+        "crosslingual_safety.translation.providers.package_version",
+        lambda _: "test-version",
+    )
+    translator = DeepTranslatorGoogleTranslator(StubGoogleTranslator)
+
+    assert translator.supports("en", "zh")
+    assert translator.supports("en", "jv")
+    assert translator.supports("en", "vi")
+    assert translator.supports("en", "my")
+    assert translator.translate("Original", "en", "jv").text == "translated: Original"
+    assert calls[-1] == ("en", "jw")
+    assert translator.translate("Original", "en", "zh").text == "translated: Original"
+    assert calls[-1] == ("en", "zh-CN")
+    assert translator.translate("Original", "en", "my").text == "translated: Original"
+    assert calls[-1] == ("en", "my")
+    assert translator.translate("Original", "en", "vi").text == "translated: Original"
+    assert calls[-1] == ("en", "vi")
+    assert translator.version == "test-version"
+
+
+def test_deep_translator_google_retries_transient_failure(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    attempts = 0
+
+    class FlakyGoogleTranslator:
+        def __init__(self, source: str, target: str) -> None:
+            pass
+
+        def get_supported_languages(self, as_dict: bool = False) -> dict[str, str]:
+            return {"english": "en", "vietnamese": "vi"}
+
+        def translate(self, text: str) -> str:
+            nonlocal attempts
+            attempts += 1
+            if attempts == 1:
+                raise ConnectionError
+            return "Nghiên cứu đánh giá an toàn."
+
+    monkeypatch.setattr(
+        "crosslingual_safety.translation.providers.package_version",
+        lambda _: "test-version",
+    )
+    translator = DeepTranslatorGoogleTranslator(FlakyGoogleTranslator, retry_delays=(0,))
+
+    assert translator.translate("Safety evaluation research.", "en", "vi").text
+    assert attempts == 2
+
+
+def test_nllb_uses_cuda_fp16_and_project_language_codes(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    forced_bos_codes: list[str] = []
+
+    class StubTensor:
+        shape = (1, 579)
+
+        def __init__(self) -> None:
+            self.device: str | None = None
+
+        def to(self, device: str) -> "StubTensor":
+            self.device = device
+            return self
+
+    class StubTokenizer:
+        src_lang = ""
+        encoded = StubTensor()
+
+        @classmethod
+        def from_pretrained(cls, checkpoint: str, **kwargs: object) -> "StubTokenizer":
+            return cls()
+
+        def __call__(self, text: str, **kwargs: object) -> dict[str, StubTensor]:
+            return {"input_ids": self.encoded}
+
+        def convert_tokens_to_ids(self, code: str) -> int:
+            forced_bos_codes.append(code)
+            return 101
+
+        def batch_decode(self, generated: object, **kwargs: object) -> list[str]:
+            return ["translated"]
+
+    class StubModel:
+        loaded_dtype: object = None
+        device: str | None = None
+        evaluated = False
+
+        @classmethod
+        def from_pretrained(cls, checkpoint: str, **kwargs: object) -> "StubModel":
+            cls.loaded_dtype = kwargs.get("dtype")
+            return cls()
+
+        def to(self, device: str) -> "StubModel":
+            type(self).device = device
+            return self
+
+        def eval(self) -> "StubModel":
+            type(self).evaluated = True
+            return self
+
+        def generate(self, **kwargs: object) -> list[list[int]]:
+            return [[101, 102]]
+
+    transformers = SimpleNamespace(
+        AutoModelForSeq2SeqLM=StubModel,
+        AutoTokenizer=StubTokenizer,
+        __version__="test-transformers",
+    )
+    torch = SimpleNamespace(
+        cuda=SimpleNamespace(is_available=lambda: True),
+        float16="float16",
+        inference_mode=nullcontext,
+        __version__="test-torch",
+    )
+    monkeypatch.setitem(sys.modules, "transformers", transformers)
+    monkeypatch.setitem(sys.modules, "torch", torch)
+    languages = load_languages(Path("configs/languages.yaml"))
+
+    translator = NLLBTranslator(languages, device="cuda", dtype="float16")
+    results = [
+        translator.translate("Safety evaluation research.", "en", target)
+        for target in ("zh", "vi", "my")
+    ]
+
+    assert StubModel.loaded_dtype == "float16"
+    assert StubModel.device == "cuda"
+    assert StubModel.evaluated
+    assert StubTokenizer.encoded.device == "cuda"
+    assert forced_bos_codes == ["zho_Hans", "vie_Latn", "mya_Mymr"]
+    assert all(result.text == "translated" for result in results)
+
+
+def test_nllb_requires_cuda(monkeypatch: pytest.MonkeyPatch) -> None:
+    transformers = SimpleNamespace(
+        AutoModelForSeq2SeqLM=object,
+        AutoTokenizer=object,
+        __version__="test-transformers",
+    )
+    torch = SimpleNamespace(
+        cuda=SimpleNamespace(is_available=lambda: False),
+        float16="float16",
+        __version__="test-torch",
+    )
+    monkeypatch.setitem(sys.modules, "transformers", transformers)
+    monkeypatch.setitem(sys.modules, "torch", torch)
+
+    with pytest.raises(
+        RuntimeError,
+        match="CUDA is required for NLLB translation but is unavailable",
+    ):
+        NLLBTranslator(load_languages(Path("configs/languages.yaml")))
+
+
+def test_translate_defaults_to_local_nllb_provider(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     cases_path = tmp_path / "cases.parquet"
     output_dir = tmp_path / "translated"
-    translator = FakeTranslator(outputs={("Original", "my"): "default-google"})
+    translator = FakeTranslator(outputs={("Original", "my"): "default-local-nllb"})
     import pyarrow as pa
 
     pq.write_table(pa.Table.from_pylist([_case().model_dump(mode="json")]), cases_path)
     monkeypatch.setattr(
-        "crosslingual_safety.translation.commands.GoogleCloudNMTTranslator",
-        lambda: translator,
+        "crosslingual_safety.translation.commands.NLLBTranslator",
+        lambda languages: translator,
     )
 
     result = runner.invoke(
@@ -270,8 +456,80 @@ def test_translate_defaults_to_google_provider(
 
     assert result.exit_code == 0, result.output
     assert TranslationStore(output_dir).translations()[0].normalized_translated_text == (
-        "default-google"
+        "default-local-nllb"
     )
+
+
+def test_translate_reports_overlong_nllb_input_and_continues(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    class PartiallyOverlongTranslator(FakeTranslator):
+        translator_id = "nllb"
+        version = "facebook/nllb-200-distilled-600M"
+        method = "nllb"
+
+        def translate(
+            self,
+            text: str,
+            source_language: str,
+            target_language: str,
+        ) -> ProviderTranslation:
+            if text == "Too long":
+                raise TranslationInputTooLongError(1046, 1024)
+            return super().translate(text, source_language, target_language)
+
+    cases_path = tmp_path / "cases.parquet"
+    output_dir = tmp_path / "translated"
+    translator = PartiallyOverlongTranslator(outputs={("Original", "my"): "translated"})
+    import pyarrow as pa
+
+    overlong = _case("case-overlong").model_copy(
+        update={"source_text": "Too long", "canonical_payload": "Too long"}
+    )
+    pq.write_table(
+        pa.Table.from_pylist([_case().model_dump(mode="json"), overlong.model_dump(mode="json")]),
+        cases_path,
+    )
+    monkeypatch.setattr(
+        "crosslingual_safety.translation.commands.NLLBTranslator",
+        lambda languages: translator,
+    )
+
+    result = runner.invoke(
+        app,
+        [
+            "translate",
+            "--languages",
+            "my",
+            "--cases-path",
+            str(cases_path),
+            "--output-dir",
+            str(output_dir),
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert "failed 1" in result.output
+    assert len(TranslationStore(output_dir).translations()) == 1
+    failures = [
+        json.loads(line)
+        for line in (output_dir / "translation_failures.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    ]
+    assert failures == [
+        {
+            "case_id": "case-overlong",
+            "error_code": "input_too_long",
+            "max_input_tokens": 1024,
+            "requires_manual_translation": True,
+            "source_language": "en",
+            "target_language": "my",
+            "token_count": 1046,
+            "translator_id": "nllb",
+        }
+    ]
 
 
 def test_native_dataset_translation_has_priority(tmp_path: Path) -> None:
