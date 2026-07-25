@@ -291,16 +291,18 @@ from typing import Protocol
 class DatasetAdapter(Protocol):
     dataset_name: str
 
-    def load(self, path: Path) -> list[PromptCase]:
+    def load(self, path: Path) -> "IngestionResult":
         ...
 ```
+
+`IngestionResult` 包含 `cases`、`source_records` 與可選的 `native_translations`。adapter 不直接寫檔；CLI 在 raw contract 驗證後合併結果並以 stable ID upsert 到 Parquet。
 
 必要實作：
 
 ```text
 MultiJailAdapter
-JailbreakBenchHarmfulAdapter
-JailbreakBenchBenignAdapter
+JailbreakBenchAdapter(split="harmful")
+JailbreakBenchAdapter(split="benign")
 HarmBenchAdapter
 ```
 
@@ -379,6 +381,10 @@ uv run crosslingual-safety deduplicate
 ```text
 data/normalized/cases.parquet
 data/normalized/source_records.parquet
+data/normalized/native_translations.parquet
+data/normalized/case_pairs.parquet
+data/normalized/variant_case_selection.parquet
+data/normalized/raw_snapshot_inventory.json
 data/normalized/duplicate_candidates.parquet
 ```
 
@@ -391,6 +397,7 @@ data/normalized/duplicate_candidates.parquet
 - HarmBench 每個非空 `ContextString` 都出現在對應 case 的 payload 中。
 - JBB harmful 與 benign 各 100 筆，依 `Index` 形成 100 組 paired records。
 - Exact duplicate 不會重複進入後續 prompt variants。
+- `variant_case_selection.parquet` 以 `dataset × content_id` 為 scope，只保留一個 deterministic `selected_case_id`；後續 `build-variants` 必須只讀取該選取集合。跨資料集 cohort 的選取必須由 experiment manifest 另行宣告，不能由 Phase 1 隱含決定。
 - 原始資料沒有被修改。
 
 ---
