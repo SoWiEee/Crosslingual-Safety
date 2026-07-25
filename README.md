@@ -178,6 +178,8 @@ final projection 與 Parquet snapshot 位於 `runs/pilot_001/`。
 
 `manual-run` 可讀取使用者自己的 UTF-8 `.txt` 或 `.jsonl`，使用本機 GPU NLLB
 補齊英文、中文、越南語與緬甸語，再將每個語言版本送到預設五個遠端模型。
+手動執行的 `max_tokens` 預設為 4096，讓會先產生內部 reasoning tokens 的模型
+有足夠額度輸出最終 response；仍可用 `--max-tokens` 明確覆寫。
 
 `.txt` 的整個檔案視為一筆 prompt，必須明確指定來源語言：
 
