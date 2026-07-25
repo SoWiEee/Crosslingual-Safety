@@ -18,8 +18,10 @@ from crosslingual_safety.ingest import (
 )
 from crosslingual_safety.raw_contracts import RAW_SNAPSHOT_CONTRACTS
 from crosslingual_safety.schemas import PromptCase
+from crosslingual_safety.translation.commands import register_translation_commands
 
 app = typer.Typer(no_args_is_help=True)
+register_translation_commands(app)
 
 
 def _validate_or_fail(repo_root: Path, contract_name: str, input_path: Path | None = None) -> Path:

@@ -1,0 +1,41 @@
+languages:
+  en:
+    display_name: English
+    nllb_code: eng_Latn
+    family: Germanic
+    script: Latin
+  zh:
+    display_name: Simplified Chinese
+    nllb_code: zho_Hans
+    family: Sino-Tibetan
+    script: Han
+  jv:
+    display_name: Javanese
+    nllb_code: jav_Latn
+    family: Austronesian
+    script: Latin
+  my:
+    display_name: Burmese
+    nllb_code: mya_Mymr
+    family: Sino-Tibetan
+    script: Myanmar
+  th:
+    display_name: Thai
+    nllb_code: tha_Thai
+    family: Kra-Dai
+    script: Thai
+  vi:
+    display_name: Vietnamese
+    nllb_code: vie_Latn
+    family: Austroasiatic
+    script: Latin
+  id:
+    display_name: Indonesian
+    nllb_code: ind_Latn
+    family: Austronesian
+    script: Latin
+  tl:
+    display_name: Tagalog
+    nllb_code: tgl_Latn
+    family: Austronesian
+    script: Latin

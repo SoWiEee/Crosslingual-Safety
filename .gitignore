@@ -219,6 +219,7 @@ __marimo__/
 
 # project
 /data/
+/runs/
 CLAUDE.md
 AGENTS.md
 .agents/
