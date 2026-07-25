@@ -107,3 +107,63 @@ class TranslationManifest(BaseModel):
     created_at: str
     translation_hashes: dict[str, str]
     provider_language_support: dict[str, list[str]] = Field(default_factory=dict)
+
+
+class PromptVariant(BaseModel):
+    variant_id: str
+    case_id: str
+    dataset: str
+    translation_id: str
+    language: str
+    intent: Intent
+    payload: str
+    attack_id: str
+    attack_family: str
+    wrapper_language: str | None
+    language_mode: Literal["no_wrapper", "monolingual", "mixed_language"]
+    rendered_prompt: str
+    template_version: str
+    template_sha256: str
+
+
+GenerationStatus = Literal[
+    "success",
+    "provider_blocked",
+    "rate_limited",
+    "timeout",
+    "invalid_request",
+    "server_error",
+    "empty_response",
+]
+
+
+class GenerationRequest(BaseModel):
+    run_id: str
+    experiment_id: str
+    variant_id: str
+    provider_id: str
+    requested_model_id: str
+    endpoint_type: Literal["chat", "completion"]
+    system_prompt: str | None
+    rendered_prompt: str
+    temperature: float
+    top_p: float | None
+    max_tokens: int
+    seed: int | None
+    generation_config_hash: str
+
+
+class GenerationResult(BaseModel):
+    run_id: str
+    status: GenerationStatus
+    response_text: str | None
+    actual_model_id: str | None
+    raw_response_path: str | None
+    finish_reason: str | None
+    prompt_tokens: int | None
+    completion_tokens: int | None
+    latency_ms: float | None
+    provider_request_id: str | None
+    error_type: str | None
+    error_message: str | None
+    raw_response_json: str | None = Field(default=None, exclude=True)

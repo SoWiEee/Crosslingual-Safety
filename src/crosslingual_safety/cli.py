@@ -6,6 +6,7 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 import typer
 
+from crosslingual_safety.generation.commands import register_generation_commands
 from crosslingual_safety.ingest import (
     HarmBenchAdapter,
     IngestionResult,
@@ -16,12 +17,15 @@ from crosslingual_safety.ingest import (
     validate_raw_snapshot,
     write_parquet,
 )
+from crosslingual_safety.jailbreaks import register_jailbreak_commands
 from crosslingual_safety.raw_contracts import RAW_SNAPSHOT_CONTRACTS
 from crosslingual_safety.schemas import PromptCase
 from crosslingual_safety.translation.commands import register_translation_commands
 
 app = typer.Typer(no_args_is_help=True)
 register_translation_commands(app)
+register_jailbreak_commands(app)
+register_generation_commands(app)
 
 
 def _validate_or_fail(repo_root: Path, contract_name: str, input_path: Path | None = None) -> Path:

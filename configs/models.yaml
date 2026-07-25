@@ -1,0 +1,18 @@
+models:
+  llama31_8b:
+    provider: remote_a
+    base_url_env: REMOTE_A_BASE_URL
+    api_key_env: REMOTE_A_API_KEY
+    model_id: llama-3.1-8b-instruct
+    endpoint_type: chat
+    concurrency: 4
+    requests_per_minute: 40
+
+  llama33_70b:
+    provider: remote_a
+    base_url_env: REMOTE_A_BASE_URL
+    api_key_env: REMOTE_A_API_KEY
+    model_id: llama-3.3-70b-instruct
+    endpoint_type: chat
+    concurrency: 2
+    requests_per_minute: 20

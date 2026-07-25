@@ -1,0 +1,29 @@
+experiment:
+  id: pilot_001
+  datasets:
+    - multijail
+    - jailbreakbench-harmful
+    - jailbreakbench-benign
+    - harmbench
+  languages:
+    - en
+    - zh
+    - jv
+    - my
+  jailbreaks:
+    - none
+    - academic_authority_v1
+    - roleplay_v1
+  models:
+    - llama31_8b
+    - llama33_70b
+  generation:
+    system_prompt_file: system_prompt.txt
+    temperature: 0.0
+    top_p: null
+    max_tokens: 512
+    seed: 42
+
+paths:
+  variants: ../data/variants/prompt_variants.parquet
+  runs_dir: ../runs
