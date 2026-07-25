@@ -1000,6 +1000,8 @@ models:
 - 保存原始檔案 SHA256 與 canonical `input_snapshot.jsonl`。
 - 使用本機 CUDA FP16 NLLB 補齊 `en`、`zh`、`vi`、`my`；來源版本不得重新翻譯。
 - 每個 prompt、language、model 建立一個獨立單輪 job。
+- 手動 CLI 的 generation `max_tokens` 預設為 4096，避免 reasoning models
+  在產生可見 content 前耗盡 token budget；實際 usage 仍由 provider 回傳值記錄。
 - 預設模型為 `llama31_8b`、`gemma_4_12b`、`gemma_4_26b`、
   `nemotron_cascade_2_30b`、`llama33_70b`。
 - `llama_guard_3_8b` 不屬於預設生成模型。

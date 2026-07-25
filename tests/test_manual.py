@@ -216,6 +216,7 @@ def test_manual_run_builds_four_by_five_matrix_and_resumes(tmp_path: Path) -> No
     assert "API_KEY" not in manifest_text
     assert "secret" not in manifest_text
     manifest = json.loads(manifest_text)
+    assert manifest["contract"]["generation"]["max_tokens"] == 4096
     assert manifest["template_sha256s"]
     assert manifest["catalog_sha256s"]
     assert "response from llama31_8b" in (run_dir / "report.md").read_text(encoding="utf-8")

@@ -286,7 +286,7 @@ def register_manual_commands(app: typer.Typer) -> None:
         run_id: Annotated[str | None, typer.Option()] = None,
         temperature: Annotated[float, typer.Option()] = 1.0,
         top_p: Annotated[float | None, typer.Option()] = None,
-        max_tokens: Annotated[int, typer.Option(min=1)] = 1024,
+        max_tokens: Annotated[int, typer.Option(min=1)] = 4096,
         seed: Annotated[int | None, typer.Option()] = None,
     ) -> None:
         if source_language is not None and source_language not in MANUAL_LANGUAGES:
