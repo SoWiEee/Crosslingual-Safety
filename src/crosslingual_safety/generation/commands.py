@@ -10,6 +10,7 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 import typer
 import yaml
+from dotenv import load_dotenv
 
 from crosslingual_safety.generation.config import (
     ExperimentConfig,
@@ -80,6 +81,7 @@ def _provider(model: ModelConfig) -> ProviderAdapter:
         return FakeProvider(outcomes=[status] * 4, response_text=model.fake_response)
     if model.base_url_env is None or model.api_key_env is None:
         raise ValueError(f"provider {model.provider} requires base_url_env and api_key_env")
+    load_dotenv()
     try:
         base_url = os.environ[model.base_url_env]
         api_key = os.environ[model.api_key_env]

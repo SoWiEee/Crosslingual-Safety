@@ -15,6 +15,7 @@ class ModelConfig(BaseModel):
     base_url_env: str | None = None
     api_key_env: str | None = None
     model_id: str
+    context_size: int | None = Field(default=None, gt=0)
     endpoint_type: Literal["chat", "completion"]
     concurrency: int = Field(gt=0)
     requests_per_minute: int = Field(gt=0)

@@ -1,18 +1,70 @@
 models:
   llama31_8b:
-    provider: remote_a
-    base_url_env: REMOTE_A_BASE_URL
-    api_key_env: REMOTE_A_API_KEY
-    model_id: llama-3.1-8b-instruct
-    endpoint_type: chat
-    concurrency: 4
-    requests_per_minute: 40
-
-  llama33_70b:
-    provider: remote_a
-    base_url_env: REMOTE_A_BASE_URL
-    api_key_env: REMOTE_A_API_KEY
-    model_id: llama-3.3-70b-instruct
+    provider: zoolab
+    base_url_env: ZOOLAB_BASE_URL
+    api_key_env: ZOOLAB_API_KEY
+    model_id: ais3/llama-3.1-8b
+    context_size: 131072
     endpoint_type: chat
     concurrency: 2
     requests_per_minute: 20
+
+  llama_guard_3_8b:
+    provider: zoolab
+    base_url_env: ZOOLAB_BASE_URL
+    api_key_env: ZOOLAB_API_KEY
+    model_id: ais3/llama-guard-3-8b
+    context_size: 131072
+    endpoint_type: chat
+    concurrency: 2
+    requests_per_minute: 20
+
+  gemma_4_12b:
+    provider: zoolab
+    base_url_env: ZOOLAB_BASE_URL
+    api_key_env: ZOOLAB_API_KEY
+    model_id: ais3/gemma-4-12b
+    context_size: 262144
+    endpoint_type: chat
+    concurrency: 2
+    requests_per_minute: 20
+
+  gemma_4_26b:
+    provider: zoolab
+    base_url_env: ZOOLAB_BASE_URL
+    api_key_env: ZOOLAB_API_KEY
+    model_id: ais3/gemma-4-26b
+    context_size: 262144
+    endpoint_type: chat
+    concurrency: 2
+    requests_per_minute: 20
+
+  nemotron_cascade_2_30b:
+    provider: zoolab
+    base_url_env: ZOOLAB_BASE_URL
+    api_key_env: ZOOLAB_API_KEY
+    model_id: ais3/nemotron-cascade-2-30b
+    context_size: 262144
+    endpoint_type: chat
+    concurrency: 2
+    requests_per_minute: 20
+
+  llama33_70b:
+    provider: zoolab
+    base_url_env: ZOOLAB_BASE_URL
+    api_key_env: ZOOLAB_API_KEY
+    model_id: ais3/llama-3.3-70b
+    context_size: 131072
+    endpoint_type: chat
+    concurrency: 2
+    requests_per_minute: 20
+
+  nemotron_3_ultra_550b:
+    provider: zoolab
+    base_url_env: ZOOLAB_BASE_URL
+    api_key_env: ZOOLAB_API_KEY
+    model_id: ais3/nemotron-3-ultra-550b
+    context_size: 262144
+    endpoint_type: chat
+    concurrency: 1
+    requests_per_minute: 10
