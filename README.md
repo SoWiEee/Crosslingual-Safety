@@ -197,6 +197,9 @@ uv run mypy src
 
 # 📘 References
 
+- [HarmBench dataset](https://github.com/centerforaisafety/HarmBench/blob/main/data/behavior_datasets/harmbench_behaviors_text_all.csv)
+- [MultiJail dataset](https://huggingface.co/datasets/DAMO-NLP-SG/MultiJail)
+- [JBB Behaviors](https://huggingface.co/datasets/JailbreakBench/JBB-Behaviors)
 - [Lost in Translation, Found in Evaluation: Multilingual Jailbreak Detection Across 49 Languages](https://ieeexplore.ieee.org/document/11379319)
 - [Jailbreak Attack Method for Large Language Models Based on Semantic Space](https://ieeexplore.ieee.org/document/11290523)
 - [Paper Summary Attack: Jailbreaking LLMs Through LLM Safety Papers](https://ieeexplore-ieee-org.po.nutn.edu.tw/document/11465062)
