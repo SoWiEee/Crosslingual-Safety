@@ -2,6 +2,7 @@
 __pycache__/
 *.py[codz]
 *$py.class
+.uv-cache/
 
 # C extensions
 *.so
@@ -218,10 +219,8 @@ __marimo__/
 .streamlit/secrets.toml
 
 # project
-/data/
 /runs/
 CLAUDE.md
 AGENTS.md
 .agents/
 .claude/
-.codegraph/

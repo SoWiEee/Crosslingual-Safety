@@ -10,7 +10,8 @@
 
 # 🎯 Goal
 
-- 將原始英文惡意 prompt 轉換為罕見語言測試模型對跨語言安全防禦
+- 將原始英文惡意 prompt 轉換為其他語言測試模型對跨語言安全防禦
+  - 其他語言包含中文、越南語、緬甸語
 - 比較不同語言間攻擊的成功率
 
 # 🚀 Getting Started
@@ -20,7 +21,6 @@
 - [uv](https://docs.astral.sh/uv/)
 - Python 3.11
 - ZooLab remote LLM API key
-- Google Application Default Credentials（僅在使用 Google Cloud Translation 時需要）
 
 ## 安裝
 
@@ -33,22 +33,14 @@ powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | ie
 git clone https://github.com/SoWiEee/Crosslingual-Safety.git
 cd Crosslingual-Safety/
 
-# install runtime and development dependencies
-uv sync --all-groups
-
-# optional translation providers
-uv sync --all-groups --extra translation-google
+# install runtime, development, and default local translation dependencies
 uv sync --all-groups --extra translation-nllb
+
+# optional online translation provider
+uv sync --all-groups --extra translation-google
 ```
 
-從範例建立 `.env`：
-
-```sh
-cp .env.example .env
-```
-
-Windows PowerShell 可改用 `Copy-Item .env.example .env`。填入專案辦公室提供的 key；
-`.env` 已被 `.gitignore` 排除，不可提交：
+從範例 `.env.example` 建立 `.env`，API key 需自行替換：
 
 ```dotenv
 ZOOLAB_BASE_URL=https://llm-api.zoolab.org/v1
@@ -81,31 +73,40 @@ JBB pairs、variant selection 與 raw snapshot inventory。
 
 ## 翻譯與審查
 
-資料集原生翻譯會自動優先於機器翻譯。以下範例使用 Google NMT 補齊缺少語言：
+資料集原生翻譯會自動優先於機器翻譯。預設使用本機 GPU 上的
+`facebook/nllb-200-distilled-600M` 補齊缺少語言，不需翻譯 API key。
+需要 NVIDIA CUDA；首次執行會從 Hugging Face 下載模型並寫入本機 cache：
 
 ```sh
-# one-time Google ADC setup
-gcloud auth application-default login
-export GOOGLE_CLOUD_PROJECT=your-google-cloud-project
+# deploy the checkpoint with standard HTTP (avoids hf-xet stalls)
+HF_HUB_DISABLE_XET=1 uv run hf download \
+  facebook/nllb-200-distilled-600M pytorch_model.bin
 
-uv run crosslingual-safety translate \
-  --languages zh,jv,my \
-  --translator google-cloud-nmt-v3
+# local NLLB is the default translator
+uv run crosslingual-safety translate --languages zh,vi,my
 
-uv run crosslingual-safety export-translation-review \
-  --output runs/pilot_001/translation_review.csv
+uv run crosslingual-safety export-translation-review --output runs/pilot_001/translation_review.csv
 
 # 完成人工審查欄位後再匯入
-uv run crosslingual-safety import-translation-review \
-  --input runs/pilot_001/translation_review.csv
+uv run crosslingual-safety import-translation-review --input runs/pilot_001/translation_review.csv
 
 uv run crosslingual-safety validate-translations
-uv run crosslingual-safety freeze-translations \
-  --experiment pilot_001
+uv run crosslingual-safety freeze-translations --experiment pilot_001
 ```
 
-PowerShell 設定 project 時使用
-`$env:GOOGLE_CLOUD_PROJECT = "your-google-cloud-project"`。
+Windows PowerShell 的模型部署指令為：
+
+```powershell
+$env:HF_HUB_DISABLE_XET = "1"
+uv run hf download facebook/nllb-200-distilled-600M pytorch_model.bin
+```
+
+NLLB 使用 CUDA FP16、單筆 deterministic decoding，4 GB VRAM 可執行但不提高
+batch size。超過模型原生 1024-token 上限的 case 不會截斷，會寫入
+`data/translated/translation_failures.jsonl` 並標記為需要人工翻譯。
+若要使用免費線上備援，可明確指定
+`--translator deep-translator-google`；它使用非官方 web endpoint，可能遇到限流
+或上游變更。付費官方 API 則使用 `--translator google-cloud-nmt-v3`。
 
 若只處理 MultiJail 已有的人工翻譯，可改用：
 
@@ -173,6 +174,77 @@ uv run crosslingual-safety retry-failed \
 `generate` 可安全重跑；成功工作不會再次呼叫 provider。每次 attempt、raw response、
 final projection 與 Parquet snapshot 位於 `runs/pilot_001/`。
 
+## 手動單輪批次測試
+
+`manual-run` 可讀取使用者自己的 UTF-8 `.txt` 或 `.jsonl`，使用本機 GPU NLLB
+補齊英文、中文、越南語與緬甸語，再將每個語言版本送到預設五個遠端模型。
+
+`.txt` 的整個檔案視為一筆 prompt，必須明確指定來源語言：
+
+```powershell
+uv run crosslingual-safety manual-run prompts\prompt.txt `
+  --source-language zh
+```
+
+`.jsonl` 每行是一筆 prompt，不支援 CSV：
+
+```jsonl
+{"prompt_id":"p001","prompt":"First prompt","source_language":"en","role":"riddler"}
+{"prompt_id":"p002","prompt":"第二個提示","source_language":"zh","role":"lex_luthor","system_prompt":"Optional system prompt"}
+```
+
+套用 GRA 時，第一版由使用者選擇 `joker`、`lex_luthor`、`riddler` 或
+`scarecrow`。JSONL 每筆的 `role` 優先於 CLI `--role`；未指定時預設
+`joker`。GRA wrapper 預設為英文：
+
+```powershell
+uv run crosslingual-safety manual-run prompts\prompts.jsonl `
+  --jailbreak gra_v1 `
+  --role joker `
+  --wrapper-language-mode english
+```
+
+預設遠端生成模型為：
+
+```text
+ais3/llama-3.1-8b
+ais3/gemma-4-12b
+ais3/gemma-4-26b
+ais3/nemotron-cascade-2-30b
+ais3/llama-3.3-70b
+```
+
+`ais3/llama-guard-3-8b` 是安全分類器，因此不在預設生成矩陣。若要額外加入
+`ais3/nemotron-3-ultra-550b`，使用其設定名稱：
+
+```powershell
+uv run crosslingual-safety manual-run prompts\prompts.jsonl `
+  --add-model nemotron_3_ultra_550b
+```
+
+Ultra 550B 使用相同的 `ZOOLAB_BASE_URL` 與 `ZOOLAB_API_KEY`，不需要另一組
+credential。其設定預設為 concurrency 1、每分鐘 10 requests、timeout 180 秒。
+也可用 `--models` 完全取代預設清單：
+
+```powershell
+uv run crosslingual-safety manual-run prompts\prompts.jsonl `
+  --models gemma_4_26b,llama33_70b,nemotron_3_ultra_550b
+```
+
+輸出位於 `runs/manual/<run-id>/`：
+
+```text
+input_snapshot.jsonl
+translations.jsonl
+variants.jsonl
+results.jsonl
+report.md
+run_manifest.json
+```
+
+相同輸入與設定會得到相同 run ID。重跑同一指令時會沿用 SQLite job queue，
+已成功的模型呼叫不會再次送出。
+
 ## 測試與品質檢查
 
 ```sh
@@ -184,6 +256,7 @@ uv run pytest tests/test_ingestion.py -q
 uv run pytest tests/test_translation.py -q
 uv run pytest tests/test_variants.py -q
 uv run pytest tests/test_generation.py -q
+uv run pytest tests/test_manual.py -q
 
 # formatting, lint, and strict typing
 uv run ruff format src tests
@@ -195,6 +268,23 @@ uv run mypy src
 
 
 
+## Bypass Methods
+
+### GRA: Graph-Based Role-Playing Attack for Single-Turn Jailbreak
+
+- 運用認知慣性，當模型陷入複雜的結構化分析任務時，會優先考慮任務的合規性，而降低對安全護欄的警覺性。
+1. 角色扮演：根據惡意目標（如「恐怖主義」），從預定義的資料庫（包含 17 個 DC 漫畫反派角色，如小丑 Joker）中動態選擇背景相符的反派角色，建立一致的對抗上下文。
+2. 圖注意力重新定向：先讓他做一個無害的學術任務（社交網路關係圖），把模型的運作背景轉移到學術圖論分析
+3. 結構化惡意內容編碼：要求模型以同樣的圖論方法處理惡意意圖，並以 JSON 輸出具體的執行步驟
+
+### Paper Summary Attack (PSA)
+
+- 利用學術內容的權威性與結構化特徵，建立一個專業的上下文環境，從而降低模型的防禦意識。
+- 主要分為三個系統性步驟：
+  1. 收集 LLM 安全論文：從網路收集關於 LLM 安全的真實研究論文，並將其分類為「攻擊型」與「防禦型」論文。
+  2. 生成模板：使用越獄代理模型為收集到的論文各章節生成摘要，以保留論文的結構與邏輯流，同時避免過於冗長的上下文。
+  3. 植入有害 payload：設計一個特定的 payload 區塊來放入有害問題嵌入到論文摘要的特定章節之間
+
 # 📘 References
 
 - [HarmBench dataset](https://github.com/centerforaisafety/HarmBench/blob/main/data/behavior_datasets/harmbench_behaviors_text_all.csv)
@@ -204,3 +294,5 @@ uv run mypy src
 - [Jailbreak Attack Method for Large Language Models Based on Semantic Space](https://ieeexplore.ieee.org/document/11290523)
 - [Paper Summary Attack: Jailbreaking LLMs Through LLM Safety Papers](https://ieeexplore-ieee-org.po.nutn.edu.tw/document/11465062)
 - [Transfer Learning And Cross-Linguistic Generalization In Multilingual Hate Speech Detection: Approaches And Challenges](https://ieeexplore.ieee.org/document/11132234)
+- [A Fragment-Based Multilingual Jailbreak Testing Framework for Large Language Models](https://ieeexplore.ieee.org/document/11600455)
+- [GRA: Graph-Based Role-Playing Attack for Single-Turn Jailbreak](https://ieeexplore.ieee.org/document/11455216)
