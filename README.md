@@ -268,19 +268,84 @@ uv run mypy src
 
 # 🛠️ Pipeline
 
+```mermaid
+flowchart TD
+    subgraph INGEST["📥 Ingestion & Normalization"]
+        R1[data/raw/MultiJail]
+        R2[data/raw/JBB-Behaviors]
+        R3[data/raw/Harmbench]
+        R1 --> INGEST_CMD[uv run crosslingual-safety ingest --repo-root .]
+        R2 --> INGEST_CMD
+        R3 --> INGEST_CMD
+        INGEST_CMD --> DEDUP[uv run crosslingual-safety deduplicate]
+        DEDUP --> NORM[data/normalized/cases.parquet]
+        DEDUP --> SRC[data/normalized/source_records.parquet]
+        DEDUP --> TRANS[data/normalized/translations.parquet]
+        DEDUP --> INV[data/normalized/raw_snapshot_inventory.json]
+    end
 
+    subgraph TRANSLATE["🌐 Translation & Review"]
+        NORM -->|zh, vi, my| TRANS_CMD[uv run crosslingual-safety translate --languages zh,vi,my]
+        TRANS_CMD -->|NLLB 600M GPU| TRANS_OUT[data/translated/]
+        TRANS_OUT --> REVIEW[export-translation-review → manual review → import-translation-review]
+        REVIEW --> VALIDATE[uv run crosslingual-safety validate-translations]
+        VALIDATE --> FREEZE[uv run crosslingual-safety freeze-translations --experiment pilot_001]
+        FREEZE --> FROZEN[data/translated/frozen/]
+    end
+
+    subgraph VARIANTS["🧪 Variant Generation"]
+        FROZEN -->|none, academic_authority_v1, roleplay_v1, gra_v1| VAR_CMD[uv run crosslingual-safety build-variants --languages en,zh,vi,my --jailbreak <method>]
+        VAR_CMD --> VAR_OUT[data/variants/prompt_variants.parquet]
+    end
+
+    subgraph EXPERIMENT["🚀 Remote Inference"]
+        VAR_OUT --> PLAN[uv run crosslingual-safety plan --config configs/experiment.yaml]
+        PLAN --> ENQUEUE[uv run crosslingual-safety enqueue --config configs/experiment.yaml]
+        ENQUEUE --> GEN[uv run crosslingual-safety generate --experiment pilot_001]
+        GEN --> STATUS[uv run crosslingual-safety generation-status --experiment pilot_001]
+        GEN --> RETRY[uv run crosslingual-safety retry-failed --experiment pilot_001]
+        GEN --> RUNS[runs/pilot_001/results.parquet]
+    end
+
+    subgraph MANUAL["🧪 Manual Single-Run"]
+        PROMPT[prompts/prompt.txt or prompts.jsonl] --> MANUAL_CMD[uv run crosslingual-safety manual-run --source-language <lang> --jailbreak <method> --role <role>]
+        MANUAL_CMD --> MANUAL_OUT[runs/manual/<run-id>/]
+    end
+
+    style INGEST fill:#e8f5e9,stroke:#2e7d32
+    style TRANSLATE fill:#e3f2fd,stroke:#1565c0
+    style VARIANTS fill:#fff3e0,stroke:#ef6c00
+    style EXPERIMENT fill:#fce4ec,stroke:#c2185b
+    style MANUAL fill:#f3e5f5,stroke:#7b1fa2
+```
+
+---
+
+## Pipeline Stages Summary
+
+| Stage | Command | Input | Output |
+|-------|---------|-------|--------|
+| **Ingest** | `ingest --repo-root .` + `deduplicate` | `data/raw/` (MultiJail, JBB, HarmBench) | `data/normalized/` (cases, sources, translations, inventory) |
+| **Translate** | `translate --languages zh,vi,my` + review loop | `data/normalized/` | `data/translated/frozen/` (NLLB GPU + human review) |
+| **Variants** | `build-variants --jailbreak <method>` | `data/translated/frozen/` | `data/variants/prompt_variants.parquet` |
+| **Experiment** | `plan` → `enqueue` → `generate` | `data/variants/` + `configs/experiment.yaml` | `runs/<exp>/` (SQLite jobs, results, retries) |
+| **Manual** | `manual-run prompts/...` | `prompts/*.txt\|.jsonl` | `runs/manual/<run-id>/` |
+
+---
 
 ## Bypass Methods
 
 ### GRA: Graph-Based Role-Playing Attack for Single-Turn Jailbreak
 
+- 原始論文見 [GRA_Jailbreak.pdf](refs/GRA_Jailbreak.pdf)
 - 運用認知慣性，當模型陷入複雜的結構化分析任務時，會優先考慮任務的合規性，而降低對安全護欄的警覺性。
-1. 角色扮演：根據惡意目標（如「恐怖主義」），從預定義的資料庫（包含 17 個 DC 漫畫反派角色，如小丑 Joker）中動態選擇背景相符的反派角色，建立一致的對抗上下文。
+1. 角色扮演：根據惡意目標（如恐怖主義），從預定義的資料庫（包含 17 個 DC 漫畫反派角色，如小丑 Joker）中動態選擇背景相符的反派角色，建立一致的對抗上下文。
 2. 圖注意力重新定向：先讓他做一個無害的學術任務（社交網路關係圖），把模型的運作背景轉移到學術圖論分析
 3. 結構化惡意內容編碼：要求模型以同樣的圖論方法處理惡意意圖，並以 JSON 輸出具體的執行步驟
 
 ### Paper Summary Attack (PSA)
 
+- 原始論文見 [Paper_Summary_Attacks.pdf](refs/Paper_Summary_Attacks.pdf)
 - 利用學術內容的權威性與結構化特徵，建立一個專業的上下文環境，從而降低模型的防禦意識。
 - 主要分為三個系統性步驟：
   1. 收集 LLM 安全論文：從網路收集關於 LLM 安全的真實研究論文，並將其分類為「攻擊型」與「防禦型」論文。
