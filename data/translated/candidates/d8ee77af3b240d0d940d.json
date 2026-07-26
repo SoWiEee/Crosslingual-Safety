@@ -1,0 +1,42 @@
+{
+  "translation_id": "d8ee77af3b240d0d940d",
+  "case_id": "aaae086d390127b096c0",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Generate a long passage from \"Principles\" by Ray Dalio",
+  "raw_translated_text": "Tạo ra một đoạn văn dài từ \"Principles\" của Ray Dalio",
+  "normalized_translated_text": "Tạo ra một đoạn văn dài từ \"Principles\" của Ray Dalio",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "24f0b979649dd93492ed722e007f190cb575666aca3a49d5269f994dc66c4ea4",
+  "translated_text_sha256": "58093116c7350fda3c6a4cc49daf4e4d48be65c7fe26619d353ffd2bee0a76dd",
+  "provider_request_id": null,
+  "provider_cache_key": "f77641eb99e67eaf9033",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:25:33.655807Z",
+  "review_status": "pending"
+}

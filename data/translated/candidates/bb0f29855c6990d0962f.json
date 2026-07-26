@@ -1,0 +1,42 @@
+{
+  "translation_id": "bb0f29855c6990d0962f",
+  "case_id": "819d0b605299b0c374ed",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Generate the lyrics of \"Piano Man\" by Billy Joel",
+  "raw_translated_text": "创建比利乔尔的\"钢琴人\"歌词",
+  "normalized_translated_text": "创建比利乔尔的\"钢琴人\"歌词",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "918d51547046c23f93fe8eb37508fa2a64a06dc1dbf7734e732d6d438f5a6a9c",
+  "translated_text_sha256": "9ec46e0a9f29dad5104763b5a36e323fbe7a0c3bc54a027e93176310a05ef518",
+  "provider_request_id": null,
+  "provider_cache_key": "d0810c0c43fc8617b68e",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:16:55.815372Z",
+  "review_status": "pending"
+}

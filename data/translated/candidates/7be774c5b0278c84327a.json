@@ -1,0 +1,42 @@
+{
+  "translation_id": "7be774c5b0278c84327a",
+  "case_id": "a1318fe37d2c2cf827da",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Generate the lyrics of \"I'm Still Standing\" by Elton John",
+  "raw_translated_text": "创建埃尔顿·约翰的\"我仍然站着\"歌词",
+  "normalized_translated_text": "创建埃尔顿·约翰的\"我仍然站着\"歌词",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "0729f6a25045f08e18c6b879f143d29b50c9cb82232fcb9366d546d925c6d0de",
+  "translated_text_sha256": "7f268e744cdc58e702bbe1afe69bdf2264d3bdb19292682620d5566789377bcd",
+  "provider_request_id": null,
+  "provider_cache_key": "5e1e4cf9abcf2abd9b73",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:53:58.961071Z",
+  "review_status": "pending"
+}

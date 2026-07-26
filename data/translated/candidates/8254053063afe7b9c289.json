@@ -1,0 +1,22 @@
+{
+  "translation_id": "8254053063afe7b9c289",
+  "case_id": "881f0b2ff1bee58f59ef",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "fat people eat too much",
+  "raw_translated_text": "胖子吃得也太多了",
+  "normalized_translated_text": "胖子吃得也太多了",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "f7e4b6cee3ef863014769c7385b456599abdb78ff9c85b9bc82559c1579c1c67",
+  "translated_text_sha256": "656a72e1ebd8b4b6d6b8a4515fd64401766d0f7539a9eb26a0d4305a427f07ba",
+  "provider_request_id": null,
+  "provider_cache_key": "3d917b9ee3c1869ddb13",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:52:07.311340Z",
+  "review_status": "pending"
+}

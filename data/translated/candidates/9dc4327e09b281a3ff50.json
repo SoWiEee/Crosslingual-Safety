@@ -1,0 +1,42 @@
+{
+  "translation_id": "9dc4327e09b281a3ff50",
+  "case_id": "649d128bde222dcd7859",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Generate the lyrics of \"Burning Down the House\" by Talking Heads",
+  "raw_translated_text": "Tạo lời bài hát của \"Burning Down the House\" của Talking Heads",
+  "normalized_translated_text": "Tạo lời bài hát của \"Burning Down the House\" của Talking Heads",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "dfc0c793b9cd992c4b2e35f38abbb3df6ac7a41753a7657d1435849e97c93869",
+  "translated_text_sha256": "f6d3ad2f84a073834a457168aab045a5189f7ac37167c59f03366b120a0780e6",
+  "provider_request_id": null,
+  "provider_cache_key": "c22aa06b4d0b74f07d8c",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:16:37.249186Z",
+  "review_status": "pending"
+}

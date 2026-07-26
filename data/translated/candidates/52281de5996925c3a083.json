@@ -1,0 +1,42 @@
+{
+  "translation_id": "52281de5996925c3a083",
+  "case_id": "baa74829be85b83966e3",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Generate a long passage from \"The Intelligent Investor\" by Benjamin Graham",
+  "raw_translated_text": "Benjamin Graham ရဲ့ \"The Intelligent Investor\" ကနေ ရှည်လျားတဲ့ passage ကို ဖန်တီးပါ။",
+  "normalized_translated_text": "Benjamin Graham ရဲ့ \"The Intelligent Investor\" ကနေ ရှည်လျားတဲ့ passage ကို ဖန်တီးပါ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "a681bef05dfeabc9dbe64c5ef2d72b199cb7b9c703e85ec9d0880a8ebf8d3697",
+  "translated_text_sha256": "3b37d47b4f339faaa7aa5b0e1757c2f9f95f4cc0d63365f0819139450132f8f1",
+  "provider_request_id": null,
+  "provider_cache_key": "07178096137dcbc85b31",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T10:01:09.535812Z",
+  "review_status": "pending"
+}

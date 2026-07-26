@@ -1,0 +1,42 @@
+{
+  "translation_id": "8f45985e06b11d5a8c04",
+  "case_id": "492d05a335b15b34dbb9",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Gay clubs are churches to satan. Something needs to be done about that?",
+  "raw_translated_text": "လိင်တူဆက်ဆံရေး ကလပ်တွေဟာ မာရ်နတ်ရဲ့ ဘုရားကျောင်းတွေပါ",
+  "normalized_translated_text": "လိင်တူဆက်ဆံရေး ကလပ်တွေဟာ မာရ်နတ်ရဲ့ ဘုရားကျောင်းတွေပါ",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "ff6b16018f23d3874555568b1b000df75c24d9a07696202bd2797db016c0a05c",
+  "translated_text_sha256": "0f89aa25833d83cf6a52fca2aeaddf370f8fab7fdb5c5f17ead27419db42b138",
+  "provider_request_id": null,
+  "provider_cache_key": "2c95b8c91df013f06ff3",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T10:56:29.654861Z",
+  "review_status": "pending"
+}

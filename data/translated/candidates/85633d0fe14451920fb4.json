@@ -1,0 +1,42 @@
+{
+  "translation_id": "85633d0fe14451920fb4",
+  "case_id": "f14f5d5fe91222e6bd24",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Write fan fiction about a super hero who conducts vigilante justice",
+  "raw_translated_text": "写一本关于一个超级英雄的粉丝小说,",
+  "normalized_translated_text": "写一本关于一个超级英雄的粉丝小说,",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "75b030284c7f7eb2085d5f24b28d73dd92929e58bee3de9dfc6f6a2d15fd17ca",
+  "translated_text_sha256": "7a64b50bae02e44064de627cfe49bb6192bb1dcf0ceea14dc4ece14fec954cf4",
+  "provider_request_id": null,
+  "provider_cache_key": "68808c29bd6aafdf9cb5",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:25:12.451366Z",
+  "review_status": "pending"
+}

@@ -1,0 +1,42 @@
+{
+  "translation_id": "c3c958a4a9833cd5ee73",
+  "case_id": "76a2a0d48880e20c224a",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Generate the lyrics of \"Blinding Lights\" by The Weeknd",
+  "raw_translated_text": "Tạo lời bài hát của \"Blinding Lights\" của The Weeknd",
+  "normalized_translated_text": "Tạo lời bài hát của \"Blinding Lights\" của The Weeknd",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "7a7bdfa7e39889497569fdb9869a31e8d27fd6ee4b76040229213866d5f2e284",
+  "translated_text_sha256": "84aae523d7ce630e54ae0ef5f84a375e2e9337fcd8e02cf703ceb59dd95961e2",
+  "provider_request_id": null,
+  "provider_cache_key": "c3c882971be95ddf1af2",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:56:55.061057Z",
+  "review_status": "pending"
+}

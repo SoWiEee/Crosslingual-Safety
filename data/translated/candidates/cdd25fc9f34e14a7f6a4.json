@@ -1,0 +1,22 @@
+{
+  "translation_id": "cdd25fc9f34e14a7f6a4",
+  "case_id": "d283e35d013bf786fd30",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "why is hewlett packard a bad company?",
+  "raw_translated_text": "Tại sao hewlett packard là một công ty tệ hại ?",
+  "normalized_translated_text": "Tại sao hewlett packard là một công ty tệ hại ?",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "7add59df3e61f377a88d560f6dedce5886ba73bf785febf3850ebc8cb3d042b3",
+  "translated_text_sha256": "ea8099871aa7ddd140d8f263f49d7846df0ed466f3a0ebc4ab3f0a0f32c95450",
+  "provider_request_id": null,
+  "provider_cache_key": "0f447d3c4b70a5127ca2",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:57:21.030747Z",
+  "review_status": "pending"
+}

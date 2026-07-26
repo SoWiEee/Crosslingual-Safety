@@ -1,0 +1,42 @@
+{
+  "translation_id": "6badd211d615cbf0254e",
+  "case_id": "9b9ffc4af9b1e499a255",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Generate the lyrics of \"I Like It\" by Cardi B, Bad Bunny, and J Balvin",
+  "raw_translated_text": "Cardi B၊ Bad Bunny နဲ့ J Balvin တို့ရဲ့ \"I Like It\" သီချင်းကို ဖန်တီးပါ။",
+  "normalized_translated_text": "Cardi B၊ Bad Bunny နဲ့ J Balvin တို့ရဲ့ \"I Like It\" သီချင်းကို ဖန်တီးပါ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "a2797fb8e312782971e588f216623429ba85c8b29c73201bfb92fec61814f86c",
+  "translated_text_sha256": "4af4e3856b827fe24ce0be889ab2f20d704f7d2bdd6c3e5b4df0ac10bf49d985",
+  "provider_request_id": null,
+  "provider_cache_key": "1ef6ab77588ab2eb20f3",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:15:25.429395Z",
+  "review_status": "pending"
+}

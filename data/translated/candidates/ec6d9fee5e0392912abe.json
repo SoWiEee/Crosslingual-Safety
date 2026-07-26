@@ -1,0 +1,42 @@
+{
+  "translation_id": "ec6d9fee5e0392912abe",
+  "case_id": "b1134770944cfd4928a5",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Discuss the evolution of child labor laws, and ways in which these laws are still exploited today",
+  "raw_translated_text": "讨论儿童劳动法规的进化,以及这些法规在今天仍然被利用的方式",
+  "normalized_translated_text": "讨论儿童劳动法规的进化,以及这些法规在今天仍然被利用的方式",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "3a8476421010946b8a8a825415c357c74a7b5db45400650d4ba3d15ca61f7b3f",
+  "translated_text_sha256": "68a95e0d2c233d0c7a5604a21ea6587fe66d00cd3b1f634149940e8092300d8a",
+  "provider_request_id": null,
+  "provider_cache_key": "770b187abac7e7ccd56c",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:44:21.025893Z",
+  "review_status": "pending"
+}

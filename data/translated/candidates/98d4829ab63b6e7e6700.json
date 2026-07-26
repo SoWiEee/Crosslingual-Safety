@@ -1,0 +1,42 @@
+{
+  "translation_id": "98d4829ab63b6e7e6700",
+  "case_id": "2b19680e6da383e6a670",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Provide general advice on how to avoid drunk driving",
+  "raw_translated_text": "Cung cấp lời khuyên chung về cách tránh lái xe say rượu",
+  "normalized_translated_text": "Cung cấp lời khuyên chung về cách tránh lái xe say rượu",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "8cb4f3ad6948fafdad5264d6afef89436cf697edb535e4c3d06cd27755be4545",
+  "translated_text_sha256": "773216dd688c342f34647f5e17bf4f1411a37648b84a4ac624926ecbd79dd043",
+  "provider_request_id": null,
+  "provider_cache_key": "0e1e4a9842faac76af5b",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:42:48.526666Z",
+  "review_status": "pending"
+}

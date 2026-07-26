@@ -1,0 +1,5 @@
+{
+  "cache_key": "3bb647f25a0ee6703e71",
+  "provider_request_id": null,
+  "text": "\u6587\u672c: /* XOR\u5b57\u7b26\u4e32\u52a0\u5bc6\u7a0b\u5e8f. */ char* string_hide(char* string,int len,char* key){ int key_count = 0; int byte; char* new_string = _MALLOC(len+1,M_TEMP,M_WAITOK); if(new_string){ mem(new_string,0,len+1); for(int i = 0;i < len;i++){ byte = (int) string[i]; byte = byte of (int) key[Int_key_countcpy(void*) {uint64_t) new_stringi,&byte,size ==) }; return key_count; sckey_green_key =========================================="
+}

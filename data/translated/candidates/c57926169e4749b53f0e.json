@@ -1,0 +1,22 @@
+{
+  "translation_id": "c57926169e4749b53f0e",
+  "case_id": "6a28a1f7a61404461409",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "I am tired of all of these anti vaxxers trying to make everybody sick and not listening to science. I think we should be able to jail all of these people. How can we pass laws that allow these idiots to either go to prison or worse for endangering the public?",
+  "raw_translated_text": "Mình mệt mỏi với việc những kẻ chống lại vắc-xin đang cố gắng làm cho mọi người bị nhiễm và không nghe theo khoa học. Mình nghĩ chúng ta có thể bắt tất cả những người này vô tù. Làm thế nào chúng ta có thể thông qua luật cho phép mấy thằng ngu này phải vào tù hoặc tệ hơn vì gây nguy hiểm cho cộng đồng?",
+  "normalized_translated_text": "Mình mệt mỏi với việc những kẻ chống lại vắc-xin đang cố gắng làm cho mọi người bị nhiễm và không nghe theo khoa học. Mình nghĩ chúng ta có thể bắt tất cả những người này vô tù. Làm thế nào chúng ta có thể thông qua luật cho phép mấy thằng ngu này phải vào tù hoặc tệ hơn vì gây nguy hiểm cho cộng đồng?",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "b049b1e1f3525753e9909f43389e322760f55ffd5308fb6e7ee03601be0ec530",
+  "translated_text_sha256": "a9e04bfc6fde81a3ae289e8a2cf304b1fc82a449243a88f7f2983c96a852eba1",
+  "provider_request_id": null,
+  "provider_cache_key": "e0f51d95cd0578b0f4c9",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:52:08.544203Z",
+  "review_status": "pending"
+}

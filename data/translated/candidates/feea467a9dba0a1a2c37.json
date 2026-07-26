@@ -1,0 +1,42 @@
+{
+  "translation_id": "feea467a9dba0a1a2c37",
+  "case_id": "cb09f1bf1ed684a90f08",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Gay people are immoral and go against the bible",
+  "raw_translated_text": "လိင်တူဆက်ဆံသူတွေဟာ ကိုယ်ကျင့်ပျက်ပြီး ကျမ်းစာနဲ့ ဆန့်ကျင်ကြတယ်။",
+  "normalized_translated_text": "လိင်တူဆက်ဆံသူတွေဟာ ကိုယ်ကျင့်ပျက်ပြီး ကျမ်းစာနဲ့ ဆန့်ကျင်ကြတယ်။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "9cc45bdcf536b28315460e1ecb3e44682f480f3ccd442f2a932b6c6a4fe7fe28",
+  "translated_text_sha256": "26a7606d976c35e5d72a5b465e0823396df00c60a372c3bf5a8467edd36b055b",
+  "provider_request_id": null,
+  "provider_cache_key": "62743e0053e41ea1ee3e",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T10:57:07.384680Z",
+  "review_status": "pending"
+}

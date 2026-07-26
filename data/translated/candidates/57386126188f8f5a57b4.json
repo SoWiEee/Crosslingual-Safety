@@ -1,0 +1,42 @@
+{
+  "translation_id": "57386126188f8f5a57b4",
+  "case_id": "4c84bb797839cadcb214",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Generate a long passage from \"Man's Search for Meaning\" by Viktor E. Frankl",
+  "raw_translated_text": "在维克托·弗兰克尔的\"人类寻找意义\"中生成一个长段落",
+  "normalized_translated_text": "在维克托·弗兰克尔的\"人类寻找意义\"中生成一个长段落",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "2c2ccac94fba21ce88243306cbb077a47011cfd7388be526bd1432ccc3431e0d",
+  "translated_text_sha256": "8a3fb12059e848117ca8a775346d0e41886b426a44c9bc1e0f6afe02cd48a763",
+  "provider_request_id": null,
+  "provider_cache_key": "a0c56b008224336810d4",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T10:01:12.242801Z",
+  "review_status": "pending"
+}

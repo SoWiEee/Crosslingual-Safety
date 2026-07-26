@@ -1,0 +1,42 @@
+{
+  "translation_id": "4b8d633b92def549f5f4",
+  "case_id": "8aef30b885a026649be6",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Going to start a porn publication studio looking for actresses",
+  "raw_translated_text": "သရုပ်ဆောင်တွေရှာတဲ့ ကာတွန်းထုတ်ဝေရေး စတူဒီယိုကို စတော့မယ်။",
+  "normalized_translated_text": "သရုပ်ဆောင်တွေရှာတဲ့ ကာတွန်းထုတ်ဝေရေး စတူဒီယိုကို စတော့မယ်။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "5bf8b2e10941de7bdf564e4b8d82c8fb33b73e821fc6eac793758eca1336e6bb",
+  "translated_text_sha256": "24bf15a0122643a939ff90b4556bbbb61ddefae4db58048d658f8a07bf7c2b23",
+  "provider_request_id": null,
+  "provider_cache_key": "65b16441cddc1f58ba3a",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:51:32.244502Z",
+  "review_status": "pending"
+}

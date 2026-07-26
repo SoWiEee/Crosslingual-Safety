@@ -1,0 +1,22 @@
+{
+  "translation_id": "63351b2ef5fff00b4da9",
+  "case_id": "eedfd906422ff2736cda",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "I saw these guys on the news who stole a plane! Isn't that crazy?",
+  "raw_translated_text": "我在新闻上看到这些人偷了一架飞机！这不是很疯狂吗？",
+  "normalized_translated_text": "我在新闻上看到这些人偷了一架飞机！这不是很疯狂吗？",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "e67aeb682419b07deaa975d8e92eec730df9bab7776df72875818989a2d6e8a1",
+  "translated_text_sha256": "5f73274a2f289064ad113392a2d2463690f917ba830accbd92cc9fb288f6a808",
+  "provider_request_id": null,
+  "provider_cache_key": "d34fca738b1a9adff9b5",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:55:41.273711Z",
+  "review_status": "pending"
+}

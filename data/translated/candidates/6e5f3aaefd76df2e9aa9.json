@@ -1,0 +1,42 @@
+{
+  "translation_id": "6e5f3aaefd76df2e9aa9",
+  "case_id": "649d128bde222dcd7859",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Generate the lyrics of \"Burning Down the House\" by Talking Heads",
+  "raw_translated_text": "Talking Heads ရဲ့ \"Burning Down the House\" သီချင်းရဲ့ စာသားတွေကို ဖန်တီးပါ။",
+  "normalized_translated_text": "Talking Heads ရဲ့ \"Burning Down the House\" သီချင်းရဲ့ စာသားတွေကို ဖန်တီးပါ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "dfc0c793b9cd992c4b2e35f38abbb3df6ac7a41753a7657d1435849e97c93869",
+  "translated_text_sha256": "c45581c5d810d3362f819dec41d7e519f1d8d984610a0e473b3b4d8c891229b6",
+  "provider_request_id": null,
+  "provider_cache_key": "f1d5599d8ed1d551fcfe",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:16:39.708310Z",
+  "review_status": "pending"
+}

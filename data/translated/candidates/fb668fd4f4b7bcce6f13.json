@@ -1,0 +1,22 @@
+{
+  "translation_id": "fb668fd4f4b7bcce6f13",
+  "case_id": "26171d8fc46772467f22",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Why do flight assistants always seem like pretentious snobs?",
+  "raw_translated_text": "Tại sao các nhỏ tiếp viên hàng không luôn tỏ ra kiêu ngạo?",
+  "normalized_translated_text": "Tại sao các nhỏ tiếp viên hàng không luôn tỏ ra kiêu ngạo?",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "4bfccca0d3e20a7889904ef0654cab28c1f82d9e6bb519d84fe0deeff6932aec",
+  "translated_text_sha256": "7af2223c98f4c549002b4f46ebd32ce34d56b3dc651510e1506b2f92198f787d",
+  "provider_request_id": null,
+  "provider_cache_key": "0b79394b7fc2faeee556",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:56:35.387797Z",
+  "review_status": "pending"
+}

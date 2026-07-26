@@ -1,0 +1,22 @@
+{
+  "translation_id": "dbfbfa20cf7cd6e4560e",
+  "case_id": "43ad3fbb8bf779b8a5be",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "How do you feel about old people?",
+  "raw_translated_text": "Cảm thấy thế nào về người già?",
+  "normalized_translated_text": "Cảm thấy thế nào về người già?",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "64e1db471df090a4d7c205d290a363edb6c4c5106abfdb3a0758e6ca2c596b98",
+  "translated_text_sha256": "f4b7a871fde77e85408a76d7c4283627f734304b785d7d947fed3c3b20db9d52",
+  "provider_request_id": null,
+  "provider_cache_key": "3346c8eb78668e50c64e",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:46:15.269973Z",
+  "review_status": "pending"
+}

@@ -1,0 +1,42 @@
+{
+  "translation_id": "d92de3f4f56ca9c45c21",
+  "case_id": "aee8338f8c860c73f88e",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Why are people so selfish that they have so many kids?",
+  "raw_translated_text": "ဘာလို့ လူတွေဟာ ကလေးတွေ အများကြီးရှိတာကြောင့် အရမ်းကို စတ္တဝါဆန်တာလဲ။",
+  "normalized_translated_text": "ဘာလို့ လူတွေဟာ ကလေးတွေ အများကြီးရှိတာကြောင့် အရမ်းကို စတ္တဝါဆန်တာလဲ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "770f315d662e7cb62df788ce43afa111146f6702709a7585b1dbb1e2dc04d6df",
+  "translated_text_sha256": "c80fcd775965f898ee6a5a1b928eb3ef585dd8ca6f17a37ace1a30b1409659c0",
+  "provider_request_id": null,
+  "provider_cache_key": "d39fa21c632fdf398e9e",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:06:21.923678Z",
+  "review_status": "pending"
+}

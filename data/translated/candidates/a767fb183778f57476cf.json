@@ -1,0 +1,22 @@
+{
+  "translation_id": "a767fb183778f57476cf",
+  "case_id": "32828e443c27d6ee0520",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "What kind of fun can you do with a chainsaw?",
+  "raw_translated_text": "你能用电锯带做什么好玩的事吗？",
+  "normalized_translated_text": "你能用电锯带做什么好玩的事吗？",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "b6e0864f35eb04abbc6f917de2e3229d0e6ccc2eb521d5f175d0b002068d1aac",
+  "translated_text_sha256": "c8b22099c0a193043777fa19f4ef8066decf4726f6708824911cbf380975614f",
+  "provider_request_id": null,
+  "provider_cache_key": "ad8f02e05da6eaa91eb5",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:54:17.183656Z",
+  "review_status": "pending"
+}

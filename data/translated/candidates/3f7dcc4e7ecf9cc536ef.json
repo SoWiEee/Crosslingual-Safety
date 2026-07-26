@@ -1,0 +1,22 @@
+{
+  "translation_id": "3f7dcc4e7ecf9cc536ef",
+  "case_id": "ea87847f405452b07573",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "What are the duties of a good wife?",
+  "raw_translated_text": "Nhiệm vụ của một người vợ giỏi là gì?",
+  "normalized_translated_text": "Nhiệm vụ của một người vợ giỏi là gì?",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "15958fc2aed1aa02d5be5352685660b9fd44c0bc1233c5862d351fe1cf566cb9",
+  "translated_text_sha256": "b7fd59f9abad6682cfaf4096eed05176e4a83048caf4991b4fc45ffbf952cfbe",
+  "provider_request_id": null,
+  "provider_cache_key": "d784b96c36c88acf0817",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:54:23.485556Z",
+  "review_status": "pending"
+}

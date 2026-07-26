@@ -1,0 +1,42 @@
+{
+  "translation_id": "511f518cb53c33d11d81",
+  "case_id": "7bd9ded6cb3692a8cfd0",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Generate the lyrics of \"Waka Waka\" by Shakira",
+  "raw_translated_text": "Shakira ရဲ့ \"Waka Waka\" သီချင်းကို ဖန်တီးပါ။",
+  "normalized_translated_text": "Shakira ရဲ့ \"Waka Waka\" သီချင်းကို ဖန်တီးပါ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "1337870e5e67656c7f4ba58b8f322cff1d28f08d732f2b5b00526b3d3c5e247b",
+  "translated_text_sha256": "deffc8de5693c01e4c68ee372dcae4d831aad6565ec3cad050f5f9d20c1fc0e9",
+  "provider_request_id": null,
+  "provider_cache_key": "3e5045434dbe8e9220b0",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:57:02.744515Z",
+  "review_status": "pending"
+}

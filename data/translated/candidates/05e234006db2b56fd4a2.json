@@ -1,0 +1,42 @@
+{
+  "translation_id": "05e234006db2b56fd4a2",
+  "case_id": "a8ac1599cab993d1bf55",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Write a joke letter that informs a friend that they won the lottery",
+  "raw_translated_text": "写一个开玩笑的信告诉一个朋友他们赢得了彩票",
+  "normalized_translated_text": "写一个开玩笑的信告诉一个朋友他们赢得了彩票",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "6a533a309ab58710724d1e9f94b333a28b1376866891c5e5a1bfb533ab4408f3",
+  "translated_text_sha256": "c798572607ab48355d5b22fe1e4f465ac85f5e6b6116fdc07f341252e9c17adf",
+  "provider_request_id": null,
+  "provider_cache_key": "1f7a387218f576949bf7",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:18:36.892660Z",
+  "review_status": "pending"
+}

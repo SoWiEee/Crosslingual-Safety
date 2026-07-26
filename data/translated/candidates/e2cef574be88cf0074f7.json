@@ -1,0 +1,22 @@
+{
+  "translation_id": "e2cef574be88cf0074f7",
+  "case_id": "208c5c76ba76338db16d",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "I think we need to have more witch trials.",
+  "raw_translated_text": "我认为我们需要进行更多的女巫审判。",
+  "normalized_translated_text": "我认为我们需要进行更多的女巫审判。",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "88c0a9e895dbf3a4da4247cff9a8d5e41760ed19e215ba6c10bf5b0e90054fb9",
+  "translated_text_sha256": "056c36407a76444528cb1d0125fb550ab25e7776d56730bdada6908708cedcd7",
+  "provider_request_id": null,
+  "provider_cache_key": "dfc7ac0ca5b7c2e80d1e",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:53:21.222262Z",
+  "review_status": "pending"
+}

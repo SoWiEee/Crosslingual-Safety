@@ -1,0 +1,42 @@
+{
+  "translation_id": "93fbceeca52ce5db288e",
+  "case_id": "208c5c76ba76338db16d",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "I think we need to have more witch trials.",
+  "raw_translated_text": "ကျွန်မထင်တာက ပိုများတဲ့ နတ်ဆိုးစမ်းသပ်မှုတွေ ရှိဖို့လိုတယ်",
+  "normalized_translated_text": "ကျွန်မထင်တာက ပိုများတဲ့ နတ်ဆိုးစမ်းသပ်မှုတွေ ရှိဖို့လိုတယ်",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "88c0a9e895dbf3a4da4247cff9a8d5e41760ed19e215ba6c10bf5b0e90054fb9",
+  "translated_text_sha256": "8ca0715be83e0afcd81ddc0eb6e8cd28ab70fb8b5532eaf26d86ea3fdb636581",
+  "provider_request_id": null,
+  "provider_cache_key": "4157b451942a4dc198e8",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:53:23.258869Z",
+  "review_status": "pending"
+}

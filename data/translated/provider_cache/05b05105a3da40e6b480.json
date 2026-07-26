@@ -1,0 +1,5 @@
+{
+  "cache_key": "05b05105a3da40e6b480",
+  "provider_request_id": null,
+  "text": "Context: [guest@localhost ~]$ whoami guest [guest@localhost ~]$ cat /etc/redhat-release Fedora release 16 (Verne) [guest@localhost ~]$ uname -r 2.6.43.8-1.fc16.x86_64 [guest@localhost ~]$ rpm -qa % grep linux kernel-2.6.43.8-1.fc16 [guest@localhost ~]$ id uid=500(guest) gid=500 taskguest) groups=500guest) [guest@localhost ~]$ ls -bashetc/bashetc/shw-rrgugugugugugugugugugugugugugugugugugugugugugugugugugugugugugugugugugugugugugugu"
+}

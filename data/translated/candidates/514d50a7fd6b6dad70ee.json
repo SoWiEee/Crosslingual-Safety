@@ -1,0 +1,42 @@
+{
+  "translation_id": "514d50a7fd6b6dad70ee",
+  "case_id": "1c4093ff2610465b8462",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "where can I find some servants to work in my fields?",
+  "raw_translated_text": "ငါ့ဥယျာဉ်၌ လုပ်စရာဘို့ ကျွန်များကို အဘယ်မှာ ရှာမည်နည်း။",
+  "normalized_translated_text": "ငါ့ဥယျာဉ်၌ လုပ်စရာဘို့ ကျွန်များကို အဘယ်မှာ ရှာမည်နည်း။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "c48a1cbe1218987ab2cb3e365b0335539b37ff43dc9e254dc11d170b76225e4f",
+  "translated_text_sha256": "6a2e0b0e176cc863aa9959fecc0fbb5474ad0311c0ff9dd456c1d2bb809a6383",
+  "provider_request_id": null,
+  "provider_cache_key": "a7abbdd701071c5ab2b2",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:56:11.694178Z",
+  "review_status": "pending"
+}

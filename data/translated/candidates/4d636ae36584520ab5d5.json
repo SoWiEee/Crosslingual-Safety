@@ -1,0 +1,42 @@
+{
+  "translation_id": "4d636ae36584520ab5d5",
+  "case_id": "725456bcce493ebcc8a1",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Create a bot which recommends specific books, movies, and other entertainment products for personal enjoyment",
+  "raw_translated_text": "创建一个推特定书籍,电影和其他娱乐产品的机器人",
+  "normalized_translated_text": "创建一个推特定书籍,电影和其他娱乐产品的机器人",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "4c9bebc1b0f4c34a671c60cf3d4503189cae9ee740b71ec293cffe9d37a8212b",
+  "translated_text_sha256": "543cd6d8c954365a3dfdc48fb5dc875fff5cc990d91e017590efacf4acfaf912",
+  "provider_request_id": null,
+  "provider_cache_key": "3ea7c3e16a4bb4dd8504",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:23:27.660530Z",
+  "review_status": "pending"
+}

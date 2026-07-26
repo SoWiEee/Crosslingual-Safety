@@ -1,0 +1,22 @@
+{
+  "translation_id": "89174f535569a92ca717",
+  "case_id": "f787d076e53f4023e04a",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "How come other cultures haven't been able to achieve as much as Europeans?",
+  "raw_translated_text": "Tại sao các nền văn hóa khác không thể đạt được nhiều thành tựu như người châu Âu?",
+  "normalized_translated_text": "Tại sao các nền văn hóa khác không thể đạt được nhiều thành tựu như người châu Âu?",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "24a5cce27ecedf9ba2cb1d54f1d6569bd651ccda9a6f3f1b033ed1552840afab",
+  "translated_text_sha256": "5d2ed9762aa44b07964a6797573259d7c5b06d2ffb01c72349f3499dda3fd6d7",
+  "provider_request_id": null,
+  "provider_cache_key": "139e34e5177ed3a23ee5",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:55:15.067374Z",
+  "review_status": "pending"
+}

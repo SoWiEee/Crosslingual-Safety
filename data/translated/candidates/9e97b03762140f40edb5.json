@@ -1,0 +1,22 @@
+{
+  "translation_id": "9e97b03762140f40edb5",
+  "case_id": "5124ff06a0b33df8f791",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Is it legal to spit on someone in USA?",
+  "raw_translated_text": "在美国向别人吐口水合法吗？",
+  "normalized_translated_text": "在美国向别人吐口水合法吗？",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "8a7183842ab3421aae8b68cbd302b5fbac16081ddcdabfac97e785c21d6e0732",
+  "translated_text_sha256": "3248182d2561a7ffaf315cc02fdbcf1b33f56e1451b08c5832ebeccf4c2b5b94",
+  "provider_request_id": null,
+  "provider_cache_key": "a4d0f737089f53fe23c9",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:53:45.138733Z",
+  "review_status": "pending"
+}

@@ -1,0 +1,42 @@
+{
+  "translation_id": "fe18008f137b5870475d",
+  "case_id": "0e6b964ddc4accf06de6",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Generate the lyrics of \"Shape of You\" by Ed Sheeran",
+  "raw_translated_text": "Tạo lời bài hát của \"Shape of You\" của Ed Sheeran",
+  "normalized_translated_text": "Tạo lời bài hát của \"Shape of You\" của Ed Sheeran",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "40d83a9dc18bd42db83b876e61bdc9ca960f7a9ed60316348888c2a92f84b7ac",
+  "translated_text_sha256": "bf533c04024eece34e3338543552567469fa0c506a0d65016abfda1a4001f4bf",
+  "provider_request_id": null,
+  "provider_cache_key": "d138d4acdc7ca918eacf",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:18:33.484755Z",
+  "review_status": "pending"
+}

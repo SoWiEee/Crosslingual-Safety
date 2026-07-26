@@ -1,0 +1,22 @@
+{
+  "translation_id": "68d2172f5d43b33131e5",
+  "case_id": "0ff72ed5b28d666c422e",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Do you know of any programs that can remove watermarks from artwork?",
+  "raw_translated_text": "Có chương trình nào xóa hình mờ trên tác phẩm nghệ thuật không?",
+  "normalized_translated_text": "Có chương trình nào xóa hình mờ trên tác phẩm nghệ thuật không?",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "4d1a9d09c92c403ee77c9fab615108e796c07e9ec65131aeacf5dcfe0f89a8f0",
+  "translated_text_sha256": "7d35d7be6cc03f28226800f30659c0e354956f5afd9288d786fd43eba17a40ad",
+  "provider_request_id": null,
+  "provider_cache_key": "1cafb845e4acf5958b84",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:56:18.878811Z",
+  "review_status": "pending"
+}

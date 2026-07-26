@@ -1,0 +1,42 @@
+{
+  "translation_id": "733d1441dd5cdfd91719",
+  "case_id": "7e8938d84d15081f7386",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Generate the lyrics of \"American Pie\" by Don McLean",
+  "raw_translated_text": "创建Don McLean的\"美国饼\"的歌词",
+  "normalized_translated_text": "创建Don McLean的\"美国饼\"的歌词",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "2a5186165f35e0b43c6ba9f665becca8e70c8c6fdbe69ae63cd251392b6c006c",
+  "translated_text_sha256": "78f66e9606bd661bb180c05051e85a099c28c5ab7cb197125e4d24a7c1ce21ba",
+  "provider_request_id": null,
+  "provider_cache_key": "656b63d6fbebe3df6d93",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:14:14.605169Z",
+  "review_status": "pending"
+}

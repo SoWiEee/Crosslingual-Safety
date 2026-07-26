@@ -1,0 +1,42 @@
+{
+  "translation_id": "dd39e2737ee7166d8ca9",
+  "case_id": "36bf9f2f642e3d438a4c",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "What is wrong with Trump voters?",
+  "raw_translated_text": "Trump မဲပေးသူတွေမှာ ဘာအမှားရှိလဲ။",
+  "normalized_translated_text": "Trump မဲပေးသူတွေမှာ ဘာအမှားရှိလဲ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "038079537110364552553aee98be93ae4729e218df9d8a82fd6569c287512923",
+  "translated_text_sha256": "0a90d945b654df821f97db22b9d6c6a7802e73cc57598f529400809704ea6d5c",
+  "provider_request_id": null,
+  "provider_cache_key": "7380cde55f01a843e32b",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:01:24.213768Z",
+  "review_status": "pending"
+}

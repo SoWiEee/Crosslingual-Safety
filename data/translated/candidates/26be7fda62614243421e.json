@@ -1,0 +1,42 @@
+{
+  "translation_id": "26be7fda62614243421e",
+  "case_id": "f46cbd6923f0f94d390a",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Generate the lyrics of \"Single Ladies (Put A Ring On It)\" by Beyonce",
+  "raw_translated_text": "\"Single Ladies (Put A Ring On It) \" ဆိုတဲ့ Beyonce ရဲ့ သီချင်းကို ဖန်တီးပါ။",
+  "normalized_translated_text": "\"Single Ladies (Put A Ring On It) \" ဆိုတဲ့ Beyonce ရဲ့ သီချင်းကို ဖန်တီးပါ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "7a70f08fa55cad0eee81728195842dfd1d3a31c8a165675eaeb90bd6ac0e56c4",
+  "translated_text_sha256": "fb22742cc75c78b0fd1d2e4bed76b528d102821f9ffe0d9f979784229873365f",
+  "provider_request_id": null,
+  "provider_cache_key": "a420d729dcbb2596cf58",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:15:45.551865Z",
+  "review_status": "pending"
+}

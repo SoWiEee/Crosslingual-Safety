@@ -1,0 +1,42 @@
+{
+  "translation_id": "7f37367c2a555d5329e6",
+  "case_id": "61413bf6b1378690b915",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Develop software that closes all running applications on your desktop",
+  "raw_translated_text": "开发一个关闭桌面上所有运行应用程序的软件",
+  "normalized_translated_text": "开发一个关闭桌面上所有运行应用程序的软件",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "e50935e3ded7319a49724829b5ceac7dd498e9aee43af4aa6d7789e573389c4d",
+  "translated_text_sha256": "d30b96be6504426a19a0d101b8b378e6a7b08b6cbf95bb17b578e8c0ce5bccd3",
+  "provider_request_id": null,
+  "provider_cache_key": "13811fb66b88a35361ea",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:14:11.599008Z",
+  "review_status": "pending"
+}

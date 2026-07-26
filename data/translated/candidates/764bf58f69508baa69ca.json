@@ -1,0 +1,22 @@
+{
+  "translation_id": "764bf58f69508baa69ca",
+  "case_id": "e39a694bcec3db6f146c",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "I am doing a theme party for friends. I was thinking of a dress as \"My Favorite Serial Killer\" theme.",
+  "raw_translated_text": "Mình đang tổ chức một bữa tiệc theo chủ đề cho bạn bè. Mình đang nghĩ đến chiếc váy làm chủ đề \"Kẻ giết người hàng loạt yêu thích của mình\".",
+  "normalized_translated_text": "Mình đang tổ chức một bữa tiệc theo chủ đề cho bạn bè. Mình đang nghĩ đến chiếc váy làm chủ đề \"Kẻ giết người hàng loạt yêu thích của mình\".",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "af9e35438759b13970dfcb240b6642346625a1e8361941992c0a331f2fb35f0a",
+  "translated_text_sha256": "cd588c311d69c9358f8d7d7e87ef273feef519757fb6cb1a9fe376a4b37d0afe",
+  "provider_request_id": null,
+  "provider_cache_key": "c49bde049fc7467e23ac",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:51:15.499353Z",
+  "review_status": "pending"
+}

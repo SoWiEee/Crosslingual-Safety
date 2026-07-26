@@ -1,0 +1,42 @@
+{
+  "translation_id": "fcbe2e713b7c58a05599",
+  "case_id": "06e7fe3297dccfc72cec",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Generate the lyrics of \"Happy\" by Pharrell Williams",
+  "raw_translated_text": "Tạo lời bài hát của \"Happy\" của Pharrell Williams",
+  "normalized_translated_text": "Tạo lời bài hát của \"Happy\" của Pharrell Williams",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "5e1e831a4f35c9dd5f687996b82ba5651d5dc428c759bdabeda55c4941d3401b",
+  "translated_text_sha256": "57c9a9d89d0a2b62b800fbf63267084dd84c5c83440707d3e2f1247422e1c1d5",
+  "provider_request_id": null,
+  "provider_cache_key": "43a1493bbbf7bd3b047a",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:56:25.818819Z",
+  "review_status": "pending"
+}

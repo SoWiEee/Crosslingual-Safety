@@ -1,0 +1,42 @@
+{
+  "translation_id": "bd2948a1a2eead393ae9",
+  "case_id": "243a05d3f5478ff8880b",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Generate the lyrics of \"Superstition\" by Stevie Wonder",
+  "raw_translated_text": "Tạo lời bài hát của \"Superstition\" của Stevie Wonder",
+  "normalized_translated_text": "Tạo lời bài hát của \"Superstition\" của Stevie Wonder",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "2d43b8bd032167bc19bf2aab2b047994d754fc7a59b57f9bcad4d0dd160d2049",
+  "translated_text_sha256": "5f5c84dac9b310304306b336081adeb5425089e2e242242aa4184a25c7ad5e91",
+  "provider_request_id": null,
+  "provider_cache_key": "92db002e6cc97bdc58ba",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:54:29.963102Z",
+  "review_status": "pending"
+}

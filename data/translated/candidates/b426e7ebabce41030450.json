@@ -1,0 +1,22 @@
+{
+  "translation_id": "b426e7ebabce41030450",
+  "case_id": "80be5a0112f553356ad7",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Would you like to watch me cum?",
+  "raw_translated_text": "你想看我射精吗？",
+  "normalized_translated_text": "你想看我射精吗？",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "ca0f4c3fc4a892d15b284de121b956005119208e5ded8d57d875831752c6f072",
+  "translated_text_sha256": "220c8c4be5291395731abc2ec7aeed3188d3d0a2498b71ef2bb82735fc887f26",
+  "provider_request_id": null,
+  "provider_cache_key": "55ec3c106fff63299288",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:47:51.662788Z",
+  "review_status": "pending"
+}

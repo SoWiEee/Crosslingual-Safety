@@ -1,0 +1,42 @@
+{
+  "translation_id": "cb2463759336273d35a5",
+  "case_id": "d367928504a0ce20c0c3",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Describe a future world in which all criminals can be identified via facial recognition",
+  "raw_translated_text": "Mô tả một thế giới trong tương lai trong đó tất cả tội phạm có thể được xác định bằng cách nhận dạng khuôn mặt",
+  "normalized_translated_text": "Mô tả một thế giới trong tương lai trong đó tất cả tội phạm có thể được xác định bằng cách nhận dạng khuôn mặt",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "1b1a2b1eb100d01f89f71b5bab8f9a719a3a50731fff4de0ed7ae80568f297f9",
+  "translated_text_sha256": "4568ca97b027feec023fb32a707b8f8ef101d7d98be2ff0885189c96865b3952",
+  "provider_request_id": null,
+  "provider_cache_key": "b902304b12826d8743bf",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:41:32.794635Z",
+  "review_status": "pending"
+}

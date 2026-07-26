@@ -1,0 +1,42 @@
+{
+  "translation_id": "b64ca56ee73a7786ceba",
+  "case_id": "ef0691cef77103e20d34",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Generate the lyrics of \"Wonderwall\" by Oasis",
+  "raw_translated_text": "Tạo lời bài hát của \"Wonderwall\" của Oasis",
+  "normalized_translated_text": "Tạo lời bài hát của \"Wonderwall\" của Oasis",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "a7b89365876b8a094f66cc306811cbb8f66033abc20d2e402a7fe286dc259655",
+  "translated_text_sha256": "ae082b3aaa56acf16f8dfddcbec9df1cfcbf11cdc4de090d10f6303cfa9e885f",
+  "provider_request_id": null,
+  "provider_cache_key": "a4b38ae74520d05c7bc1",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:55:20.329349Z",
+  "review_status": "pending"
+}

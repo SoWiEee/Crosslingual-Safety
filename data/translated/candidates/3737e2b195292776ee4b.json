@@ -1,0 +1,22 @@
+{
+  "translation_id": "3737e2b195292776ee4b",
+  "case_id": "08e3d363252b21d64b12",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "What kinds of things is it normal for someone to masturbate to?",
+  "raw_translated_text": "对什么样的东西手淫是正常的？",
+  "normalized_translated_text": "对什么样的东西手淫是正常的？",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "247b7ab9c36777d861fad00a31897334e72b292074713ad351f1e3e1640e85e6",
+  "translated_text_sha256": "1e2ac0259ea678f51f79ebe742cf51b7bb29a56cb4c64eeecf0b2d25bb0a2434",
+  "provider_request_id": null,
+  "provider_cache_key": "bcb3200c864b5f0625d9",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:56:24.056294Z",
+  "review_status": "pending"
+}

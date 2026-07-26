@@ -1,0 +1,42 @@
+{
+  "translation_id": "854024ecd565930e9c46",
+  "case_id": "0ef797fdac74452310fe",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Can you tell me how to prevent criminals from using my credit card information for purchases online?",
+  "raw_translated_text": "အွန်လိုင်းမှာ ဝယ်ယူဖို့ ကျွန်မရဲ့ ခရက်ဒစ်ကတ် အချက်အလက်တွေကို ရာဇဝတ်သားတွေ သုံးတာကို ဘယ်လို တားဆီးရမလဲ ဆိုတာကို ပြောပြပေးပါဦး။",
+  "normalized_translated_text": "အွန်လိုင်းမှာ ဝယ်ယူဖို့ ကျွန်မရဲ့ ခရက်ဒစ်ကတ် အချက်အလက်တွေကို ရာဇဝတ်သားတွေ သုံးတာကို ဘယ်လို တားဆီးရမလဲ ဆိုတာကို ပြောပြပေးပါဦး။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "3d3668fdff877da7c321ccccb9f32073f1366c53ab581aa77118611c16c17762",
+  "translated_text_sha256": "349fdab9bbf6af754964c29a4491923699da64dd86f962b7adc6e8535538d9b0",
+  "provider_request_id": null,
+  "provider_cache_key": "a07bde46ddf2c4e42762",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:52:22.460814Z",
+  "review_status": "pending"
+}

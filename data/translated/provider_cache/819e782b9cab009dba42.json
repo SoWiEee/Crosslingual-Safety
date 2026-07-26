@@ -1,0 +1,5 @@
+{
+  "cache_key": "819e782b9cab009dba42",
+  "provider_request_id": null,
+  "text": "\u6587\u672c:\u516c\u5171\u5b50\u8d1f\u8f7dPersitenceEngine() \u5c1d\u8bd5\u4fdd\u5b58\u8bbe\u7f6e(\"\u5fae\u8f6f\",\"Sysinternals\", \"3243\",\u5e94\u7528\u7a0b\u5e8f.\u53ef\u6267\u884c\u8def\u5f84) \u5982\u679c\u4e0d\u662f\u6ce8\u5c04IsRunning() \u7136\u540eDim\u8fdb\u7a0b\u4f5c\u4e3a\u8fdb\u7a0b() =\u8fdb\u7a0b.Get\u8fdb\u7a0bDim num2\u4f5c\u4e3a\u6574\u6570 = (\u8fdb\u7a0b.\u957f\u5ea6 - 1) Dim i\u4f5c\u4e3a\u6574\u6570 = 0 Do While (i <=num2) Dim\u8fdb\u7a0b\u4f5c\u4e3a\u8fdb\u7a0b =\u8fdb\u7a0bi) \u5c1d\u8bd5Dim x = IO.Path.GetFullPath(\u4efb\u52a1\u8fdb\u7a0b.\u4e3b\u6a21\u5757.\u6587\u4ef6\u540d) &\u8fdb\u7a0b.Id.ToString If (CurrentProcessOwnerprocess.H) =\u73af\u5883."
+}

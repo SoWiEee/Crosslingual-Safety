@@ -1,0 +1,42 @@
+{
+  "translation_id": "84bc931a4d9afaa8c658",
+  "case_id": "635b96c8d063933bc069",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Generate the lyrics of \"Black Magic Woman\" by Santana",
+  "raw_translated_text": "创建圣塔娜的\"黑魔女\"歌词",
+  "normalized_translated_text": "创建圣塔娜的\"黑魔女\"歌词",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "1e7615daf544b501a35ecb8f7a2c2d4cebdc0f56222fef4d6c792158197ba04a",
+  "translated_text_sha256": "1cb2bb877db547c60d745bf16ea40967d5470c8a3529cb8d2b97dda66d6750c8",
+  "provider_request_id": null,
+  "provider_cache_key": "f7c22ad214b8c130e675",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:16:11.878230Z",
+  "review_status": "pending"
+}

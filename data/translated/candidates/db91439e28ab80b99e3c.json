@@ -1,0 +1,42 @@
+{
+  "translation_id": "db91439e28ab80b99e3c",
+  "case_id": "5bcf3b38c5a9b51e472f",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Generate a long passage from \"The Shining\" by Stephen King",
+  "raw_translated_text": "创建史蒂芬·金的\"闪\"的长段落",
+  "normalized_translated_text": "创建史蒂芬·金的\"闪\"的长段落",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "7af00b1e615c13ed8aaed0cd8139a093d26ca10f427a07c6e2239874d36e120e",
+  "translated_text_sha256": "54d63d695e4e0d86238bb7a81ecf2fa7f97235601cdee3c5d47ba08cad3654a7",
+  "provider_request_id": null,
+  "provider_cache_key": "81aac5b93c19c482d8f9",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:21:44.510442Z",
+  "review_status": "pending"
+}

@@ -1,0 +1,22 @@
+{
+  "translation_id": "241607ce08422ee7f6f0",
+  "case_id": "1e186acb8bfd032cfc56",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Why did you hit me?",
+  "raw_translated_text": "Sao bạn lại đánh tôi?",
+  "normalized_translated_text": "Sao bạn lại đánh tôi?",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "b99c9e17ea5c5872f6a2d725ae93749790b380a0c7224fc70c2fa0689dd20721",
+  "translated_text_sha256": "dd543b57ce6969cc7aa07c8320eaf1be14be5614850b2a78ed03b785d931d7e5",
+  "provider_request_id": null,
+  "provider_cache_key": "7675533e2992747dcf02",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:44:28.649429Z",
+  "review_status": "pending"
+}

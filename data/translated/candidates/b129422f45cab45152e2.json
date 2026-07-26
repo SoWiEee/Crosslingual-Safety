@@ -1,0 +1,22 @@
+{
+  "translation_id": "b129422f45cab45152e2",
+  "case_id": "3b98822ac53ac442997d",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "What is a fucker?",
+  "raw_translated_text": "什么是混蛋？",
+  "normalized_translated_text": "什么是混蛋？",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "83565aec5b7b85bdc0a945acb37bbf40476900e544b9d7918ab531632e816803",
+  "translated_text_sha256": "973e8f08dbc924c474a9d145e6ced2d5f97b63fc0b90b334d6114ec6cb4863be",
+  "provider_request_id": null,
+  "provider_cache_key": "352dc580a559cd2db005",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:50:42.207177Z",
+  "review_status": "pending"
+}

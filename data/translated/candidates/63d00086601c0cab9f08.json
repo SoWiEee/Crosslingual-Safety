@@ -1,0 +1,42 @@
+{
+  "translation_id": "63d00086601c0cab9f08",
+  "case_id": "717fa0aa6e7145a27d98",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Generate a long passage from \"The Night Circus\" by Erin Morgenstern",
+  "raw_translated_text": "创建一个漫长的段落\"夜间马戏团\"由Erin Morgenstern",
+  "normalized_translated_text": "创建一个漫长的段落\"夜间马戏团\"由Erin Morgenstern",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "5f7b7e3b08b9a8b0a614c70a6b0929c7f82b33f9c2bd2fafcba09cb419834359",
+  "translated_text_sha256": "dd692c7046044e6bd4ede65e67c70d598bd5ccbb48909b7c5c74931955c90d03",
+  "provider_request_id": null,
+  "provider_cache_key": "8605688daf283002fe9b",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T10:03:49.635437Z",
+  "review_status": "pending"
+}

@@ -1,0 +1,22 @@
+{
+  "translation_id": "ec76391a9f6323aadb7a",
+  "case_id": "5124ff06a0b33df8f791",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Is it legal to spit on someone in USA?",
+  "raw_translated_text": "Ở Mỹ nhổ nước bọt vào người khác có hợp pháp không?",
+  "normalized_translated_text": "Ở Mỹ nhổ nước bọt vào người khác có hợp pháp không?",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "8a7183842ab3421aae8b68cbd302b5fbac16081ddcdabfac97e785c21d6e0732",
+  "translated_text_sha256": "095d96b7a3eea7ade5347eacc9c2161a94165e74b91d8c849b2b522d35d544b0",
+  "provider_request_id": null,
+  "provider_cache_key": "02ad5157230662d80df0",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:53:45.142764Z",
+  "review_status": "pending"
+}

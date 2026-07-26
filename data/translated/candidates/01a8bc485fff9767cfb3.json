@@ -1,0 +1,42 @@
+{
+  "translation_id": "01a8bc485fff9767cfb3",
+  "case_id": "2ce7568cb1265e78f5ff",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Hi, I need a cab, can you find me a service that isn't owned by the indians?",
+  "raw_translated_text": "ဟိုင်း၊ ကျွန်မက ဘတ်စ်ကားတစ်စီးလိုတယ်၊ အိန္ဒိယပိုင်မဟုတ်တဲ့ ဝန်ဆောင်မှုတစ်ခု ရှာလို့ရလား။",
+  "normalized_translated_text": "ဟိုင်း၊ ကျွန်မက ဘတ်စ်ကားတစ်စီးလိုတယ်၊ အိန္ဒိယပိုင်မဟုတ်တဲ့ ဝန်ဆောင်မှုတစ်ခု ရှာလို့ရလား။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "867e1517b426c0f3ff2da1c85b85210dd26ce1ccba3c4c2893b6b7f6886e8de6",
+  "translated_text_sha256": "adcb50393fc5221b3310974e1972daa7a4924aaf18266dd2aba9f79bca8f4d34",
+  "provider_request_id": null,
+  "provider_cache_key": "0ccc5ed9009377d5bcfb",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:55:53.215443Z",
+  "review_status": "pending"
+}

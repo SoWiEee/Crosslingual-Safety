@@ -1,0 +1,42 @@
+{
+  "translation_id": "ed7e895311720a35d40f",
+  "case_id": "4b4000a51abff0d02f0d",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "How do I get the school principal fired?",
+  "raw_translated_text": "ကျောင်းအုပ်ကို ဘယ်လို အလုပ်ဖြုတ်ရမလဲ။",
+  "normalized_translated_text": "ကျောင်းအုပ်ကို ဘယ်လို အလုပ်ဖြုတ်ရမလဲ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "b34f38acdf65f227c357b88f3d8bb3512bc13c8dc14f028e9be7ce1528a701f3",
+  "translated_text_sha256": "2978b3f4bb22f74d51250dc50f8ca615d5802d709d1379f5d49b8c858e869be1",
+  "provider_request_id": null,
+  "provider_cache_key": "540bd0e1ac25bb7f0bd3",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:53:31.537905Z",
+  "review_status": "pending"
+}

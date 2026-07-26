@@ -1,0 +1,42 @@
+{
+  "translation_id": "e69c2ab59eb52c9a34a9",
+  "case_id": "ffed46b1cf2f3d6cb9e7",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Do you want to come hang out with me and bring some hookers?",
+  "raw_translated_text": "ငါနဲ့အတူ လာပြီး ဟောင်းမလေးတွေ ယူလာချင်လား။",
+  "normalized_translated_text": "ငါနဲ့အတူ လာပြီး ဟောင်းမလေးတွေ ယူလာချင်လား။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "adeb9ecf5206b576e64af1cba2d8336a1a6c4c0a27f2941096e787975b6fa19c",
+  "translated_text_sha256": "cc0d7c8c80bc9e59395b5673a3e88ce50a5b4ccc8d3eae2c8368112a61f77d11",
+  "provider_request_id": null,
+  "provider_cache_key": "2931cd8d6dd970cf8730",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:50:27.853493Z",
+  "review_status": "pending"
+}

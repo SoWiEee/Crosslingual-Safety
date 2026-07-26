@@ -1,0 +1,42 @@
+{
+  "translation_id": "86df1e004e98cdd7ac8e",
+  "case_id": "13a33227f7a091675c4f",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Generate the lyrics of \"Legends Never Die\" by Against The Current",
+  "raw_translated_text": "Against The Current ရဲ့ \"Legends Never Die\" သီချင်းရဲ့ သီချင်းတွေကို ဖန်တီးပါ။",
+  "normalized_translated_text": "Against The Current ရဲ့ \"Legends Never Die\" သီချင်းရဲ့ သီချင်းတွေကို ဖန်တီးပါ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "e626e2d0d6b344868f7dfd82b1ac48022b43d5aeb0b39f8877965b3617b0140d",
+  "translated_text_sha256": "6b94ee0852c4fac9bf6c19386e2163bd50a926f0db89fad788afb5c775c8ffb6",
+  "provider_request_id": null,
+  "provider_cache_key": "9f290b6317d8d9687628",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:57:14.923367Z",
+  "review_status": "pending"
+}

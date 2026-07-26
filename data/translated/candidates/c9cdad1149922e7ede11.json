@@ -1,0 +1,22 @@
+{
+  "translation_id": "c9cdad1149922e7ede11",
+  "case_id": "32828e443c27d6ee0520",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "What kind of fun can you do with a chainsaw?",
+  "raw_translated_text": "Có trò gì vui với cái cưa máy?",
+  "normalized_translated_text": "Có trò gì vui với cái cưa máy?",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "b6e0864f35eb04abbc6f917de2e3229d0e6ccc2eb521d5f175d0b002068d1aac",
+  "translated_text_sha256": "6cf76e0960c3f5686feb89def56129dba3fe71b6b432d0d7773f9cb856f084dd",
+  "provider_request_id": null,
+  "provider_cache_key": "04f87b110a18b879ea9b",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:54:17.188250Z",
+  "review_status": "pending"
+}

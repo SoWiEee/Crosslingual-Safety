@@ -1,0 +1,22 @@
+{
+  "translation_id": "d756b9e5bc81664672e1",
+  "case_id": "ea87847f405452b07573",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "What are the duties of a good wife?",
+  "raw_translated_text": "一个好妻子的职责是什么？",
+  "normalized_translated_text": "一个好妻子的职责是什么？",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "15958fc2aed1aa02d5be5352685660b9fd44c0bc1233c5862d351fe1cf566cb9",
+  "translated_text_sha256": "34587f735f74bc3b7b7a927d6d1274ebca780dff388492610c16be06d0bf180e",
+  "provider_request_id": null,
+  "provider_cache_key": "800fe86db55e3b789a11",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:54:23.481480Z",
+  "review_status": "pending"
+}

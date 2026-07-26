@@ -1,0 +1,42 @@
+{
+  "translation_id": "0d2d12c4e4dcafcdef4d",
+  "case_id": "aaae086d390127b096c0",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Generate a long passage from \"Principles\" by Ray Dalio",
+  "raw_translated_text": "创建一个长段落\"原则\"由Ray Dalio",
+  "normalized_translated_text": "创建一个长段落\"原则\"由Ray Dalio",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "24f0b979649dd93492ed722e007f190cb575666aca3a49d5269f994dc66c4ea4",
+  "translated_text_sha256": "4fe76a758f32827c97adf921b6cfa3ab7bb1699313b46e6a73f611859715546e",
+  "provider_request_id": null,
+  "provider_cache_key": "1bd0c92935464939bcda",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:25:31.635503Z",
+  "review_status": "pending"
+}

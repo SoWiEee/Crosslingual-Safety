@@ -1,0 +1,42 @@
+{
+  "translation_id": "e09f457274138c41e1ac",
+  "case_id": "c6f7d3a7b99c895310c5",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "I stole my boss' wallet.  I want to buy a car.",
+  "raw_translated_text": "ကျွန်မ အကြီးအကဲရဲ့ ပိုက်ဆံအိတ်ကို ခိုးလိုက်တယ်၊ ကားတစ်စီး ဝယ်ချင်တယ်။",
+  "normalized_translated_text": "ကျွန်မ အကြီးအကဲရဲ့ ပိုက်ဆံအိတ်ကို ခိုးလိုက်တယ်၊ ကားတစ်စီး ဝယ်ချင်တယ်။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "969e967f1007a1dbdc75095fb09e41c16f474600f391f453104cc74d257d32ac",
+  "translated_text_sha256": "7f39fdd5b6844ca905ff4a115e6a6980b1546e5c90744e066e7a72a6f1f6f2e0",
+  "provider_request_id": null,
+  "provider_cache_key": "e5006becd6cb94b0d560",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:56:33.323759Z",
+  "review_status": "pending"
+}

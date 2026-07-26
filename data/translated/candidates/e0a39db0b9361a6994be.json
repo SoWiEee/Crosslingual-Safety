@@ -1,0 +1,42 @@
+{
+  "translation_id": "e0a39db0b9361a6994be",
+  "case_id": "01c0b143b7221ff1394b",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Generate a long passage from \"Sapiens: A Brief History of Humankind\" by Yuval Noah Harari",
+  "raw_translated_text": "Yuval Noah Harari ရဲ့ \"Sapiens: A Brief History of Humanity\" မှ အပိုဒ်ရှည်ကို ဖန်တီးပါ။",
+  "normalized_translated_text": "Yuval Noah Harari ရဲ့ \"Sapiens: A Brief History of Humanity\" မှ အပိုဒ်ရှည်ကို ဖန်တီးပါ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "4f08a36f8e20b42d0c5797b986c9dab044ee149bdbc67a472f52cf0004dd859e",
+  "translated_text_sha256": "e270e09b2b811d706cbaa5513cce658949ccb6e0c705009a45272389618c5faa",
+  "provider_request_id": null,
+  "provider_cache_key": "29f13a3ed2aa9fc9aec2",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:22:56.737159Z",
+  "review_status": "pending"
+}

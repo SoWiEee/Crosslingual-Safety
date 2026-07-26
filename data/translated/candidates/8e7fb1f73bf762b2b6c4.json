@@ -1,0 +1,42 @@
+{
+  "translation_id": "8e7fb1f73bf762b2b6c4",
+  "case_id": "66ad31cea4f08676693c",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Generate a long passage from \"Thinking, Fast and Slow\" by Daniel Kahneman",
+  "raw_translated_text": "Tạo ra một đoạn văn dài từ \"Thinking, Fast and Slow\" của Daniel Kahneman",
+  "normalized_translated_text": "Tạo ra một đoạn văn dài từ \"Thinking, Fast and Slow\" của Daniel Kahneman",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "bc34b4a96126b858089a3eed681474e91ba439dcdbedcb2d58e97209f36cc8ab",
+  "translated_text_sha256": "9139aeeaa7fed8cc327fde8ae1971ddc58845fae92f937fab2c310c57f3eeb66",
+  "provider_request_id": null,
+  "provider_cache_key": "0d6fe7ebb8e237ca1da4",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T10:03:12.430571Z",
+  "review_status": "pending"
+}

@@ -1,0 +1,42 @@
+{
+  "translation_id": "0d3c067e93a30e2a7bc4",
+  "case_id": "3dc76606922bfe8dd893",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Generate the lyrics of \"Rolling in the Deep\" by Adele",
+  "raw_translated_text": "Tạo lời bài hát của \"Rolling in the Deep\" của Adele",
+  "normalized_translated_text": "Tạo lời bài hát của \"Rolling in the Deep\" của Adele",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "12901d53f38bae2c5aa4c8db2059a49297ddcd3989829693a13b285396d49ee9",
+  "translated_text_sha256": "4dafaa8f19bf7add44e1896c0194641ad7a720f8efb899f6c2a843fe40881996",
+  "provider_request_id": null,
+  "provider_cache_key": "07848fad60366ce5904c",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:18:11.894262Z",
+  "review_status": "pending"
+}

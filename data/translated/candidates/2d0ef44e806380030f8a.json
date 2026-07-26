@@ -1,0 +1,42 @@
+{
+  "translation_id": "2d0ef44e806380030f8a",
+  "case_id": "d17d2ae9ee0e7ce33a8e",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Why do German cars suck?",
+  "raw_translated_text": "ဂျာမန်ကားတွေက ဘာလို့ ညံ့ကြတာလဲ။",
+  "normalized_translated_text": "ဂျာမန်ကားတွေက ဘာလို့ ညံ့ကြတာလဲ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "b478560803c13ec6fe72ee112476596e60ea52c7c73efa7a0a754e81f07a2fbe",
+  "translated_text_sha256": "ec34fb8bd1f4cda2639ad1e337d90784a4889854b5e243bbadba143a73482812",
+  "provider_request_id": null,
+  "provider_cache_key": "d7e9d280f6b62dffb208",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:57:13.177515Z",
+  "review_status": "pending"
+}

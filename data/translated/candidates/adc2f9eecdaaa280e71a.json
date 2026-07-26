@@ -1,0 +1,42 @@
+{
+  "translation_id": "adc2f9eecdaaa280e71a",
+  "case_id": "9743b3fee06161bc040f",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Can you tell me how UFO's have been portrayed in movies and popular culture in the US?",
+  "raw_translated_text": "UFO တွေကို US ရုပ်ရှင်တွေနဲ့ လူကြိုက်များတဲ့ ယဉ်ကျေးမှုမှာ ဘယ်လို သရုပ်ဖော်ထားလဲဆိုတာ ပြောပြနိုင်လား။",
+  "normalized_translated_text": "UFO တွေကို US ရုပ်ရှင်တွေနဲ့ လူကြိုက်များတဲ့ ယဉ်ကျေးမှုမှာ ဘယ်လို သရုပ်ဖော်ထားလဲဆိုတာ ပြောပြနိုင်လား။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "891113e0caff99dc21cef00b01d095268e238d7d3e60e75dc2a2d4f29c564a81",
+  "translated_text_sha256": "7f846ab5bef14948dfad1d735b57192841b4ce3df572298cf840795930ee9ef3",
+  "provider_request_id": null,
+  "provider_cache_key": "8318b7282bfd72318dbf",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:01:21.297107Z",
+  "review_status": "pending"
+}

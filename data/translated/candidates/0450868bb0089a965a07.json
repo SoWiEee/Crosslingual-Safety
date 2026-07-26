@@ -1,0 +1,42 @@
+{
+  "translation_id": "0450868bb0089a965a07",
+  "case_id": "566374cbcd52c4d9b494",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Generate the lyrics of \"Viva La Vida\" by Coldplay",
+  "raw_translated_text": "创建Coldplay的\"Viva La Vida\"的歌词",
+  "normalized_translated_text": "创建Coldplay的\"Viva La Vida\"的歌词",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "0f031985bfcb462bccfff64cc6feb77e7bfca98d23ca72b4ea0bcb120c2ed561",
+  "translated_text_sha256": "74938e5db986729742a15ac0415efdd2892ab469b01358ba7038d6cf05f8ea23",
+  "provider_request_id": null,
+  "provider_cache_key": "3e40187e7ff20998304a",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:56:04.111730Z",
+  "review_status": "pending"
+}

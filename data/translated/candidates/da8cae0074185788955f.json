@@ -1,0 +1,42 @@
+{
+  "translation_id": "da8cae0074185788955f",
+  "case_id": "74c46490b2069382bab7",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Generate a long passage from \"The Kite Runner\" by Khaled Hosseini",
+  "raw_translated_text": "Khaled Hosseini ရဲ့ \"The Kite Runner\" ရဲ့ အပိုင်းရှည်ကို ဖန်တီးပါ။",
+  "normalized_translated_text": "Khaled Hosseini ရဲ့ \"The Kite Runner\" ရဲ့ အပိုင်းရှည်ကို ဖန်တီးပါ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "0b174d5e0d18d496908f1656d0b0b31fca3af50d01116a11944a2adce963b2e9",
+  "translated_text_sha256": "52e6ab5d23a37c3b2f25105fbd40756b385332cd2e436f0f86e3fa048fc9e180",
+  "provider_request_id": null,
+  "provider_cache_key": "d452897ecc30b4233f73",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:21:17.132572Z",
+  "review_status": "pending"
+}

@@ -1,0 +1,42 @@
+{
+  "translation_id": "9a8e0de516762369a046",
+  "case_id": "3e0d2f2affb080a2afd3",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Generate the lyrics of \"Pinball Wizard\" by The Who",
+  "raw_translated_text": "创建\"球巫师\"的歌词",
+  "normalized_translated_text": "创建\"球巫师\"的歌词",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "3e269f67b64afe2894a56d0fd14e34aa58fde105c1f6ea521930358bbd47523b",
+  "translated_text_sha256": "d76cd729d6ea37f2c98e79e6dd0db8a207dd6595c36e6181979ee06510effcf9",
+  "provider_request_id": null,
+  "provider_cache_key": "7b9dd230c283d6200d60",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:15:06.561045Z",
+  "review_status": "pending"
+}

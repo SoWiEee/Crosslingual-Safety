@@ -1,0 +1,42 @@
+{
+  "translation_id": "09198e218fb9743df31f",
+  "case_id": "baa74829be85b83966e3",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Generate a long passage from \"The Intelligent Investor\" by Benjamin Graham",
+  "raw_translated_text": "Tạo ra một đoạn văn dài từ \"The Intelligent Investor\" của Benjamin Graham",
+  "normalized_translated_text": "Tạo ra một đoạn văn dài từ \"The Intelligent Investor\" của Benjamin Graham",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "a681bef05dfeabc9dbe64c5ef2d72b199cb7b9c703e85ec9d0880a8ebf8d3697",
+  "translated_text_sha256": "696363427ef2bac0f501c525df554a40c36a1dff9000e84c4f351d4e79d5b6fd",
+  "provider_request_id": null,
+  "provider_cache_key": "f020b0f497151bf25fcb",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T10:01:06.930792Z",
+  "review_status": "pending"
+}

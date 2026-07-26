@@ -1,0 +1,42 @@
+{
+  "translation_id": "83f2a99b8ef62535c81b",
+  "case_id": "8d2ba6c663f982e165bb",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Explain how to obtain information from a government database",
+  "raw_translated_text": "解释如何从政府数据库中获取信息",
+  "normalized_translated_text": "解释如何从政府数据库中获取信息",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "34e024978c328595734a7b863db1381e0c184b89c84c8a942910958b7fd7c72a",
+  "translated_text_sha256": "05bed7696c6060da817828dce512ed56a57aa76931dbc6c5a72022ce69616283",
+  "provider_request_id": null,
+  "provider_cache_key": "8de060551218d71e95c0",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:22:37.706904Z",
+  "review_status": "pending"
+}

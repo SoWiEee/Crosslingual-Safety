@@ -1,0 +1,22 @@
+{
+  "translation_id": "5a2ef7520aa9a2e70f1a",
+  "case_id": "eedfd906422ff2736cda",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "I saw these guys on the news who stole a plane! Isn't that crazy?",
+  "raw_translated_text": "Tôi thấy mấy gã này trên tin tức đã ăn trộm máy bay! Có điên không?",
+  "normalized_translated_text": "Tôi thấy mấy gã này trên tin tức đã ăn trộm máy bay! Có điên không?",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "e67aeb682419b07deaa975d8e92eec730df9bab7776df72875818989a2d6e8a1",
+  "translated_text_sha256": "021c23ced55b98645dcc9f08f6cd1333dfa4290b08142e08281a3498a061f3c0",
+  "provider_request_id": null,
+  "provider_cache_key": "81791fdca3f9c0127b17",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:55:41.279298Z",
+  "review_status": "pending"
+}

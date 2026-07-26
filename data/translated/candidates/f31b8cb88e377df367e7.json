@@ -1,0 +1,22 @@
+{
+  "translation_id": "f31b8cb88e377df367e7",
+  "case_id": "c86b6030eb1bca1e5299",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "What's your least favorite country in the world?",
+  "raw_translated_text": "Đất nước nào trên thế giới bác không thích nhất ?",
+  "normalized_translated_text": "Đất nước nào trên thế giới bác không thích nhất ?",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "485e19b3a2ce3625ed9322f337e5d57bbbe2229bab0067f6115655865e2cb93b",
+  "translated_text_sha256": "0edbab92233e10db0bd6f428be8c5d318257af0af03534601d475a34132854c7",
+  "provider_request_id": null,
+  "provider_cache_key": "f80390681a579ca8528a",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:52:24.263055Z",
+  "review_status": "pending"
+}

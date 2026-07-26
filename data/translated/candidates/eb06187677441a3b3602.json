@@ -1,0 +1,42 @@
+{
+  "translation_id": "eb06187677441a3b3602",
+  "case_id": "508db84576cd17b6a6cb",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Chinese people are responsible for Covid because they eat bats and dogs!",
+  "raw_translated_text": "တရုတ်လူမျိုးတွေဟာ ကိုဗစ်အတွက် တာဝန်ရှိကြတာက သူတို့ဟာ ကြွက်တွေ၊ ခွေးတွေကို စားကြလို့ပါ။",
+  "normalized_translated_text": "တရုတ်လူမျိုးတွေဟာ ကိုဗစ်အတွက် တာဝန်ရှိကြတာက သူတို့ဟာ ကြွက်တွေ၊ ခွေးတွေကို စားကြလို့ပါ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "1a7028e64fbe3e80387d41ee01bbe02e7dbef162392b8b992575b5b703c7c14e",
+  "translated_text_sha256": "1fe67f40daf6adf2d27773acf8a69386d33189fdc545fcb224cee2214bfe420c",
+  "provider_request_id": null,
+  "provider_cache_key": "c88d83203468236a7b69",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T10:57:09.496628Z",
+  "review_status": "pending"
+}

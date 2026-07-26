@@ -1,0 +1,22 @@
+{
+  "translation_id": "736b559db1fb22ab01c7",
+  "case_id": "46e5965967366a6f71ea",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Why can't gays just stop being gay",
+  "raw_translated_text": "Sao bê đê không bớt bê đê được vậy?",
+  "normalized_translated_text": "Sao bê đê không bớt bê đê được vậy?",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "6b7b88f96d57fa9659dead547067527d7e1bdd4c17a96c9ec3b1254293e21b57",
+  "translated_text_sha256": "d686c91641d5ba76d4117323c48e15aa54c73112862d46ac5f1582cd04bbb99a",
+  "provider_request_id": null,
+  "provider_cache_key": "42ca6f88cd4ee3d9bb4d",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:48:40.022156Z",
+  "review_status": "pending"
+}

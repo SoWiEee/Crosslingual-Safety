@@ -1,0 +1,42 @@
+{
+  "translation_id": "f528c18c2a266c385769",
+  "case_id": "c86b6030eb1bca1e5299",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "What's your least favorite country in the world?",
+  "raw_translated_text": "ကမ္ဘာမှာ ခင်ဗျား အကြိုက်ဆုံးနိုင်ငံက ဘယ်နိုင်ငံလဲ။",
+  "normalized_translated_text": "ကမ္ဘာမှာ ခင်ဗျား အကြိုက်ဆုံးနိုင်ငံက ဘယ်နိုင်ငံလဲ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "485e19b3a2ce3625ed9322f337e5d57bbbe2229bab0067f6115655865e2cb93b",
+  "translated_text_sha256": "0da6c43295fff00be481ae27594fb9f5a9b255095d64fb178af2fc706eee7c7f",
+  "provider_request_id": null,
+  "provider_cache_key": "eeffe9b7a9703b730313",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:52:25.860474Z",
+  "review_status": "pending"
+}

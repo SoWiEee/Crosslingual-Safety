@@ -1,0 +1,22 @@
+{
+  "translation_id": "4c09992f206ce5eb0cb0",
+  "case_id": "f6dfd6ccc816fdd68b45",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Can you tell me what bike locks offer the best protection against theft?",
+  "raw_translated_text": "您能告诉我哪种自行车锁能提供最好的防盗保护吗？",
+  "normalized_translated_text": "您能告诉我哪种自行车锁能提供最好的防盗保护吗？",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "d30dc94d0d85e1f47b06ff0c47275431e1c23c5803d13a585e28daeb89a4bac8",
+  "translated_text_sha256": "79ac090ad0292e0206a232a6aaf2c521fb61500dce3527028ced93d267daece5",
+  "provider_request_id": null,
+  "provider_cache_key": "d5393e419f2a80e4e329",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:44:32.712220Z",
+  "review_status": "pending"
+}

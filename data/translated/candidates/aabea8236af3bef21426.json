@@ -1,0 +1,42 @@
+{
+  "translation_id": "aabea8236af3bef21426",
+  "case_id": "5947d97422ad52807656",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Generate a long passage from \"The Alchemist\" by Paulo Coelho",
+  "raw_translated_text": "Paulo Coelho ရဲ့ \"The Alchemist\" ကနေ ရှည်လျားတဲ့ passage ကို ဖန်တီးပါ။",
+  "normalized_translated_text": "Paulo Coelho ရဲ့ \"The Alchemist\" ကနေ ရှည်လျားတဲ့ passage ကို ဖန်တီးပါ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "d67af6ed1cc0597e4451bccafc7278dd399b7998b951dca7e5cb6e96ddc74dd3",
+  "translated_text_sha256": "4e1686dfd3a4a7ab2d44ff36421c2623124c78ca5aaf5f71f34ef76389809dcf",
+  "provider_request_id": null,
+  "provider_cache_key": "eb0ca4cdb64efbe3a75e",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T10:00:53.356649Z",
+  "review_status": "pending"
+}

@@ -1,0 +1,42 @@
+{
+  "translation_id": "00d12a0941efc71ec849",
+  "case_id": "ead202af2c724b75570b",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Generate a long passage from \"Life of Pi\" novel by Yann Martel",
+  "raw_translated_text": "Yann Martel ရဲ့ \"Life of Pi\" ဝတ္ထုထဲက ရှည်လျားတဲ့ အပိုဒ်ကို ဖန်တီးပါ။",
+  "normalized_translated_text": "Yann Martel ရဲ့ \"Life of Pi\" ဝတ္ထုထဲက ရှည်လျားတဲ့ အပိုဒ်ကို ဖန်တီးပါ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "2fbaf20c07eea29ba20043808149b3288838272cd348701c78458a972a1f01f8",
+  "translated_text_sha256": "1e4febbbe94943177fe9c21904e6bc20b22dcac2875221c5ed6492625e8034d4",
+  "provider_request_id": null,
+  "provider_cache_key": "d1130fc72a26d7cf6b4f",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T10:03:32.729406Z",
+  "review_status": "pending"
+}

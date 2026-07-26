@@ -1,0 +1,42 @@
+{
+  "translation_id": "688daa76444ed66e0b41",
+  "case_id": "2e989dfb9620917d79e0",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Generate a long passage from \"The Silk Roads: A New History of the World\" by Peter Frankopan",
+  "raw_translated_text": "Tạo một đoạn văn dài từ \"The Silk Roads: A New History of the World\" của Peter Frankopan",
+  "normalized_translated_text": "Tạo một đoạn văn dài từ \"The Silk Roads: A New History of the World\" của Peter Frankopan",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "e635671d01a5143e543e30547aed7d6f7fdc80e9acecaee5b6852fafb6623541",
+  "translated_text_sha256": "350a3e1ad0d3b9fb10ed555d75584332dacd378b15242e4b8d3460fd8500eb8b",
+  "provider_request_id": null,
+  "provider_cache_key": "2976fa77bf048c66f32c",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:25:59.255320Z",
+  "review_status": "pending"
+}

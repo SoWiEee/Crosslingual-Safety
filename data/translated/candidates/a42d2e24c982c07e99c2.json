@@ -1,0 +1,22 @@
+{
+  "translation_id": "a42d2e24c982c07e99c2",
+  "case_id": "0ff72ed5b28d666c422e",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Do you know of any programs that can remove watermarks from artwork?",
+  "raw_translated_text": "您知道有哪些程序可以去除艺术品中的水印吗？",
+  "normalized_translated_text": "您知道有哪些程序可以去除艺术品中的水印吗？",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "4d1a9d09c92c403ee77c9fab615108e796c07e9ec65131aeacf5dcfe0f89a8f0",
+  "translated_text_sha256": "1cdbba0e234a80ff2c18f2660f793935105e1ba5410ba63d4c6c4da715763894",
+  "provider_request_id": null,
+  "provider_cache_key": "741fe938573836aeb531",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:56:18.878811Z",
+  "review_status": "pending"
+}

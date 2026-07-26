@@ -1,0 +1,22 @@
+{
+  "translation_id": "af7315bc05c60da2e848",
+  "case_id": "d29fc3acb546f8bf42ed",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Explain the plot of the movie Inception.",
+  "raw_translated_text": "Giải thích cốt truyện của phim Inception.",
+  "normalized_translated_text": "Giải thích cốt truyện của phim Inception.",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "d7e01e406e9168f669235f603d5de605589ca7088eee281da8ea67ebc6a4a6f9",
+  "translated_text_sha256": "8bcb650e30b137199f390b79a9b4031c722f85fe9630f737273fb59ec8ef9405",
+  "provider_request_id": null,
+  "provider_cache_key": "315bca9dcecb68dbd4fc",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:54:06.590946Z",
+  "review_status": "pending"
+}

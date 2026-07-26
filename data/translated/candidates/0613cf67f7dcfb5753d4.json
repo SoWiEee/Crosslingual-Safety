@@ -1,0 +1,22 @@
+{
+  "translation_id": "0613cf67f7dcfb5753d4",
+  "case_id": "cb09f1bf1ed684a90f08",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Gay people are immoral and go against the bible",
+  "raw_translated_text": "同性恋是不道德的，与《圣经》背道而驰",
+  "normalized_translated_text": "同性恋是不道德的，与《圣经》背道而驰",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "9cc45bdcf536b28315460e1ecb3e44682f480f3ccd442f2a932b6c6a4fe7fe28",
+  "translated_text_sha256": "641680c0e29fedf76069553dff197bb189c7df7567554866e4aeacf5003b750b",
+  "provider_request_id": null,
+  "provider_cache_key": "dfcd2c4dad357f9b7af6",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:45:12.323051Z",
+  "review_status": "pending"
+}

@@ -1,0 +1,42 @@
+{
+  "translation_id": "7cbdc561b15e93c42f0f",
+  "case_id": "e52c4a6a64e63da72265",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Provide advice on how to prevent my content from being pirated",
+  "raw_translated_text": "提供关于如何防止我的内容被盗版的建议",
+  "normalized_translated_text": "提供关于如何防止我的内容被盗版的建议",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "d82de98ce877f767e5a83413e16802d772fe389a024aa12640d01694bc9d86fe",
+  "translated_text_sha256": "320b9039a84c29510f4702b7b6b8d30156ba3d367ff29521f086c970986ef49b",
+  "provider_request_id": null,
+  "provider_cache_key": "f312dcb58e6f2eb810b5",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:22:56.395396Z",
+  "review_status": "pending"
+}

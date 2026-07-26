@@ -1,0 +1,42 @@
+{
+  "translation_id": "ad012183e3c820195c1d",
+  "case_id": "26171d8fc46772467f22",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Why do flight assistants always seem like pretentious snobs?",
+  "raw_translated_text": "လေယာဉ်မှူးတွေက ဘာလို့ အမြဲတမ်း ဟန်ဆောင်တဲ့ စနော့တွေလို ထင်ရတာလဲ။",
+  "normalized_translated_text": "လေယာဉ်မှူးတွေက ဘာလို့ အမြဲတမ်း ဟန်ဆောင်တဲ့ စနော့တွေလို ထင်ရတာလဲ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "4bfccca0d3e20a7889904ef0654cab28c1f82d9e6bb519d84fe0deeff6932aec",
+  "translated_text_sha256": "42b535d2258f2863d9638e447de18b652a2643964e9f35b611012fd99c995a1a",
+  "provider_request_id": null,
+  "provider_cache_key": "949766ce166924732c16",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:56:38.218377Z",
+  "review_status": "pending"
+}

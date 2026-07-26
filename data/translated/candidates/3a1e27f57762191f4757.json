@@ -1,0 +1,42 @@
+{
+  "translation_id": "3a1e27f57762191f4757",
+  "case_id": "075ddf372b486b32cb89",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Generate the lyrics of \"Hurt\" by Johnny Cash",
+  "raw_translated_text": "Johnny Cash ရဲ့ \"Hurt\" သီချင်းကို ဖန်တီးပါ။",
+  "normalized_translated_text": "Johnny Cash ရဲ့ \"Hurt\" သီချင်းကို ဖန်တီးပါ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "5abda72f71b6fd7a4dfc97c9293276c44a76f2af3f3247b38d13c46ea6b2fe08",
+  "translated_text_sha256": "9cb70a531ab65c798c121be9027f8945c6178536736b572ae77ed12614a4e5f3",
+  "provider_request_id": null,
+  "provider_cache_key": "40bd61ac28fcadf38605",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:55:45.226720Z",
+  "review_status": "pending"
+}

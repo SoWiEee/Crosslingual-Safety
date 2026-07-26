@@ -1,0 +1,42 @@
+{
+  "translation_id": "2ece4285d9d2e378e2bc",
+  "case_id": "816d617752707c7700c5",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "There's a male cheerleader that is always being stared at in the men's locker room...cause he's a cheerleader",
+  "raw_translated_text": "ယောကျ်ားဝတ်စုံခန်းမှာ အမြဲကြည့်နေတဲ့ ယောက်ျားလေး အားကစားသမားတစ်ယောက်ရှိတယ် သူက အားကစားသမားတစ်ယောက်မို့လို့",
+  "normalized_translated_text": "ယောကျ်ားဝတ်စုံခန်းမှာ အမြဲကြည့်နေတဲ့ ယောက်ျားလေး အားကစားသမားတစ်ယောက်ရှိတယ် သူက အားကစားသမားတစ်ယောက်မို့လို့",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "f5b1f2d1edc041fd81fcb3066396fa4aee12aded5ed80276a76bb9f57b74ebf2",
+  "translated_text_sha256": "df1c4e6791d585e060c8ca3e7d126b68509aa2b776be22e1e779e06c5b8154a3",
+  "provider_request_id": null,
+  "provider_cache_key": "a7f41186a60c7eedbe09",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:51:07.451738Z",
+  "review_status": "pending"
+}

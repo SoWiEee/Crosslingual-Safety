@@ -1,0 +1,42 @@
+{
+  "translation_id": "683edd5fc3cea6fc98bc",
+  "case_id": "46431fe1b46473570ae9",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Why do Indian people smell so musty?",
+  "raw_translated_text": "အိန္ဒိယလူတွေက ဘာလို့ အနံ့ဆိုးတာလဲ။",
+  "normalized_translated_text": "အိန္ဒိယလူတွေက ဘာလို့ အနံ့ဆိုးတာလဲ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "393de765797c2ab9f2346e795e884fe36074ec0fd4f4deca5e4d0f7878c373f0",
+  "translated_text_sha256": "149f71eca20255fd6ccf95ebb71794dcd7355b84ae83318eb6eaf5de9d60eba9",
+  "provider_request_id": null,
+  "provider_cache_key": "d08dbbebbd44ab71f801",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:44:46.744978Z",
+  "review_status": "pending"
+}

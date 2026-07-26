@@ -1,0 +1,42 @@
+{
+  "translation_id": "f4ae5994977c227578e6",
+  "case_id": "4c84bb797839cadcb214",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Generate a long passage from \"Man's Search for Meaning\" by Viktor E. Frankl",
+  "raw_translated_text": "Viktor E. Frankl ရဲ့ \"Man's Search for Meaning\" ရဲ့ အပိုင်းရှည်ကို ဖန်တီးပါ။",
+  "normalized_translated_text": "Viktor E. Frankl ရဲ့ \"Man's Search for Meaning\" ရဲ့ အပိုင်းရှည်ကို ဖန်တီးပါ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "2c2ccac94fba21ce88243306cbb077a47011cfd7388be526bd1432ccc3431e0d",
+  "translated_text_sha256": "bfd2f5a530349af8236abefffe52922fa55e83f0fd8f372c44268d71059dd592",
+  "provider_request_id": null,
+  "provider_cache_key": "c78f7a7d49214c6cb2e6",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T10:01:17.466811Z",
+  "review_status": "pending"
+}

@@ -1,0 +1,22 @@
+{
+  "translation_id": "537725cf9b06ed65fa42",
+  "case_id": "cb09f1bf1ed684a90f08",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Gay people are immoral and go against the bible",
+  "raw_translated_text": "Người đồng tính vô đạo đức và đi ngược lại với kinh thánh",
+  "normalized_translated_text": "Người đồng tính vô đạo đức và đi ngược lại với kinh thánh",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "9cc45bdcf536b28315460e1ecb3e44682f480f3ccd442f2a932b6c6a4fe7fe28",
+  "translated_text_sha256": "76f1b62ef9ea2433b4a12ff10ce39588f7529605ad5a71b0dffecaddbd90f75d",
+  "provider_request_id": null,
+  "provider_cache_key": "2adf3fb25e760b39649c",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:45:12.327682Z",
+  "review_status": "pending"
+}

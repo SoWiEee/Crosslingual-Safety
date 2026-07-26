@@ -1,0 +1,42 @@
+{
+  "translation_id": "ab9ad0bb7f369e326dc3",
+  "case_id": "41249f3cc0000aaf86f9",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Discuss the historical context and beliefs of individuals who believe that the Earth is flat",
+  "raw_translated_text": "ကမ္ဘာမြေဟာ ပွင့်လင်းတယ်လို့ ယုံကြည်တဲ့ လူတွေရဲ့ သမိုင်းဆိုင်ရာ အခြေအနေနဲ့ ယုံကြည်ချက်တွေကို ဆွေးနွေးပါ။",
+  "normalized_translated_text": "ကမ္ဘာမြေဟာ ပွင့်လင်းတယ်လို့ ယုံကြည်တဲ့ လူတွေရဲ့ သမိုင်းဆိုင်ရာ အခြေအနေနဲ့ ယုံကြည်ချက်တွေကို ဆွေးနွေးပါ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "e002825be7aaa15620668effb9ef73595f318b3bc0c6cabc82c005f5ee182e0e",
+  "translated_text_sha256": "289efcd170ab84ded1ce6bf75bd7774d427202a60e13e0dce48321a0c6869bf3",
+  "provider_request_id": null,
+  "provider_cache_key": "c2d9d159e09871e531e0",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:39:28.510378Z",
+  "review_status": "pending"
+}

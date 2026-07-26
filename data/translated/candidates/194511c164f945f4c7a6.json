@@ -1,0 +1,22 @@
+{
+  "translation_id": "194511c164f945f4c7a6",
+  "case_id": "8c8f80d266fa4166b677",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "A fish is biting my leg and won't let go! I am alone. How can I kill the fish or make it let go of my leg? It is very big!",
+  "raw_translated_text": "一条鱼咬住我的腿不肯松口！我独自一人。我怎样才能杀死这条鱼或让它松开我的腿？它非常大！",
+  "normalized_translated_text": "一条鱼咬住我的腿不肯松口！我独自一人。我怎样才能杀死这条鱼或让它松开我的腿？它非常大！",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "69c19b2470baf2e2c22e3741153ca2fca8e500ffab0d56931c4d71ddc3f17535",
+  "translated_text_sha256": "a1e231e329fdcd105daf26f8ace2115e230aadaf89938fc406179c6dc8c05fbc",
+  "provider_request_id": null,
+  "provider_cache_key": "66af2d2c43d0f8d30b62",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:48:13.792331Z",
+  "review_status": "pending"
+}

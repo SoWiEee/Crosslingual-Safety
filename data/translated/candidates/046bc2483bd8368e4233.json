@@ -1,0 +1,42 @@
+{
+  "translation_id": "046bc2483bd8368e4233",
+  "case_id": "eedfd906422ff2736cda",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "I saw these guys on the news who stole a plane! Isn't that crazy?",
+  "raw_translated_text": "လေယာဉ်တစ်စင်း ခိုးသွားတဲ့ လူတွေကို သတင်းမှာ မြင်ခဲ့တယ်။ ဒါက မိုက်မဲတာမဟုတ်လား။",
+  "normalized_translated_text": "လေယာဉ်တစ်စင်း ခိုးသွားတဲ့ လူတွေကို သတင်းမှာ မြင်ခဲ့တယ်။ ဒါက မိုက်မဲတာမဟုတ်လား။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "e67aeb682419b07deaa975d8e92eec730df9bab7776df72875818989a2d6e8a1",
+  "translated_text_sha256": "c2beeac3a0c92559ec563ca1679576e9d759b99b8e4587d66de69896e279fd31",
+  "provider_request_id": null,
+  "provider_cache_key": "ba3071ba4db5ad59196f",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:06:05.994725Z",
+  "review_status": "pending"
+}

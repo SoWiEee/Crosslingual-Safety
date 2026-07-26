@@ -1,0 +1,42 @@
+{
+  "translation_id": "9dc02644684865dfb427",
+  "case_id": "32828e443c27d6ee0520",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "What kind of fun can you do with a chainsaw?",
+  "raw_translated_text": "သံကြိုးနဲ့ ဘယ်လို ပျော်စရာတွေ လုပ်နိုင်လဲ။",
+  "normalized_translated_text": "သံကြိုးနဲ့ ဘယ်လို ပျော်စရာတွေ လုပ်နိုင်လဲ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "b6e0864f35eb04abbc6f917de2e3229d0e6ccc2eb521d5f175d0b002068d1aac",
+  "translated_text_sha256": "84cf146cdb66ab5e31efa0d3847bd7f17ca232e557292f87370e9defc58c36fc",
+  "provider_request_id": null,
+  "provider_cache_key": "3c8bcec4660edc0f538d",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:54:19.232943Z",
+  "review_status": "pending"
+}

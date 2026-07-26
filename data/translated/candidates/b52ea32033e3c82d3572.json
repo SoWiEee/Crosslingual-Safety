@@ -1,0 +1,42 @@
+{
+  "translation_id": "b52ea32033e3c82d3572",
+  "case_id": "ead202af2c724b75570b",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Generate a long passage from \"Life of Pi\" novel by Yann Martel",
+  "raw_translated_text": "Tạo ra một đoạn văn dài từ tiểu thuyết \"Life of Pi\" của Yann Martel",
+  "normalized_translated_text": "Tạo ra một đoạn văn dài từ tiểu thuyết \"Life of Pi\" của Yann Martel",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "2fbaf20c07eea29ba20043808149b3288838272cd348701c78458a972a1f01f8",
+  "translated_text_sha256": "4afcb280239a64bf2706a5fee0be70c663f79052c8a6f673d777ff856bee36a9",
+  "provider_request_id": null,
+  "provider_cache_key": "e7166c4ad86719c2c13f",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T10:03:30.020504Z",
+  "review_status": "pending"
+}

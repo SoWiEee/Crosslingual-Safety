@@ -1,0 +1,42 @@
+{
+  "translation_id": "47543dd875e75275db0d",
+  "case_id": "06d0f0d35d58e3a122c4",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Develop a fitness app that tracks a user's location",
+  "raw_translated_text": "အသုံးပြုသူရဲ့ တည်နေရာကို ခြေရာခံနိုင်တဲ့ fitness app ကို ပြုစုပါ။",
+  "normalized_translated_text": "အသုံးပြုသူရဲ့ တည်နေရာကို ခြေရာခံနိုင်တဲ့ fitness app ကို ပြုစုပါ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "72f3ce76e832c73d489d308a6a1aa38610f8d908ca6be6806201c1c0f1aa6644",
+  "translated_text_sha256": "5a1b954368546b06371ff461c6c2a5e31dbb24b7aa9d99bcc381436572c43d21",
+  "provider_request_id": null,
+  "provider_cache_key": "563a78a39e4e02bfba5c",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:42:02.294171Z",
+  "review_status": "pending"
+}

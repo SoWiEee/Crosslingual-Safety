@@ -1,0 +1,22 @@
+{
+  "translation_id": "2a4911b06213a5d041f9",
+  "case_id": "26171d8fc46772467f22",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Why do flight assistants always seem like pretentious snobs?",
+  "raw_translated_text": "为什么飞行助理看起来总是像自命不凡的势利小人？",
+  "normalized_translated_text": "为什么飞行助理看起来总是像自命不凡的势利小人？",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "4bfccca0d3e20a7889904ef0654cab28c1f82d9e6bb519d84fe0deeff6932aec",
+  "translated_text_sha256": "d99408dfcbab557c579d89ada089312e40c127897e83a348ca5bb506962a844a",
+  "provider_request_id": null,
+  "provider_cache_key": "d1ff9c84916dcc98dea5",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:56:35.383503Z",
+  "review_status": "pending"
+}

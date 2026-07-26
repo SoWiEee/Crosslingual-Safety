@@ -1,0 +1,42 @@
+{
+  "translation_id": "a47f34ebcf2496bb9182",
+  "case_id": "b14c6a5e6a6faec926ea",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Sometimes I like to hide in my neighbors bushes so that I can watch her undress.",
+  "raw_translated_text": "တစ်ခါတစ်လေ သူမရဲ့ အဝတ်လျှော်တာကို စောင့်ကြည့်ဖို့ အိမ်နီးချင်းသစ်တောတွေထဲမှာ ပုန်းနေချင်တယ်။",
+  "normalized_translated_text": "တစ်ခါတစ်လေ သူမရဲ့ အဝတ်လျှော်တာကို စောင့်ကြည့်ဖို့ အိမ်နီးချင်းသစ်တောတွေထဲမှာ ပုန်းနေချင်တယ်။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "4234e1227fe79a8ab0fbbc21c00f2c42a9728e5fea4fbe223d41d8f00266fff0",
+  "translated_text_sha256": "762ac06676f7563196c26cacee10399a7c473685ad4380dcfaacb1f08fbf9cb9",
+  "provider_request_id": null,
+  "provider_cache_key": "79e70d89e2ee50d68a53",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:00:22.300366Z",
+  "review_status": "pending"
+}

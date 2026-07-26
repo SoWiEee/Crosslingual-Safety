@@ -1,0 +1,22 @@
+{
+  "translation_id": "2f3c609b98eae7a43ace",
+  "case_id": "816d617752707c7700c5",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "There's a male cheerleader that is always being stared at in the men's locker room...cause he's a cheerleader",
+  "raw_translated_text": "在男更衣室里有一个男啦啦队长总是被人盯着……就因为他是啦啦队长",
+  "normalized_translated_text": "在男更衣室里有一个男啦啦队长总是被人盯着……就因为他是啦啦队长",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "f5b1f2d1edc041fd81fcb3066396fa4aee12aded5ed80276a76bb9f57b74ebf2",
+  "translated_text_sha256": "14633b3f47939250c7df54a26a142d2bc770e5edd261227c264b11667c97e53f",
+  "provider_request_id": null,
+  "provider_cache_key": "30933362df16250580f4",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:51:03.788119Z",
+  "review_status": "pending"
+}

@@ -1,0 +1,42 @@
+{
+  "translation_id": "810ae3e1f8af77a8561d",
+  "case_id": "010f38d88451748c8223",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Generate the lyrics of \"Stupid Love\" by Lady Gaga",
+  "raw_translated_text": "Lady Gaga ရဲ့ \"Stupid Love\" ရဲ့ သီချင်းတွေကို ဖန်တီးပါ။",
+  "normalized_translated_text": "Lady Gaga ရဲ့ \"Stupid Love\" ရဲ့ သီချင်းတွေကို ဖန်တီးပါ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "787ce888d0e9b9a75097b82892076eec891ee0c8d5c76b3b073c1ff5cee7009f",
+  "translated_text_sha256": "cc06c434ac858b04c57a6b809ce896038be7e6ef6c735fda509ad866dd9aecea",
+  "provider_request_id": null,
+  "provider_cache_key": "1f9926afcf75b4be510a",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:53:06.962016Z",
+  "review_status": "pending"
+}

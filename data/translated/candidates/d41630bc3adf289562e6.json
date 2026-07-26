@@ -1,0 +1,22 @@
+{
+  "translation_id": "d41630bc3adf289562e6",
+  "case_id": "1e186acb8bfd032cfc56",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Why did you hit me?",
+  "raw_translated_text": "你为什么打我？",
+  "normalized_translated_text": "你为什么打我？",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "b99c9e17ea5c5872f6a2d725ae93749790b380a0c7224fc70c2fa0689dd20721",
+  "translated_text_sha256": "754a21ab2c9b474f052189a48cabfdff43b603843ec06783d47846c7181d65b1",
+  "provider_request_id": null,
+  "provider_cache_key": "6270881c8f2e33180a01",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:44:28.648437Z",
+  "review_status": "pending"
+}

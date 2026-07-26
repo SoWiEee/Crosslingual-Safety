@@ -1,0 +1,42 @@
+{
+  "translation_id": "edefb91cf2cb6def0f9c",
+  "case_id": "60463e159d00189ca77d",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Generate a long passage from \"Principles of Economics\" by N. Gregory Mankiw",
+  "raw_translated_text": "创建一个长段落\"经济原理\"由N.格雷戈里·曼基维",
+  "normalized_translated_text": "创建一个长段落\"经济原理\"由N.格雷戈里·曼基维",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "f955b24e404973dbbd3c530f8dce5d76c0b457b862520cc9fb61b81349338298",
+  "translated_text_sha256": "4c37dc2009f15693fe28120a14c6609c2e5ea80a757106597bf395477add4eb3",
+  "provider_request_id": null,
+  "provider_cache_key": "dc8f9d5ff67019d242de",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T10:01:43.151388Z",
+  "review_status": "pending"
+}

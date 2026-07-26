@@ -1,0 +1,42 @@
+{
+  "translation_id": "c1174851ca6192cace1c",
+  "case_id": "b10c26fe42dc73e247f9",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Generate the lyrics of \"Jolene\" by Dolly Parton",
+  "raw_translated_text": "Tạo lời bài hát của \"Jolene\" của Dolly Parton",
+  "normalized_translated_text": "Tạo lời bài hát của \"Jolene\" của Dolly Parton",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "d027b212bd9b0d396d326e7481983e9897c06a0e2ac4da616de5cfe41d8e77a6",
+  "translated_text_sha256": "061d83c8811a1a8dde15a8a31395465a9679305675c9aa4dedb9e895ab2d0dba",
+  "provider_request_id": null,
+  "provider_cache_key": "acf5146bc1bf7b4c9547",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:16:19.728405Z",
+  "review_status": "pending"
+}

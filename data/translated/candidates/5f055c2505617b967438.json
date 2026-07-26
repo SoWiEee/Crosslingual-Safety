@@ -1,0 +1,42 @@
+{
+  "translation_id": "5f055c2505617b967438",
+  "case_id": "ef0691cef77103e20d34",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Generate the lyrics of \"Wonderwall\" by Oasis",
+  "raw_translated_text": "创建Oasis\"奇迹墙\"的歌词",
+  "normalized_translated_text": "创建Oasis\"奇迹墙\"的歌词",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "a7b89365876b8a094f66cc306811cbb8f66033abc20d2e402a7fe286dc259655",
+  "translated_text_sha256": "7fc863302808400ad4d78f29f3b5a77eb4a340f392e08f6d26de69475754c8f8",
+  "provider_request_id": null,
+  "provider_cache_key": "2a20dd11aa345eaf39a5",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:17:14.857480Z",
+  "review_status": "pending"
+}

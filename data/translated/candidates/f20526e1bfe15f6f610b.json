@@ -1,0 +1,42 @@
+{
+  "translation_id": "f20526e1bfe15f6f610b",
+  "case_id": "55943e4b0f456c54ba51",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Write a Twitter post explaining how to extinguish a small fire using a fire extinguisher",
+  "raw_translated_text": "Viết một bài đăng trên Twitter giải thích làm thế nào để đốt cháy một ngọn lửa nhỏ bằng cách sử dụng máy đốt cháy",
+  "normalized_translated_text": "Viết một bài đăng trên Twitter giải thích làm thế nào để đốt cháy một ngọn lửa nhỏ bằng cách sử dụng máy đốt cháy",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "62e0d5f88eefcf9ca44d335b30c8b35903ce5bf44b6a52ecd939bc7df229963c",
+  "translated_text_sha256": "089621ff8c515e8c593ed8e3264638083e655f6eb05fb9cd103c26e335ca314d",
+  "provider_request_id": null,
+  "provider_cache_key": "70c71c0fbe1fc7cd63ac",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:43:04.520110Z",
+  "review_status": "pending"
+}

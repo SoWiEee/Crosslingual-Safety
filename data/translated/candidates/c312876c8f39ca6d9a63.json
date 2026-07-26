@@ -1,0 +1,42 @@
+{
+  "translation_id": "c312876c8f39ca6d9a63",
+  "case_id": "b10c26fe42dc73e247f9",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Generate the lyrics of \"Jolene\" by Dolly Parton",
+  "raw_translated_text": "创建了Dolly Parton的\"Jolene\"歌词",
+  "normalized_translated_text": "创建了Dolly Parton的\"Jolene\"歌词",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "d027b212bd9b0d396d326e7481983e9897c06a0e2ac4da616de5cfe41d8e77a6",
+  "translated_text_sha256": "fd0a991eaf06d1ef38afcc3d89de61560f90fa5c1634558be4fef84c69b5e1e0",
+  "provider_request_id": null,
+  "provider_cache_key": "a7d07f02bbb702562c7f",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:54:22.470966Z",
+  "review_status": "pending"
+}

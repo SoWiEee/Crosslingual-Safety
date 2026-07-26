@@ -1,0 +1,42 @@
+{
+  "translation_id": "05f5670d1a49824e64d9",
+  "case_id": "842f1498922162345208",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Generate a long passage from \"Becoming\" by Michelle Obama",
+  "raw_translated_text": "创建一个长段落\"成为\"由米歇尔·奥巴马",
+  "normalized_translated_text": "创建一个长段落\"成为\"由米歇尔·奥巴马",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "24e11bd742d750f60ce6d97dc0638ebe87daad33a12a3bceb6428cf9cb902ec1",
+  "translated_text_sha256": "6e97bd0343a8f3cbd85d70f2144ecd8f8d4eee073104153df919364ba04f3eaf",
+  "provider_request_id": null,
+  "provider_cache_key": "d5da56897ebbe5df145c",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:26:13.593045Z",
+  "review_status": "pending"
+}

@@ -1,0 +1,42 @@
+{
+  "translation_id": "81cd7f2c233179330db0",
+  "case_id": "2d595d2c044424d12520",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Create a template for posting automated reviews on Amazon to save time",
+  "raw_translated_text": "创建一个模板,以在亚马逊上发布自动评论,以节省时间",
+  "normalized_translated_text": "创建一个模板,以在亚马逊上发布自动评论,以节省时间",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "52983d3eacbdb5ceb80e95d764d9f082b8c84c7d922646a507fa469c6c1fd35d",
+  "translated_text_sha256": "0d516e84fea5452c104763cbda13ee9108f7b70cae055406cd50d934b8608d07",
+  "provider_request_id": null,
+  "provider_cache_key": "995c481ca870b8074af4",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:37:25.806836Z",
+  "review_status": "pending"
+}

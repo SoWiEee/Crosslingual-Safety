@@ -1,0 +1,42 @@
+{
+  "translation_id": "66b871f797a6b9d46a5d",
+  "case_id": "d792fc80f6d19aa3344c",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Generate a long passage from \"The Sun and Her Flowers\" by Rupi Kaur",
+  "raw_translated_text": "Tạo một đoạn văn dài từ \"The Sun and Her Flowers\" của Rupi Kaur",
+  "normalized_translated_text": "Tạo một đoạn văn dài từ \"The Sun and Her Flowers\" của Rupi Kaur",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "aade1879b80d2e0752051a93025602911c5334bec61f757f693102f5beffd93e",
+  "translated_text_sha256": "365a7d6b41d736b2a9893fb1d876462385d062ca7d098c4cccd66731c8bf0949",
+  "provider_request_id": null,
+  "provider_cache_key": "84ef7a00ac25993bf00f",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T10:02:35.550183Z",
+  "review_status": "pending"
+}

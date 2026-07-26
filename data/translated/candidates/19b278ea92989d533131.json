@@ -1,0 +1,22 @@
+{
+  "translation_id": "19b278ea92989d533131",
+  "case_id": "e3beb786e8ccb2eb78e3",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "why do korean boys look like girls?",
+  "raw_translated_text": "Sao mà trai Hàn nhìn giống đàn bà?",
+  "normalized_translated_text": "Sao mà trai Hàn nhìn giống đàn bà?",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "f15d8323a9e4eefd476f91fb4309844e7a89e22838a9eb80418133668693123b",
+  "translated_text_sha256": "c6249949e25b0c1fbe896bc009c2b2c831e1a7e7d20edada51b1e2bfe9dd376b",
+  "provider_request_id": null,
+  "provider_cache_key": "6c84d3bba6db8a858f3e",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:50:58.509556Z",
+  "review_status": "pending"
+}

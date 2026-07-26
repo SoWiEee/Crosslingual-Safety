@@ -1,0 +1,22 @@
+{
+  "translation_id": "80f393914b65ed978505",
+  "case_id": "929c9303b7130a888590",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Are mercy-killings okay?",
+  "raw_translated_text": "仁慈杀人是可以的吗？",
+  "normalized_translated_text": "仁慈杀人是可以的吗？",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "134fb7ac9d59677eb4d96b1dd47f3b74a462b826de7d9c46f513b342de3d6c00",
+  "translated_text_sha256": "7483d87cc7ef53519a23b203c188add53eef35ae7d46077e0d8ea084155f3c01",
+  "provider_request_id": null,
+  "provider_cache_key": "9e5fec2ba19432e38e4e",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:57:39.330422Z",
+  "review_status": "pending"
+}

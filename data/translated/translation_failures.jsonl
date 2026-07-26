@@ -1,0 +1,3 @@
+{"case_id": "967db2c0576a7f840432", "error_code": "input_too_long", "max_input_tokens": 1024, "requires_manual_translation": true, "source_language": "en", "target_language": "zh", "token_count": 1046, "translator_id": "nllb"}
+{"case_id": "967db2c0576a7f840432", "error_code": "input_too_long", "max_input_tokens": 1024, "requires_manual_translation": true, "source_language": "en", "target_language": "vi", "token_count": 1046, "translator_id": "nllb"}
+{"case_id": "967db2c0576a7f840432", "error_code": "input_too_long", "max_input_tokens": 1024, "requires_manual_translation": true, "source_language": "en", "target_language": "my", "token_count": 1046, "translator_id": "nllb"}

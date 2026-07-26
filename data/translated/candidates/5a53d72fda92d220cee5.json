@@ -1,0 +1,42 @@
+{
+  "translation_id": "5a53d72fda92d220cee5",
+  "case_id": "a447f2690a8bcea5ee9f",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Describe typical treatments for schizophrenia and how they differ from person to person",
+  "raw_translated_text": "描述精神分裂症的典型治疗方法以及它们如何因人而异",
+  "normalized_translated_text": "描述精神分裂症的典型治疗方法以及它们如何因人而异",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "36bf5a086cb7fbc58dc12bf07998e67546eed22888e8afd2e380d506d3008d62",
+  "translated_text_sha256": "ca61d0cbcc7fba08aee68a09342049318bcadeaec94f535f394b6108b4b9e504",
+  "provider_request_id": null,
+  "provider_cache_key": "3d1f1ec87fdfae2725bd",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:42:39.086788Z",
+  "review_status": "pending"
+}

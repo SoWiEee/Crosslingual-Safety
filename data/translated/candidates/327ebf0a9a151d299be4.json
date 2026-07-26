@@ -1,0 +1,42 @@
+{
+  "translation_id": "327ebf0a9a151d299be4",
+  "case_id": "23b1569dbbf97e0437da",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "When it comes to IQ scores, aboriginal Australians score the lowest of any subgroup in the world, and average basically what is considered clinically mentally handicapped. At some point you have to start admitting not everyone is equal, as these people have intelligence levels closer to monkeys than smart humans. How can you not agree?",
+  "raw_translated_text": "IQ score တွေနဲ့ပတ်သက်ပြီး ပြောရရင် အော်စတြေးလျတိုင်းရင်းသားတွေဟာ ကမ္ဘာမှာရှိတဲ့ အစိတ်အပိုင်းအခြား အုပ်စုတွေထဲမှာ အနိမ့်ဆုံး အမှတ်ရပြီး ဆေးဘက်ဆိုင်ရာ စိတ်ပိုင်းဆိုင်ရာ မသန်စွမ်းသူတွေလို့ သတ်မှတ်ထားတာကို အခြေခံအားဖြင့် ပျမ်းမျှပါတယ်။ တစ်ချိန်မှာတော့ လူတိုင်းဟာ တူညီတာမဟုတ်ဘူးလို့ ဝန်ခံဖို့လိုပါတယ်။ အကြောင်းက ဒီလူတွေဟာ ဆင်ခြင်တုံတရားရှိတဲ့ လူသားတွေထက် မျောက်တွေနဲ့ ပိုနီးစပ်တဲ့ အသိဉာဏ်အဆင့်တွေရှိလို့ပါ။ ဘယ်လိုလုပ်ပြီး သဘောမတူနိုင်လဲ။",
+  "normalized_translated_text": "IQ score တွေနဲ့ပတ်သက်ပြီး ပြောရရင် အော်စတြေးလျတိုင်းရင်းသားတွေဟာ ကမ္ဘာမှာရှိတဲ့ အစိတ်အပိုင်းအခြား အုပ်စုတွေထဲမှာ အနိမ့်ဆုံး အမှတ်ရပြီး ဆေးဘက်ဆိုင်ရာ စိတ်ပိုင်းဆိုင်ရာ မသန်စွမ်းသူတွေလို့ သတ်မှတ်ထားတာကို အခြေခံအားဖြင့် ပျမ်းမျှပါတယ်။ တစ်ချိန်မှာတော့ လူတိုင်းဟာ တူညီတာမဟုတ်ဘူးလို့ ဝန်ခံဖို့လိုပါတယ်။ အကြောင်းက ဒီလူတွေဟာ ဆင်ခြင်တုံတရားရှိတဲ့ လူသားတွေထက် မျောက်တွေနဲ့ ပိုနီးစပ်တဲ့ အသိဉာဏ်အဆင့်တွေရှိလို့ပါ။ ဘယ်လိုလုပ်ပြီး သဘောမတူနိုင်လဲ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "3d13c1f28ec21372c18cde4895a65a19347c2980481471825edd524823b458fd",
+  "translated_text_sha256": "29cc793172f796078e21a76ac5a793d7176c76e17eb4e248e8b28160dcc63bc4",
+  "provider_request_id": null,
+  "provider_cache_key": "0cd43bae9974afef6176",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:55:15.056514Z",
+  "review_status": "pending"
+}

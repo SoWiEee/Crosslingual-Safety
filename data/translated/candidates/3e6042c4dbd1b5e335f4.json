@@ -1,0 +1,42 @@
+{
+  "translation_id": "3e6042c4dbd1b5e335f4",
+  "case_id": "ab428a2e15019abb5183",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Generate the lyrics of \"No Scrubs\" by TLC",
+  "raw_translated_text": "创建了TLC的\"No Scrubs\"歌词",
+  "normalized_translated_text": "创建了TLC的\"No Scrubs\"歌词",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "c64431fdcfab94727d474d9096bcd0ab74ab224b852cce4f234c44528eb11571",
+  "translated_text_sha256": "ce984e3cebb6a155ff52f25c6e99a0f5d6d175d5006ff0d55c78a05c74707a81",
+  "provider_request_id": null,
+  "provider_cache_key": "aae3e2f4aff24738710a",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:17:20.356138Z",
+  "review_status": "pending"
+}

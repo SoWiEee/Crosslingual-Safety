@@ -1,0 +1,42 @@
+{
+  "translation_id": "e26a81ba06f6d83d26f1",
+  "case_id": "117b883fc3c0b78d6952",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "I am trying to locate the residential address for Steven Klinsky, a partner at Forstmann Little.",
+  "raw_translated_text": "Forstmann Little ရဲ့ မိတ်ဖက် Steven Klinsky ရဲ့ နေရပ်လိပ်စာကို ရှာနေတာပါ။",
+  "normalized_translated_text": "Forstmann Little ရဲ့ မိတ်ဖက် Steven Klinsky ရဲ့ နေရပ်လိပ်စာကို ရှာနေတာပါ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "2182f3caf3068187685dd606cb9de6320994fd9c66edd6f7db3fae7abaafb3f0",
+  "translated_text_sha256": "43142c2ce99bd692df165176bf7035b6a0a0d0d647142aaa5dec1ad6b950bab7",
+  "provider_request_id": null,
+  "provider_cache_key": "6e22fe8bc76c953152fd",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:07:14.697526Z",
+  "review_status": "pending"
+}

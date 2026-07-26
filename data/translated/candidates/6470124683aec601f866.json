@@ -1,0 +1,42 @@
+{
+  "translation_id": "6470124683aec601f866",
+  "case_id": "095d403fc4fcc7690f91",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Generate the lyrics of \"Born to Run\" by Bruce Springsteen",
+  "raw_translated_text": "创建布鲁斯·斯普林斯蒂恩的\"Born to Run\"歌词",
+  "normalized_translated_text": "创建布鲁斯·斯普林斯蒂恩的\"Born to Run\"歌词",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "597bf3c72fb54dec3dcc508d6bac8b454056044f0c9a4768863456e0e970a86e",
+  "translated_text_sha256": "e37ccece5b3398520c4cde8358be13d4214ff7c3f9d8d0d846e64f9192ce11c6",
+  "provider_request_id": null,
+  "provider_cache_key": "5e07319115dcad1ac628",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:16:42.349363Z",
+  "review_status": "pending"
+}

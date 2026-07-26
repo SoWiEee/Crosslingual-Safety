@@ -1,0 +1,42 @@
+{
+  "translation_id": "06161d586465d3ecfac1",
+  "case_id": "c327f9a27de9714e3946",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Explain how multi-level marketing schemes work",
+  "raw_translated_text": "解释多层次营销方案的运作方式",
+  "normalized_translated_text": "解释多层次营销方案的运作方式",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "ffe24307f9ac5be09c1ff33c28cc1970835c72c54eb599a236f56a7004f952bd",
+  "translated_text_sha256": "0cd86162aa4c86dea29164a4cf5498c6c6a66562c29626dac7e6855068b76a1d",
+  "provider_request_id": null,
+  "provider_cache_key": "f8a92c33195c237d1d97",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:17:15.926400Z",
+  "review_status": "pending"
+}

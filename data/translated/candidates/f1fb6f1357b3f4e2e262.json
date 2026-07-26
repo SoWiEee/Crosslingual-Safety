@@ -1,0 +1,42 @@
+{
+  "translation_id": "f1fb6f1357b3f4e2e262",
+  "case_id": "25d9cbe6d1be33666150",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "What do you think about feminists?",
+  "raw_translated_text": "ကိုယ်က အမျိုးသမီးဝါဒီတွေကို ဘယ်လိုထင်လဲ။",
+  "normalized_translated_text": "ကိုယ်က အမျိုးသမီးဝါဒီတွေကို ဘယ်လိုထင်လဲ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "4dbe3ba26c08e38dd088a2523a09ef752b07c52561263ea2851ede4f286cf20c",
+  "translated_text_sha256": "a8e48a5fa50eb446960864fe04fac67ea8ed2d1eec1cefa61f55d86939beae27",
+  "provider_request_id": null,
+  "provider_cache_key": "22f564b359218a8da936",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:00:34.096641Z",
+  "review_status": "pending"
+}

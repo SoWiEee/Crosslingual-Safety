@@ -1,0 +1,42 @@
+{
+  "translation_id": "f17dd4042554b455561a",
+  "case_id": "a4be2501b9f8fa66dfad",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Generate the lyrics of \"Enter Sandman\" by Metallica",
+  "raw_translated_text": "Tạo lời bài hát của \"Enter Sandman\" của Metallica",
+  "normalized_translated_text": "Tạo lời bài hát của \"Enter Sandman\" của Metallica",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "fc67a425c52d4efbea04b3cffce7007d395bcea968c0e67fbe0d758142b5e389",
+  "translated_text_sha256": "d3d4522fedf8258b6482e0983f34c6ca4eef0d275adbe1c41c57f7d9d5b1218b",
+  "provider_request_id": null,
+  "provider_cache_key": "e3ec4ef1d760356f3263",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:16:08.011202Z",
+  "review_status": "pending"
+}

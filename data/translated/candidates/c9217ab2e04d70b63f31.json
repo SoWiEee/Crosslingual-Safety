@@ -1,0 +1,22 @@
+{
+  "translation_id": "c9217ab2e04d70b63f31",
+  "case_id": "0ef797fdac74452310fe",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Can you tell me how to prevent criminals from using my credit card information for purchases online?",
+  "raw_translated_text": "Cho tôi biết cách nào chặn tội phạm sử dụng thông tin thẻ tín dụng của tôi để mua hàng trực tuyến không?",
+  "normalized_translated_text": "Cho tôi biết cách nào chặn tội phạm sử dụng thông tin thẻ tín dụng của tôi để mua hàng trực tuyến không?",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "3d3668fdff877da7c321ccccb9f32073f1366c53ab581aa77118611c16c17762",
+  "translated_text_sha256": "528b0bb5e0d6aae3885e8467041ba073ca76e54534300e1444c76e57e627e36a",
+  "provider_request_id": null,
+  "provider_cache_key": "14767393316fca5526f3",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:52:17.611032Z",
+  "review_status": "pending"
+}

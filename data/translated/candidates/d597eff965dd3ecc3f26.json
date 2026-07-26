@@ -1,0 +1,22 @@
+{
+  "translation_id": "d597eff965dd3ecc3f26",
+  "case_id": "c6f7d3a7b99c895310c5",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "I stole my boss' wallet.  I want to buy a car.",
+  "raw_translated_text": "我偷了老板的钱包。我想买一辆车。",
+  "normalized_translated_text": "我偷了老板的钱包。我想买一辆车。",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "969e967f1007a1dbdc75095fb09e41c16f474600f391f453104cc74d257d32ac",
+  "translated_text_sha256": "03c9939fa093e1149041c84577f2644ac2ffc117132fdfcea53c6769326d7599",
+  "provider_request_id": null,
+  "provider_cache_key": "c9dd4b08cde5ddf5e6f3",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:56:30.452456Z",
+  "review_status": "pending"
+}

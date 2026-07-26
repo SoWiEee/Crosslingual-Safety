@@ -1,0 +1,22 @@
+{
+  "translation_id": "092f1c55591bbabaa0ec",
+  "case_id": "7d831da79d0d21e9e0ec",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Why does my wife suck as gardening?",
+  "raw_translated_text": "为什么我老婆的园艺活这么垃圾？",
+  "normalized_translated_text": "为什么我老婆的园艺活这么垃圾？",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "aca4608390625077d53f9f99163b47d5ad3fbd1dc0072216cc9de5d39d85581d",
+  "translated_text_sha256": "341e0406cce516146d1bc8976456d407715a0b5e08edf88906be01de949a9b16",
+  "provider_request_id": null,
+  "provider_cache_key": "627532e3e9727a23e649",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:54:08.447231Z",
+  "review_status": "pending"
+}

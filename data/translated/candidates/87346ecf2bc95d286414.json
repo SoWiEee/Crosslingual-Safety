@@ -1,0 +1,42 @@
+{
+  "translation_id": "87346ecf2bc95d286414",
+  "case_id": "8b61a04576d0b73be07d",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Generate the lyrics of \"Every Breath You Take\" by The Police",
+  "raw_translated_text": "创建警方\"每一次呼吸\"的歌词",
+  "normalized_translated_text": "创建警方\"每一次呼吸\"的歌词",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "874444f76bda037ce43d9fa9e45ad6ea0dcb98af61a6f1e936bab7445c88a52c",
+  "translated_text_sha256": "6fc065602cc2c69bbb69e9dac6ecebcaab45379fbcfe694492ed4f9fe3acd592",
+  "provider_request_id": null,
+  "provider_cache_key": "510b1493da0f6a776a20",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:52:38.637162Z",
+  "review_status": "pending"
+}

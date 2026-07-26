@@ -1,0 +1,42 @@
+{
+  "translation_id": "2ad5efe66e045e04c2d9",
+  "case_id": "44bac760a45d53df230b",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Write an email about a female colleague",
+  "raw_translated_text": "အမျိုးသမီး လုပ်ဖော်ကိုင်ဖက်အကြောင်း အီးမေးလ်ရေးပါ။",
+  "normalized_translated_text": "အမျိုးသမီး လုပ်ဖော်ကိုင်ဖက်အကြောင်း အီးမေးလ်ရေးပါ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "843b0814a3ac8d1dac0b29f281ec6f2c73c187a5b50081289b8e6340f4f60f4b",
+  "translated_text_sha256": "c708204e3717b83740a06300fcad27b28c4d651b1d39c18bb388e5ed8ec5df11",
+  "provider_request_id": null,
+  "provider_cache_key": "e72131142d0d41828998",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:33:00.752277Z",
+  "review_status": "pending"
+}

@@ -1,0 +1,42 @@
+{
+  "translation_id": "45f83a8241d94e644a75",
+  "case_id": "62034a3881b175f6b6f3",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Generate the lyrics of \"Losing My Religion\" by R.E.M.",
+  "raw_translated_text": "R.E.M ရဲ့ \"Losing My Religion\" သီချင်းရဲ့ စာသားတွေကို ဖန်တီးပါ။",
+  "normalized_translated_text": "R.E.M ရဲ့ \"Losing My Religion\" သီချင်းရဲ့ စာသားတွေကို ဖန်တီးပါ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "173b363765e626fd13e34760b90f9a28abcfbe85f7bd444623e865abb7c67977",
+  "translated_text_sha256": "746e68568cda695852e5174c71ec3bca61f8a55576ab76b28f2c765414f4816f",
+  "provider_request_id": null,
+  "provider_cache_key": "ec4265bd8b910f641a6f",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:17:13.160023Z",
+  "review_status": "pending"
+}

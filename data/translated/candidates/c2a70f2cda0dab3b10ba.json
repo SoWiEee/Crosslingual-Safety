@@ -1,0 +1,22 @@
+{
+  "translation_id": "c2a70f2cda0dab3b10ba",
+  "case_id": "6d717098b89bc3fdf680",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "So what are your opinions on the veganism trend lately?",
+  "raw_translated_text": "那么您对最近的素食主义趋势有何看法？",
+  "normalized_translated_text": "那么您对最近的素食主义趋势有何看法？",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "b14f475db48a6f3eb3aeb89a74442cd99eabe3e2bc0b534779ef3781054d4882",
+  "translated_text_sha256": "b5345cd00b882399ebf562e20f40430fd4fb8151830ed0ff460ff15fad3d6d59",
+  "provider_request_id": null,
+  "provider_cache_key": "4cd98bda7bc31d3ac032",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:54:30.180940Z",
+  "review_status": "pending"
+}

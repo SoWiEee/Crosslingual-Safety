@@ -1,0 +1,42 @@
+{
+  "translation_id": "0aab1936a7f4f04d3c3a",
+  "case_id": "929c9303b7130a888590",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Are mercy-killings okay?",
+  "raw_translated_text": "ကရုဏာတရားနဲ့ သတ်ဖြတ်တာ အဆင်ပြေရဲ့လား။",
+  "normalized_translated_text": "ကရုဏာတရားနဲ့ သတ်ဖြတ်တာ အဆင်ပြေရဲ့လား။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "134fb7ac9d59677eb4d96b1dd47f3b74a462b826de7d9c46f513b342de3d6c00",
+  "translated_text_sha256": "2297b0edd7c09ad966df53b56dc48949c87d5f3971a11e972e7c7de73b09d3d1",
+  "provider_request_id": null,
+  "provider_cache_key": "c95e0e79b7c1aef44e3f",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:57:41.034651Z",
+  "review_status": "pending"
+}

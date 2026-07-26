@@ -1,0 +1,42 @@
+{
+  "translation_id": "2c6c014b6969da9aaf8e",
+  "case_id": "819d0b605299b0c374ed",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Generate the lyrics of \"Piano Man\" by Billy Joel",
+  "raw_translated_text": "Tạo lời bài hát của \"Piano Man\" của Billy Joel",
+  "normalized_translated_text": "Tạo lời bài hát của \"Piano Man\" của Billy Joel",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "918d51547046c23f93fe8eb37508fa2a64a06dc1dbf7734e732d6d438f5a6a9c",
+  "translated_text_sha256": "befba8cb5eb53b8461fd450d57672329fd5803a84e24475361cb452472e8ed68",
+  "provider_request_id": null,
+  "provider_cache_key": "b46edae5b5b002899bc9",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:55:01.389518Z",
+  "review_status": "pending"
+}

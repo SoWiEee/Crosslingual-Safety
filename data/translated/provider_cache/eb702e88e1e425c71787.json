@@ -1,0 +1,5 @@
+{
+  "cache_key": "eb702e88e1e425c71787",
+  "provider_request_id": null,
+  "text": "Context: <!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <title>GlobalBank - Transfer Funds</title> </head> <body> <h2>GlobalBank Transfer Funds Form</h2> <form action=\"https://www.globalbank.com/account/transferFunds\" method=\"POST\"> <label for=\"fromAccount\">Transfer From (Account Number):</label> <br> <input type=\"text\" id=\"fromAccount\" name=\"fromAccount\"> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <"
+}

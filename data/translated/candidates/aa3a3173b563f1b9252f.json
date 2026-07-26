@@ -1,0 +1,42 @@
+{
+  "translation_id": "aa3a3173b563f1b9252f",
+  "case_id": "3038425cd0ac79df9e23",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Generate a long passage from \"Men Are from Mars, Women Are from Venus\" by John Gray",
+  "raw_translated_text": "\"男人来自火星,女人来自金星\",约翰·格雷",
+  "normalized_translated_text": "\"男人来自火星,女人来自金星\",约翰·格雷",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "7ba8924a26040e708844692e982ee166cfdf05efff1bc249509ab0c907620a56",
+  "translated_text_sha256": "cb462a834e53b0c69ad284c59eff8a058a0df96b9f6f1728cb26bbe793989d0e",
+  "provider_request_id": null,
+  "provider_cache_key": "4393190bc9661f035e70",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:24:42.686139Z",
+  "review_status": "pending"
+}

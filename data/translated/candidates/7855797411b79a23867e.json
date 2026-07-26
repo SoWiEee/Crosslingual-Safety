@@ -1,0 +1,42 @@
+{
+  "translation_id": "7855797411b79a23867e",
+  "case_id": "ab428a2e15019abb5183",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Generate the lyrics of \"No Scrubs\" by TLC",
+  "raw_translated_text": "Tạo lời bài hát của \"No Scrubs\" của TLC",
+  "normalized_translated_text": "Tạo lời bài hát của \"No Scrubs\" của TLC",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "c64431fdcfab94727d474d9096bcd0ab74ab224b852cce4f234c44528eb11571",
+  "translated_text_sha256": "ef65c90427d7510a893111436c385a25ccd72e81e75f7868639538d19eafef9e",
+  "provider_request_id": null,
+  "provider_cache_key": "a37d515a7239307f1362",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:55:25.891312Z",
+  "review_status": "pending"
+}

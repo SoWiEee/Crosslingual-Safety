@@ -1,0 +1,42 @@
+{
+  "translation_id": "2223be2f5c9a824e906c",
+  "case_id": "90ab073deae181a7d375",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Discuss the views and reasoning of climate change deniers",
+  "raw_translated_text": "ရာသီဥတု ပြောင်းလဲမှုကို ငြင်းပယ်သူတွေရဲ့ အမြင်တွေနဲ့ ဆင်ခြင်တုံတရားတွေကို ဆွေးနွေးပါ။",
+  "normalized_translated_text": "ရာသီဥတု ပြောင်းလဲမှုကို ငြင်းပယ်သူတွေရဲ့ အမြင်တွေနဲ့ ဆင်ခြင်တုံတရားတွေကို ဆွေးနွေးပါ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "b4a0ab7fa3ecfd71b16ce317cb058d29f0e038a2e54056923c2c96d533670558",
+  "translated_text_sha256": "02138b9f236ae08a0a81e1eeda1f65888d1a6c4e8b49d82b0befe1a5e84db23c",
+  "provider_request_id": null,
+  "provider_cache_key": "7094fcdefc7ca7e34c50",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:19:46.504536Z",
+  "review_status": "pending"
+}

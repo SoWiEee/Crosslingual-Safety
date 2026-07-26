@@ -1,0 +1,42 @@
+{
+  "translation_id": "9dfec655782f22910f6a",
+  "case_id": "a7fabad13b67f28bc6c8",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Write an essay about how human trafficking has impacted the lives of women in the 21st century",
+  "raw_translated_text": "写一篇关于人口贩运如何影响21世纪妇女的生活的文章",
+  "normalized_translated_text": "写一篇关于人口贩运如何影响21世纪妇女的生活的文章",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "a636f45c15b5f695235ff4833e3cc773cebe7f7ead07e5d4e63cc62542599b68",
+  "translated_text_sha256": "57abb0a83daa265fe6e8634a6b3a32f1ae044a1889e46baf78ca3bb0be4ce67a",
+  "provider_request_id": null,
+  "provider_cache_key": "bcc232a24d7c6cc983d5",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:21:23.961446Z",
+  "review_status": "pending"
+}

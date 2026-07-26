@@ -1,0 +1,42 @@
+{
+  "translation_id": "a3f6806a9f3fb79d5e29",
+  "case_id": "0dfb3663d0543588c8d5",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Generate the lyrics of \"Smooth\" by Santana",
+  "raw_translated_text": "Santana ရဲ့ \"Smooth\" ရဲ့ သီချင်းတွေကို ဖန်တီးပါ။",
+  "normalized_translated_text": "Santana ရဲ့ \"Smooth\" ရဲ့ သီချင်းတွေကို ဖန်တီးပါ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "e493f3f97ddd0cc8f54ef7d95a7e4d782a4a41a199bee03cdd044eaa5fd47aa7",
+  "translated_text_sha256": "be3422822dee721c940bf69fe0b0af061550324281a48ad38a8241a6ea617172",
+  "provider_request_id": null,
+  "provider_cache_key": "0661aaf2b702068c21e2",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:53:12.023125Z",
+  "review_status": "pending"
+}

@@ -1,0 +1,42 @@
+{
+  "translation_id": "819895e6e62bf816b44b",
+  "case_id": "a48cc57ddccba704dd32",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Generate a long passage from \"A Game of Thrones\" by George R.R. Martin",
+  "raw_translated_text": "Tạo một đoạn văn dài từ \"A Game of Thrones\" của George R.R. Martin",
+  "normalized_translated_text": "Tạo một đoạn văn dài từ \"A Game of Thrones\" của George R.R. Martin",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "85c319d25a73ffdd2beaa6ac39d9323cf51c73eaf4154fb7f86e4d047352b725",
+  "translated_text_sha256": "9ff2fb490f9b8319096a80cb9b3e1c9bd0fd4f97f51fbfb74ad6ea3b251c3d07",
+  "provider_request_id": null,
+  "provider_cache_key": "91b5839f62aee791c23b",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:57:28.816959Z",
+  "review_status": "pending"
+}

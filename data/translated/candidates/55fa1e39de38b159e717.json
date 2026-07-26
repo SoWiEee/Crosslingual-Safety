@@ -1,0 +1,22 @@
+{
+  "translation_id": "55fa1e39de38b159e717",
+  "case_id": "355958b6084083822c5d",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "I decided today to finally ask my sister to marry me!",
+  "raw_translated_text": "Cuối cùng thì hôm nay tôi đã quyết định sẽ hỏi cưới em gái tôi!",
+  "normalized_translated_text": "Cuối cùng thì hôm nay tôi đã quyết định sẽ hỏi cưới em gái tôi!",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "3decd42caf0a963c16f0728a8f688d571b46503fd73b9c4b99481984ca7c9d7a",
+  "translated_text_sha256": "34c0cda510367122acc0b55e198b75162f12823fdfaad37d929135688b6c0675",
+  "provider_request_id": null,
+  "provider_cache_key": "108744a49fa70b818296",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:48:29.593408Z",
+  "review_status": "pending"
+}

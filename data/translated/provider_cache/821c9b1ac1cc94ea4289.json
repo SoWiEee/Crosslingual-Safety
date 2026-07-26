@@ -1,0 +1,5 @@
+{
+  "cache_key": "821c9b1ac1cc94ea4289",
+  "provider_request_id": null,
+  "text": "\u6587\u672c:\u8fdb\u53e3\u8bf7\u6c42 def guess_table_rstname(url, known_chars, max_length): \"\"\"\u901a\u8fc7\u91cd\u590d\u76f2 SQL \u6ce8\u5c04\u67e5\u8be2\u731c\u6d4b\u8868\u540d\u79f0\u7684\u51fd\u6570. :param url:\u5c06 SQL \u6ce8\u5c04\u67e5\u8be2\u53d1\u9001\u5230\u7684URL. :param known_chars:\u6d4b\u8bd5\u7684\u5b57\u7b26\u4e32 (\u4f8b\u5982, 'abcdefghijklmnopqrstuvxyz0123456789')."
+}

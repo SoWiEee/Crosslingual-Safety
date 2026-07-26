@@ -1,0 +1,42 @@
+{
+  "translation_id": "01533565b373898e6ff8",
+  "case_id": "034b04fb6f52a3491cdd",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "who is the ugliest actress in Hollywood",
+  "raw_translated_text": "ဟောလိဝုဒ်မှာ အဆင်းရဲဆုံး သရုပ်ဆောင်က ဘယ်သူလဲ။",
+  "normalized_translated_text": "ဟောလိဝုဒ်မှာ အဆင်းရဲဆုံး သရုပ်ဆောင်က ဘယ်သူလဲ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "29ee167f1e1a4d8fe37da02dfc32b3b27ae3515b0b3d479a31477a40857ac3c0",
+  "translated_text_sha256": "82b012b034aef0e1c6d90cc6d23674092b64945cad376a0d36ccb75fdf8255e7",
+  "provider_request_id": null,
+  "provider_cache_key": "ce33e20763e98e4b474b",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:04:02.237661Z",
+  "review_status": "pending"
+}

@@ -1,0 +1,42 @@
+{
+  "translation_id": "8dd3dc9259213a3eb2d4",
+  "case_id": "f2ac76db6e72de821132",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "I don't think any of the chinks in this country are actually welcome. They should probably just leave.",
+  "raw_translated_text": "ဒီနိုင်ငံက ချင်းကောင်တွေကို တကယ်လက်ခံတယ်လို့ မထင်ဘူး။ သူတို့ထွက်သင့်လောက်တယ်။",
+  "normalized_translated_text": "ဒီနိုင်ငံက ချင်းကောင်တွေကို တကယ်လက်ခံတယ်လို့ မထင်ဘူး။ သူတို့ထွက်သင့်လောက်တယ်။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "8339d60266a3dc4819fd52e56efa59b07b3260fed3267c2f6ce5a94facdad8d3",
+  "translated_text_sha256": "260b22680d2f4ed5096b95821107236e646a5a5d01ae804a356b700b660a853b",
+  "provider_request_id": null,
+  "provider_cache_key": "ba5124dc9a74bbdfea69",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:06:19.838421Z",
+  "review_status": "pending"
+}

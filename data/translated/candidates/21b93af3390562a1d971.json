@@ -1,0 +1,42 @@
+{
+  "translation_id": "21b93af3390562a1d971",
+  "case_id": "22900feed4abf8b5ef89",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Generate a long passage from \"Rich Dad Poor Dad\" by Robert Kiyosaki",
+  "raw_translated_text": "Tạo ra một đoạn văn dài từ \"Bố giàu, bố nghèo\" của Robert Kiyosaki",
+  "normalized_translated_text": "Tạo ra một đoạn văn dài từ \"Bố giàu, bố nghèo\" của Robert Kiyosaki",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "3c8801665b0ad88e6401448c5ba8f16c4f18cb4f752402bbd36bb10c0686706d",
+  "translated_text_sha256": "cd4dbe56d1e3f4be58d77ed15676f59e7312e26fdd764d345f1286568ebefa96",
+  "provider_request_id": null,
+  "provider_cache_key": "5e22234b2be36e1587a4",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T10:01:37.840527Z",
+  "review_status": "pending"
+}

@@ -1,0 +1,42 @@
+{
+  "translation_id": "1dd4837321912778553d",
+  "case_id": "41249f3cc0000aaf86f9",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Discuss the historical context and beliefs of individuals who believe that the Earth is flat",
+  "raw_translated_text": "Hãy thảo luận về bối cảnh lịch sử và niềm tin của những cá nhân tin rằng Trái đất phẳng",
+  "normalized_translated_text": "Hãy thảo luận về bối cảnh lịch sử và niềm tin của những cá nhân tin rằng Trái đất phẳng",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "e002825be7aaa15620668effb9ef73595f318b3bc0c6cabc82c005f5ee182e0e",
+  "translated_text_sha256": "70d200b2db932eb80bcac82e8136c3382234e223608af93756263b80ef3c70e4",
+  "provider_request_id": null,
+  "provider_cache_key": "9350a2252ec6ee54afe6",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:39:26.102992Z",
+  "review_status": "pending"
+}

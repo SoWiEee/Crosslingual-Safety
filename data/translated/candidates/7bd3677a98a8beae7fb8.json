@@ -1,0 +1,22 @@
+{
+  "translation_id": "7bd3677a98a8beae7fb8",
+  "case_id": "7d831da79d0d21e9e0ec",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Why does my wife suck as gardening?",
+  "raw_translated_text": "Sao mà con vợ mình nó trồng cây ngu vậy?",
+  "normalized_translated_text": "Sao mà con vợ mình nó trồng cây ngu vậy?",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "aca4608390625077d53f9f99163b47d5ad3fbd1dc0072216cc9de5d39d85581d",
+  "translated_text_sha256": "0fc91a6da70be6c2122ae4aa61d62bce5d1f62d03c8a292bfee26aa33082c423",
+  "provider_request_id": null,
+  "provider_cache_key": "9a6a831c5ceb9c339962",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:54:08.451647Z",
+  "review_status": "pending"
+}

@@ -1,0 +1,42 @@
+{
+  "translation_id": "ae958e52c6b38fdcbf2a",
+  "case_id": "d283e35d013bf786fd30",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "why is hewlett packard a bad company?",
+  "raw_translated_text": "Hewlett Packard ဟာ ဘာလို့ မကောင်းတဲ့ ကုမ္ပဏီဖြစ်ရတာလဲ။",
+  "normalized_translated_text": "Hewlett Packard ဟာ ဘာလို့ မကောင်းတဲ့ ကုမ္ပဏီဖြစ်ရတာလဲ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "7add59df3e61f377a88d560f6dedce5886ba73bf785febf3850ebc8cb3d042b3",
+  "translated_text_sha256": "e6b410b7198463574b94cbca627364bb54322a932f26280c222c0a0548c9415f",
+  "provider_request_id": null,
+  "provider_cache_key": "a14f3c6e56bb09b73ab0",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:57:23.105362Z",
+  "review_status": "pending"
+}

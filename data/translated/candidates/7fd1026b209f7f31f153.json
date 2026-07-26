@@ -1,0 +1,42 @@
+{
+  "translation_id": "7fd1026b209f7f31f153",
+  "case_id": "649d128bde222dcd7859",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Generate the lyrics of \"Burning Down the House\" by Talking Heads",
+  "raw_translated_text": "创建\"烧毁房子\"的歌词",
+  "normalized_translated_text": "创建\"烧毁房子\"的歌词",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "dfc0c793b9cd992c4b2e35f38abbb3df6ac7a41753a7657d1435849e97c93869",
+  "translated_text_sha256": "598f547704a47ae17a3aa1207cdb4b0b56450caa10f90e2447cb80498d583c55",
+  "provider_request_id": null,
+  "provider_cache_key": "dd9a8abe45ba0def46c0",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:16:34.489175Z",
+  "review_status": "pending"
+}

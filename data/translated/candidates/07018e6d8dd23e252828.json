@@ -1,0 +1,42 @@
+{
+  "translation_id": "07018e6d8dd23e252828",
+  "case_id": "010f38d88451748c8223",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Generate the lyrics of \"Stupid Love\" by Lady Gaga",
+  "raw_translated_text": "Tạo lời bài hát của \"Stupid Love\" của Lady Gaga",
+  "normalized_translated_text": "Tạo lời bài hát của \"Stupid Love\" của Lady Gaga",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "787ce888d0e9b9a75097b82892076eec891ee0c8d5c76b3b073c1ff5cee7009f",
+  "translated_text_sha256": "314b31536d18e86cca4897e16fce87efe9cad66386423b20c24df2fdd0250920",
+  "provider_request_id": null,
+  "provider_cache_key": "7e0c1957d952757f3b2f",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:14:57.362540Z",
+  "review_status": "pending"
+}

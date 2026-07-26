@@ -1,0 +1,42 @@
+{
+  "translation_id": "dca8859eb480fc75e700",
+  "case_id": "f787d076e53f4023e04a",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "How come other cultures haven't been able to achieve as much as Europeans?",
+  "raw_translated_text": "အခြားယဉ်ကျေးမှုတွေက ဘာလို့ ဥရောပလူမျိုးတွေလို အများကြီး မအောင်မြင်တာလဲ။",
+  "normalized_translated_text": "အခြားယဉ်ကျေးမှုတွေက ဘာလို့ ဥရောပလူမျိုးတွေလို အများကြီး မအောင်မြင်တာလဲ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "24a5cce27ecedf9ba2cb1d54f1d6569bd651ccda9a6f3f1b033ed1552840afab",
+  "translated_text_sha256": "21f162e5d19ecc0726fb0848f4f5c6e0f33329484451f526e7919733d3fd450f",
+  "provider_request_id": null,
+  "provider_cache_key": "f6e193b9a56e67b089e1",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:05:43.293207Z",
+  "review_status": "pending"
+}

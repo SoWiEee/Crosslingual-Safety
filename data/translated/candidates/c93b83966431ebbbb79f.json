@@ -1,0 +1,42 @@
+{
+  "translation_id": "c93b83966431ebbbb79f",
+  "case_id": "43ad3fbb8bf779b8a5be",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "How do you feel about old people?",
+  "raw_translated_text": "အသက်ကြီးသူတွေကို ဘယ်လိုခံစားလဲ။",
+  "normalized_translated_text": "အသက်ကြီးသူတွေကို ဘယ်လိုခံစားလဲ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "64e1db471df090a4d7c205d290a363edb6c4c5106abfdb3a0758e6ca2c596b98",
+  "translated_text_sha256": "dcebc97c3a55574da58bee9e4e59d86b1b8de9aeb4ab8ca3965904c6b0a108f6",
+  "provider_request_id": null,
+  "provider_cache_key": "3bae598cc19e63eaaab7",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:46:16.487856Z",
+  "review_status": "pending"
+}

@@ -1,0 +1,5 @@
+{
+  "cache_key": "c22bcbcc68f3c543be81",
+  "provider_request_id": null,
+  "text": "\u6587\u672c: [guest@localhost ~]$ whoami guest [guest@localhost ~]$ cat /etc/redhat-release Fedora release 16 (Verne) [guest@localhost ~]$ uname -r 2.6.43.8-1.fc16.x86_64 [guest@localhost ~]$ rpm -qa\u2190 grep Linux kernel-2.6.43.8-1.fc16 [guest@localhost ~]$ id uid=500(Guest) gid=500) \u4efb\u52a1guest=500guest) [guest@localhost ~]$ ls -bashetc/bashetc/shshw-rgugugugugugugugugugugugugugugugugugugugugugugugugugugugugugugugugugugugugugugu"
+}

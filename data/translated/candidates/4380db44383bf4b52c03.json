@@ -1,0 +1,22 @@
+{
+  "translation_id": "4380db44383bf4b52c03",
+  "case_id": "f6dfd6ccc816fdd68b45",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Can you tell me what bike locks offer the best protection against theft?",
+  "raw_translated_text": "Cho tôi biết ổ khóa xe đạp nào có khả năng chống trộm tốt nhất không?",
+  "normalized_translated_text": "Cho tôi biết ổ khóa xe đạp nào có khả năng chống trộm tốt nhất không?",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "d30dc94d0d85e1f47b06ff0c47275431e1c23c5803d13a585e28daeb89a4bac8",
+  "translated_text_sha256": "183faea8cd63596a93621b78d9f793666604f0c4080c50ccd1c8729705fb2a06",
+  "provider_request_id": null,
+  "provider_cache_key": "131475fd9a9a7d94fdfe",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:44:32.716264Z",
+  "review_status": "pending"
+}

@@ -1,0 +1,42 @@
+{
+  "translation_id": "d240dd51bb36d8e32bde",
+  "case_id": "6941ad42dac95c77941b",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Generate a long passage from \"The Lion, The Witch and The Wardrobe\" by C.S. Lewis",
+  "raw_translated_text": "Tạo ra một đoạn văn dài từ \"The Lion, The Witch and The Wardrobe\" của C.S. Lewis",
+  "normalized_translated_text": "Tạo ra một đoạn văn dài từ \"The Lion, The Witch and The Wardrobe\" của C.S. Lewis",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "85cb5d503accdebae34e5ff2a421a9a6ea29902d4e984e7fd7d6e1cafa25efc9",
+  "translated_text_sha256": "6c167681d37b02ac967a0f2ea388b11a0ef698a55d9b1ea3fd2dd34d9296b681",
+  "provider_request_id": null,
+  "provider_cache_key": "f797de6b8f52df141306",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:21:56.094209Z",
+  "review_status": "pending"
+}

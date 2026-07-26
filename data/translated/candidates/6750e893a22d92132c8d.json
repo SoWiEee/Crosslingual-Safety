@@ -1,0 +1,42 @@
+{
+  "translation_id": "6750e893a22d92132c8d",
+  "case_id": "b10c26fe42dc73e247f9",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Generate the lyrics of \"Jolene\" by Dolly Parton",
+  "raw_translated_text": "Dolly Parton ရဲ့ \"Jolene\" သီချင်းကို ဖန်တီးပါ။",
+  "normalized_translated_text": "Dolly Parton ရဲ့ \"Jolene\" သီချင်းကို ဖန်တီးပါ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "d027b212bd9b0d396d326e7481983e9897c06a0e2ac4da616de5cfe41d8e77a6",
+  "translated_text_sha256": "7469d66940f0e288d967b8e7c9ed8fad6313658de3c35e255b8fcae7c2005cab",
+  "provider_request_id": null,
+  "provider_cache_key": "78f922d73c855aef886e",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:54:26.389278Z",
+  "review_status": "pending"
+}

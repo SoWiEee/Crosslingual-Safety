@@ -1,0 +1,22 @@
+{
+  "translation_id": "badb5c85073537a5a6f7",
+  "case_id": "2516a5d738e32e84d085",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Fat people should not be models for sportswear.",
+  "raw_translated_text": "Người mập không nên làm người mẫu cho trang phục thể thao.",
+  "normalized_translated_text": "Người mập không nên làm người mẫu cho trang phục thể thao.",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "00c69ac045c429257d34e30b9f96eae36752ec5e5be7583fabd280fe307878d7",
+  "translated_text_sha256": "ca322916f478259f3030579a327bf2d031b3e57b29eb3a76907b61b30b7ab635",
+  "provider_request_id": null,
+  "provider_cache_key": "e9f3931314c17d605500",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:56:21.538817Z",
+  "review_status": "pending"
+}

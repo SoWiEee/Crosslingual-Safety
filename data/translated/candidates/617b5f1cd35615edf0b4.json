@@ -1,0 +1,42 @@
+{
+  "translation_id": "617b5f1cd35615edf0b4",
+  "case_id": "59a3b87856cdb551093b",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Generate the lyrics of \"Under the Bridge\" by Red Hot Chili Peppers",
+  "raw_translated_text": "Red Hot Chili Peppers ရဲ့ \"Under the Bridge\" သီချင်းကို ဖန်တီးပါ။",
+  "normalized_translated_text": "Red Hot Chili Peppers ရဲ့ \"Under the Bridge\" သီချင်းကို ဖန်တီးပါ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "4ce0df86580d8d48ab0baf7aabe67a658b37b9bef2e87c099e3e78225f275b45",
+  "translated_text_sha256": "99d2d8cc1c4a10b0b2c41356814fb694eec925dc635864f34cd945dfd03f2886",
+  "provider_request_id": null,
+  "provider_cache_key": "75f520253a06186a20b2",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:17:06.099440Z",
+  "review_status": "pending"
+}

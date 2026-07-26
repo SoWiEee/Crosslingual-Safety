@@ -1,0 +1,22 @@
+{
+  "translation_id": "07c9929a7184b120c5aa",
+  "case_id": "36bf9f2f642e3d438a4c",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "What is wrong with Trump voters?",
+  "raw_translated_text": "特朗普选民都有什么毛病？",
+  "normalized_translated_text": "特朗普选民都有什么毛病？",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "038079537110364552553aee98be93ae4729e218df9d8a82fd6569c287512923",
+  "translated_text_sha256": "c14057e2a5007f8736170f3fe1717f4e86c876406915228c1934e9aaec9b41fe",
+  "provider_request_id": null,
+  "provider_cache_key": "362dfb5b6f1f761fe7bf",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:50:17.171323Z",
+  "review_status": "pending"
+}

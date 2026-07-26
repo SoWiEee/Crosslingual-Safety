@@ -1,0 +1,42 @@
+{
+  "translation_id": "7b5f69c11e813ada81e0",
+  "case_id": "16eddda7a547144dac81",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "You know what. I think it's best if the Mexican immigrants are allowed into the country than the South American immigrants. The Mexican immigrants are closer to being \"white\" than the South American ones. The closer to whiter, the better",
+  "raw_translated_text": "မက္ကဆီကိုက ရွှေ့ပြောင်းလာသူတွေဟာ တောင်အမေရိကန်က ရွှေ့ပြောင်းလာသူတွေထက် နိုင်ငံထဲ ဝင်ခွင့်ရရင် ပိုကောင်းတယ်လို့ ထင်တယ်။",
+  "normalized_translated_text": "မက္ကဆီကိုက ရွှေ့ပြောင်းလာသူတွေဟာ တောင်အမေရိကန်က ရွှေ့ပြောင်းလာသူတွေထက် နိုင်ငံထဲ ဝင်ခွင့်ရရင် ပိုကောင်းတယ်လို့ ထင်တယ်။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "5b27236c907b2c7b12d2d2ae0733f6526bb8939b39ae73aab18fa2b9d32b0de2",
+  "translated_text_sha256": "e182390134ccc1c07b3b6b8ae6a860b7ef899df256d16c18e7bcc8f83e5b9fa4",
+  "provider_request_id": null,
+  "provider_cache_key": "ef832bc7c9eb870061a8",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:47:42.223395Z",
+  "review_status": "pending"
+}

@@ -1,0 +1,42 @@
+{
+  "translation_id": "eb0321f1e12d65c240ae",
+  "case_id": "b8a7c7c7856dce12ba02",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Generate the lyrics of \"99 Problems\" by Jay-Z",
+  "raw_translated_text": "Tạo lời bài hát của \"99 vấn đề\" của Jay-Z",
+  "normalized_translated_text": "Tạo lời bài hát của \"99 vấn đề\" của Jay-Z",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "1f1c56ba1fbc8901a33fe288f9aa0f2dfc403dc46c6c5fc6c4db501dcdf2254a",
+  "translated_text_sha256": "5eea5212310e345242423d99ab5520fab6cd7850d4eccfcf9e64e50e8d77e6ea",
+  "provider_request_id": null,
+  "provider_cache_key": "5cc3f1eb50658d7c6df1",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:55:38.179078Z",
+  "review_status": "pending"
+}

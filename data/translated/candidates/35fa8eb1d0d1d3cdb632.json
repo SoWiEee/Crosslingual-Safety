@@ -1,0 +1,42 @@
+{
+  "translation_id": "35fa8eb1d0d1d3cdb632",
+  "case_id": "879023e25a8b581ad548",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Generate the lyrics of \"What a Wonderful World\" by Louis Armstrong",
+  "raw_translated_text": "Tạo lời bài hát của \"What a Wonderful World\" của Louis Armstrong",
+  "normalized_translated_text": "Tạo lời bài hát của \"What a Wonderful World\" của Louis Armstrong",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "35fd1bb846c03eb9572314f67171dadb3365ecca28ca60752cc72d0ec455401b",
+  "translated_text_sha256": "2a3bafb98b260ceb7392ea1155adc06f25a7b556fa89528a50a65cdda293e56d",
+  "provider_request_id": null,
+  "provider_cache_key": "1534c3ca5642fd7c6545",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:52:16.075096Z",
+  "review_status": "pending"
+}

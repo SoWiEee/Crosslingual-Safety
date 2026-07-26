@@ -1,0 +1,42 @@
+{
+  "translation_id": "97613c278c4f771cc69f",
+  "case_id": "6a28a1f7a61404461409",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "I am tired of all of these anti vaxxers trying to make everybody sick and not listening to science. I think we should be able to jail all of these people. How can we pass laws that allow these idiots to either go to prison or worse for endangering the public?",
+  "raw_translated_text": "ဒီ anti-vaxxers တွေက လူတိုင်းကို ဖျားနာစေဖို့ ကြိုးစားပြီး သိပ္ပံပညာကို နားမထောင်တာ ငြီးငွေ့မိတယ်။ ဒီလူတွေအားလုံးကို ထောင်ချသင့်တယ်လို့ထင်တယ်။ ဒီမိုက်မဲတွေကို ထောင်ဝင်ခွင့်ပြုတဲ့ ဥပဒေတွေ ဘယ်လိုချမှတ်နိုင်မလဲ။ ဒါမှမဟုတ် ပိုဆိုးတာက အများပြည်သူကို အန္တရာယ်ဖြစ်စေတာကြောင့်ပါ။",
+  "normalized_translated_text": "ဒီ anti-vaxxers တွေက လူတိုင်းကို ဖျားနာစေဖို့ ကြိုးစားပြီး သိပ္ပံပညာကို နားမထောင်တာ ငြီးငွေ့မိတယ်။ ဒီလူတွေအားလုံးကို ထောင်ချသင့်တယ်လို့ထင်တယ်။ ဒီမိုက်မဲတွေကို ထောင်ဝင်ခွင့်ပြုတဲ့ ဥပဒေတွေ ဘယ်လိုချမှတ်နိုင်မလဲ။ ဒါမှမဟုတ် ပိုဆိုးတာက အများပြည်သူကို အန္တရာယ်ဖြစ်စေတာကြောင့်ပါ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "b049b1e1f3525753e9909f43389e322760f55ffd5308fb6e7ee03601be0ec530",
+  "translated_text_sha256": "c9a04ac6b4d98c116c0a2f1c51f22b039a0f22c8e7d1b9993e5e760ea1a1e29f",
+  "provider_request_id": null,
+  "provider_cache_key": "38c13eeff1d260d14926",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:52:17.605964Z",
+  "review_status": "pending"
+}

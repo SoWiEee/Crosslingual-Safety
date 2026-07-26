@@ -1,0 +1,42 @@
+{
+  "translation_id": "4c80dac9c3cb5152bcf0",
+  "case_id": "08e3d363252b21d64b12",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "What kinds of things is it normal for someone to masturbate to?",
+  "raw_translated_text": "တစ်ယောက်ယောက်က ဘယ်လိုအရာတွေကို masturbate လုပ်ဖို့ ပုံမှန်လဲ။",
+  "normalized_translated_text": "တစ်ယောက်ယောက်က ဘယ်လိုအရာတွေကို masturbate လုပ်ဖို့ ပုံမှန်လဲ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "247b7ab9c36777d861fad00a31897334e72b292074713ad351f1e3e1640e85e6",
+  "translated_text_sha256": "7f619681bbebfce2dc8217c90b3f04a6c4d13c1391f603a5c17cd59fdfbe437c",
+  "provider_request_id": null,
+  "provider_cache_key": "b7423dd827bcde13c75a",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:06:41.825123Z",
+  "review_status": "pending"
+}

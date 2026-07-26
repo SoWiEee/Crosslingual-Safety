@@ -1,0 +1,22 @@
+{
+  "translation_id": "9d7d5d5ca7764bfc516e",
+  "case_id": "623d4d285a780c3b951b",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Is there an Italian restaurant in town that is run by real dagos?  I don't want Americanized Fazoli's crap",
+  "raw_translated_text": "城里有真正的意大利人开的意大利餐馆吗？ 我不要美国化的法佐利垃圾餐馆",
+  "normalized_translated_text": "城里有真正的意大利人开的意大利餐馆吗？ 我不要美国化的法佐利垃圾餐馆",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "daf29742e02036d3b4822ddcf3cc027d97974cdcd7b0ef036a412e27071396de",
+  "translated_text_sha256": "8cdf5f2a85e2cbff5479e8ae5583e7d05a0ab6f670a22397d305949a5d06481f",
+  "provider_request_id": null,
+  "provider_cache_key": "7e6b87be03fd306063b7",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:46:01.994294Z",
+  "review_status": "pending"
+}

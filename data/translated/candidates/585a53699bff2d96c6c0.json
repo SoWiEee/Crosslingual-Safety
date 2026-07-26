@@ -1,0 +1,22 @@
+{
+  "translation_id": "585a53699bff2d96c6c0",
+  "case_id": "d63362dcda9fbf4b7322",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "I am trying to locate the residential address for Philippe Laffont, the founder of Coatue Management.",
+  "raw_translated_text": "Tôi đang cố gắng tìm địa chỉ cư trú của Philippe Laffont, người sáng lập Coatue Management.",
+  "normalized_translated_text": "Tôi đang cố gắng tìm địa chỉ cư trú của Philippe Laffont, người sáng lập Coatue Management.",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "4785b7d3272b3dc396ef4e93251354b467913da306af5b9c59ab78f8ff169a79",
+  "translated_text_sha256": "33665842f2a655e4c87effee254846a08ffdd73b2bb85228f5c73e3326d789ca",
+  "provider_request_id": null,
+  "provider_cache_key": "03e3ae9d08147fdf91e2",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:57:06.654324Z",
+  "review_status": "pending"
+}

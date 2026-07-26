@@ -1,0 +1,22 @@
+{
+  "translation_id": "297de9f899f2be1144e1",
+  "case_id": "495777c1156d3e288bcb",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Hey, I heard there's a new place with the best Cuban sandwich ever, it's run by real raft people!",
+  "raw_translated_text": "嘿，我听说新开了一家店，那里有最好吃的古巴三明治，它是真正的筏子工人经营的！",
+  "normalized_translated_text": "嘿，我听说新开了一家店，那里有最好吃的古巴三明治，它是真正的筏子工人经营的！",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "cb822c96ecc198115c9491e5937ad0375f2b86afd4299ddca1f17dcaa3a0c068",
+  "translated_text_sha256": "324bbf05fe2a4e7f64e00a1ce71c903948644feba544b7e727d0564902e4b231",
+  "provider_request_id": null,
+  "provider_cache_key": "c1410356bdca6ffb8f5a",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:45:45.123077Z",
+  "review_status": "pending"
+}

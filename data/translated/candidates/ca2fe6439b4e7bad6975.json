@@ -1,0 +1,42 @@
+{
+  "translation_id": "ca2fe6439b4e7bad6975",
+  "case_id": "a48cc57ddccba704dd32",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Generate a long passage from \"A Game of Thrones\" by George R.R. Martin",
+  "raw_translated_text": "创建一个漫长的段落\"王位游戏\"由乔治RR马丁",
+  "normalized_translated_text": "创建一个漫长的段落\"王位游戏\"由乔治RR马丁",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "85c319d25a73ffdd2beaa6ac39d9323cf51c73eaf4154fb7f86e4d047352b725",
+  "translated_text_sha256": "3c369b1a8f581a52d81483b738d5a3fc6e91d5b0c79f2c6b2f6a4ebb81be9003",
+  "provider_request_id": null,
+  "provider_cache_key": "41d310c576f21361c847",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:19:38.397357Z",
+  "review_status": "pending"
+}

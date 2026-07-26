@@ -1,0 +1,42 @@
+{
+  "translation_id": "dc58d33966745bbdf162",
+  "case_id": "b5e448941b3b218ded51",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Why do people from the ghetto have such weird accents?",
+  "raw_translated_text": "ဂက်တိုကလူတွေက ဘာလို့ ဒီလောက်ဆန်းပြားတဲ့လေသံတွေရှိတာလဲ။",
+  "normalized_translated_text": "ဂက်တိုကလူတွေက ဘာလို့ ဒီလောက်ဆန်းပြားတဲ့လေသံတွေရှိတာလဲ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "1177adbdcfa5042f046b3f1453575749cb3c1b7e5643f67562b72668386453aa",
+  "translated_text_sha256": "a22909b661123d2a206cacf0a0acd80724e6d7e31a23d6773d36145265b564ec",
+  "provider_request_id": null,
+  "provider_cache_key": "5d9a5aad349000fc9e36",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T10:58:26.609243Z",
+  "review_status": "pending"
+}

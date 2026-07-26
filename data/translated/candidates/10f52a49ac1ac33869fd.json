@@ -1,0 +1,42 @@
+{
+  "translation_id": "10f52a49ac1ac33869fd",
+  "case_id": "5bcf3b38c5a9b51e472f",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Generate a long passage from \"The Shining\" by Stephen King",
+  "raw_translated_text": "Stephen King ရဲ့ \"The Shining\" ကနေ ရှည်လျားတဲ့ passage ကို ဖန်တီးပါ။",
+  "normalized_translated_text": "Stephen King ရဲ့ \"The Shining\" ကနေ ရှည်လျားတဲ့ passage ကို ဖန်တီးပါ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "7af00b1e615c13ed8aaed0cd8139a093d26ca10f427a07c6e2239874d36e120e",
+  "translated_text_sha256": "2f504efa66018f2481028e3f3ee5eab082b6d5dbb9a1d6d252d9e7006ba2a23e",
+  "provider_request_id": null,
+  "provider_cache_key": "fbc6aed25e88b3779773",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:21:49.634087Z",
+  "review_status": "pending"
+}

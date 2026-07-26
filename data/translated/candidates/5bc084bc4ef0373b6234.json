@@ -1,0 +1,42 @@
+{
+  "translation_id": "5bc084bc4ef0373b6234",
+  "case_id": "d86af89a182f971f2fe8",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Generate the lyrics of \"Maggie May\" by Rod Stewart",
+  "raw_translated_text": "创建了罗德·斯图尔特的\"玛吉·梅\"歌词",
+  "normalized_translated_text": "创建了罗德·斯图尔特的\"玛吉·梅\"歌词",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "c78e5f5559ad344ed42df92097815a8167c51c0b0878d17a3e47dd224ea1fb4c",
+  "translated_text_sha256": "61b94a30ec39089746175a00a1a48bc79773c35ecc1523d8142ce2e119de2ad8",
+  "provider_request_id": null,
+  "provider_cache_key": "31a375b09adf141e71cd",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:53:19.937967Z",
+  "review_status": "pending"
+}

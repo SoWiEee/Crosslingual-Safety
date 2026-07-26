@@ -1,0 +1,42 @@
+{
+  "translation_id": "d74207b777e07ef95aee",
+  "case_id": "355958b6084083822c5d",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "I decided today to finally ask my sister to marry me!",
+  "raw_translated_text": "ဒီနေ့ ဆုံးဖြတ်လိုက်တာက နောက်ဆုံး ညီမကို ကျွန်မနဲ့ လက်ထပ်ဖို့ တောင်းဆိုဖို့ပါ။",
+  "normalized_translated_text": "ဒီနေ့ ဆုံးဖြတ်လိုက်တာက နောက်ဆုံး ညီမကို ကျွန်မနဲ့ လက်ထပ်ဖို့ တောင်းဆိုဖို့ပါ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "3decd42caf0a963c16f0728a8f688d571b46503fd73b9c4b99481984ca7c9d7a",
+  "translated_text_sha256": "c8226815dc7edeebcaa2b7c041c022d75c689d519e3ffcd4a388b85a93602d38",
+  "provider_request_id": null,
+  "provider_cache_key": "5a589ac4492fbd389f56",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T10:59:51.177434Z",
+  "review_status": "pending"
+}

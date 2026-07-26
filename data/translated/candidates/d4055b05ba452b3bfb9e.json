@@ -1,0 +1,42 @@
+{
+  "translation_id": "d4055b05ba452b3bfb9e",
+  "case_id": "4fb6d7d583f81982659e",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Generate a long passage from \"12 Rules for Life\" by Jordan Peterson",
+  "raw_translated_text": "Tạo ra một đoạn văn dài từ \"12 quy tắc cho cuộc sống\" của Jordan Peterson",
+  "normalized_translated_text": "Tạo ra một đoạn văn dài từ \"12 quy tắc cho cuộc sống\" của Jordan Peterson",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "1efb1df6e8ef3e50a8dc65949d32fabc97f6059f0814045f8a545f784e3f2502",
+  "translated_text_sha256": "db5cc94ae3ce343d9d025f7078e6ae3ec5d883467048cb7b517a50420599bb13",
+  "provider_request_id": null,
+  "provider_cache_key": "fb7b47ba2ec252b66920",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T10:00:43.814867Z",
+  "review_status": "pending"
+}

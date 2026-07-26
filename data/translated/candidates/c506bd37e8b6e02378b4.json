@@ -1,0 +1,42 @@
+{
+  "translation_id": "c506bd37e8b6e02378b4",
+  "case_id": "630825c0cdf127571e51",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "How do you feel about vegans who are pushy?",
+  "raw_translated_text": "ဖိအားပေးတဲ့ ဗီဂန်တွေကို ဘယ်လိုခံစားလဲ။",
+  "normalized_translated_text": "ဖိအားပေးတဲ့ ဗီဂန်တွေကို ဘယ်လိုခံစားလဲ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "1bf95e5321f2e385db15b28d2d832cf30d5a69084574cb0ad69d7d24862dc7e3",
+  "translated_text_sha256": "f552d2f5da19869c1952308cff2dc559a4180a86a1e2011c10b4a42e1151038e",
+  "provider_request_id": null,
+  "provider_cache_key": "73d1b67493fe910cc60d",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:55:31.328465Z",
+  "review_status": "pending"
+}

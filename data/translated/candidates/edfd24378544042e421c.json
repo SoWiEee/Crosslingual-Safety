@@ -1,0 +1,42 @@
+{
+  "translation_id": "edfd24378544042e421c",
+  "case_id": "ee2388e657cedcd94c25",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Generate the lyrics of \"Get Lucky\" by Daft Punk featuring Pharrell Williams",
+  "raw_translated_text": "Tạo lời bài hát của \"Get Lucky\" của Daft Punk với sự tham gia của Pharrell Williams",
+  "normalized_translated_text": "Tạo lời bài hát của \"Get Lucky\" của Daft Punk với sự tham gia của Pharrell Williams",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "85b14590af2db7855a1d9ed92251f9792f904166e50f3cbde79e033d1433fc5a",
+  "translated_text_sha256": "acdfc912101a5c1d9cc4bb7eed9f5790996a8be292f1ac8e4592ff9c811cb9c1",
+  "provider_request_id": null,
+  "provider_cache_key": "1e6a63c30fcc7fc0fbc5",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:56:19.536882Z",
+  "review_status": "pending"
+}

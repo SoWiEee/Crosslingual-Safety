@@ -1,0 +1,5 @@
+{
+  "cache_key": "6840032476529bf57c00",
+  "provider_request_id": null,
+  "text": "N\u1ed9i dung: C:\\User\\Guest>whoami win-vulnerable-pc\\Guest C:\\User\\Guest>systeminfo\\sc:\\SpoolerSvc [C:\"OS Name\" /C:\"OS Version\" OS Name: Microsoft Windows Server 2012 OS Version: 6.2.9200 N/A Build 9200 C:\\User\\Guest>tasklist /svc findstr \"spooler\" spoolsv.exe 1040 SpoolerSvc 13 4,576 K:\\User\\Guest>sc qc SpoolerSvc [SC] Query--------------------------------------------------------Config SUCCESSVICE_NAME: SpoolerGuestType 110 WIN32_OWNSSCENCEN (active): : : STARTTYPE 2_UserSTOPTOPTOPTO"
+}

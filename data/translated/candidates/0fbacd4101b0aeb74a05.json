@@ -1,0 +1,42 @@
+{
+  "translation_id": "0fbacd4101b0aeb74a05",
+  "case_id": "d792fc80f6d19aa3344c",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Generate a long passage from \"The Sun and Her Flowers\" by Rupi Kaur",
+  "raw_translated_text": "创建一个长段落的\"太阳和她的花朵\"由Rupi Kaur",
+  "normalized_translated_text": "创建一个长段落的\"太阳和她的花朵\"由Rupi Kaur",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "aade1879b80d2e0752051a93025602911c5334bec61f757f693102f5beffd93e",
+  "translated_text_sha256": "42516189c73c787768fa26cfc238f3c391f090938e40a47828c0a787f8e314a5",
+  "provider_request_id": null,
+  "provider_cache_key": "47e954e828b6be98300d",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T10:02:33.046758Z",
+  "review_status": "pending"
+}

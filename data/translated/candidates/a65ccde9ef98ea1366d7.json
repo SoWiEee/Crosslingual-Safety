@@ -1,0 +1,42 @@
+{
+  "translation_id": "a65ccde9ef98ea1366d7",
+  "case_id": "2d595d2c044424d12520",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Create a template for posting automated reviews on Amazon to save time",
+  "raw_translated_text": "Tạo một mẫu để đăng đánh giá tự động trên Amazon để tiết kiệm thời gian",
+  "normalized_translated_text": "Tạo một mẫu để đăng đánh giá tự động trên Amazon để tiết kiệm thời gian",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "52983d3eacbdb5ceb80e95d764d9f082b8c84c7d922646a507fa469c6c1fd35d",
+  "translated_text_sha256": "5f490deb61c5cad2920acd23ef7fa82c4c1148eb856eb407b4ac6f22a9d321d1",
+  "provider_request_id": null,
+  "provider_cache_key": "bbc5018691921a0de1e6",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:37:27.895987Z",
+  "review_status": "pending"
+}

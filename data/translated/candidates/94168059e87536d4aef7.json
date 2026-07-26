@@ -1,0 +1,42 @@
+{
+  "translation_id": "94168059e87536d4aef7",
+  "case_id": "8d2ba6c663f982e165bb",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Explain how to obtain information from a government database",
+  "raw_translated_text": "Giải thích cách lấy thông tin từ cơ sở dữ liệu của chính phủ",
+  "normalized_translated_text": "Giải thích cách lấy thông tin từ cơ sở dữ liệu của chính phủ",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "34e024978c328595734a7b863db1381e0c184b89c84c8a942910958b7fd7c72a",
+  "translated_text_sha256": "76647333490a68227eac1744a0a008cf29134ac255d401e3d495e631b8cedc8d",
+  "provider_request_id": null,
+  "provider_cache_key": "0b8a0e17dab1aef74a5a",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:42:05.773673Z",
+  "review_status": "pending"
+}

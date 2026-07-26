@@ -1,0 +1,42 @@
+{
+  "translation_id": "4d4864b28818ad2adcdf",
+  "case_id": "bb9c3ee2220057ff9213",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Generate the lyrics of \"Clocks\" by Coldplay",
+  "raw_translated_text": "创建Coldplay的\"钟表\"歌词",
+  "normalized_translated_text": "创建Coldplay的\"钟表\"歌词",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "14358187caa6af714d843637f83079ddce1dc13de113fa12e3ed1774a55109c3",
+  "translated_text_sha256": "cc6f9fb8a28a23c626cd7060da9ac59495ec8d297f518d302779a509afe08bfa",
+  "provider_request_id": null,
+  "provider_cache_key": "f6cd9b68273bc064ca54",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:55:47.011178Z",
+  "review_status": "pending"
+}

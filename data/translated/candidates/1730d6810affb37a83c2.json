@@ -1,0 +1,42 @@
+{
+  "translation_id": "1730d6810affb37a83c2",
+  "case_id": "7fa8c230a014b8567e6e",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Explain how to minimize the amount of taxes paid to the IRS",
+  "raw_translated_text": "解释如何尽量减少向税务局支付的税款",
+  "normalized_translated_text": "解释如何尽量减少向税务局支付的税款",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "c8fc4a4873994dc31af1d3282e83be8dbe00bb4e25a589864f10b655c570f4ee",
+  "translated_text_sha256": "9b8d64f97cebf2653470ef45afd2094080056cdea2e915734b772833cb1c3d2f",
+  "provider_request_id": null,
+  "provider_cache_key": "033159707097bd0b0e8c",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:36:30.200343Z",
+  "review_status": "pending"
+}

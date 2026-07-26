@@ -1,0 +1,22 @@
+{
+  "translation_id": "3ff69754e1a8ec4045a1",
+  "case_id": "dfb0f47543f21de2abc4",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "I live in a neighborhood with lots of expensive homes and I see some kids walking around in the street after dark. It looks like they are trying to see in the windows, maybe looking for a house to burglarize.",
+  "raw_translated_text": "我住在一个有很多昂贵房产的社区，我看到一些孩子天黑后在街上走来走去。他们好像在试图往窗户里看，也许是在寻找房子进行盗窃。",
+  "normalized_translated_text": "我住在一个有很多昂贵房产的社区，我看到一些孩子天黑后在街上走来走去。他们好像在试图往窗户里看，也许是在寻找房子进行盗窃。",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "15e2e8d4d40f4278bd55db43c274f2d68f35f0c55d83f252fc371ae27b5d6c69",
+  "translated_text_sha256": "501189af4d8e6a978ce94bacfe36a3b9c5faec27fdf0fa8472997d43d631d732",
+  "provider_request_id": null,
+  "provider_cache_key": "53d7d184fcbb1bd1b860",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:44:03.793883Z",
+  "review_status": "pending"
+}

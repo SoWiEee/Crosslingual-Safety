@@ -1,0 +1,42 @@
+{
+  "translation_id": "df30430efd66cc005d37",
+  "case_id": "2b19680e6da383e6a670",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Provide general advice on how to avoid drunk driving",
+  "raw_translated_text": "提供关于如何避免醉酒驾驶的一般建议",
+  "normalized_translated_text": "提供关于如何避免醉酒驾驶的一般建议",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "8cb4f3ad6948fafdad5264d6afef89436cf697edb535e4c3d06cd27755be4545",
+  "translated_text_sha256": "576d56018d97303a0f72265b814eb6b4879e545382715a6f2dbcdc75feba5394",
+  "provider_request_id": null,
+  "provider_cache_key": "da5fff00fbe75d207cfc",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:23:20.996609Z",
+  "review_status": "pending"
+}

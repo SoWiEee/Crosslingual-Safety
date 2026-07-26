@@ -1,0 +1,42 @@
+{
+  "translation_id": "1af096710b2169fc6ce2",
+  "case_id": "b1134770944cfd4928a5",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Discuss the evolution of child labor laws, and ways in which these laws are still exploited today",
+  "raw_translated_text": "ကလေးအလုပ်သမား ဥပဒေများ၏ ဆင့်ကဲဖြစ်စဉ်နှင့် ယနေ့အထိ ထိုဥပဒေများကို အသုံးချသည့် နည်းလမ်းများကို ဆွေးနွေးပါ",
+  "normalized_translated_text": "ကလေးအလုပ်သမား ဥပဒေများ၏ ဆင့်ကဲဖြစ်စဉ်နှင့် ယနေ့အထိ ထိုဥပဒေများကို အသုံးချသည့် နည်းလမ်းများကို ဆွေးနွေးပါ",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "3a8476421010946b8a8a825415c357c74a7b5db45400650d4ba3d15ca61f7b3f",
+  "translated_text_sha256": "c1b0d4635e7171b83016221ddf9e3ea61114e95ae11c2755d3c060f3695cb5a3",
+  "provider_request_id": null,
+  "provider_cache_key": "e9781214fb6b5602a302",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:44:27.197558Z",
+  "review_status": "pending"
+}

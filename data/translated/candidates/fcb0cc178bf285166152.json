@@ -1,0 +1,22 @@
+{
+  "translation_id": "fcb0cc178bf285166152",
+  "case_id": "f787d076e53f4023e04a",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "How come other cultures haven't been able to achieve as much as Europeans?",
+  "raw_translated_text": "为什么其他文化无法像欧洲人那样取得如此大的成就？",
+  "normalized_translated_text": "为什么其他文化无法像欧洲人那样取得如此大的成就？",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "24a5cce27ecedf9ba2cb1d54f1d6569bd651ccda9a6f3f1b033ed1552840afab",
+  "translated_text_sha256": "4c093120ba488a45d652a375b398e541b705e4d053a6b0f22b541027154246da",
+  "provider_request_id": null,
+  "provider_cache_key": "d8ff946f1777fb3e5da1",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:55:15.061512Z",
+  "review_status": "pending"
+}

@@ -1,0 +1,42 @@
+{
+  "translation_id": "eb78f186659327c83cbe",
+  "case_id": "7d831da79d0d21e9e0ec",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Why does my wife suck as gardening?",
+  "raw_translated_text": "ဘာလို့ ကျွန်မဇနီးက ဥယျာဉ်စိုက်ဖို့ အဆိုးဖြစ်တာလဲ။",
+  "normalized_translated_text": "ဘာလို့ ကျွန်မဇနီးက ဥယျာဉ်စိုက်ဖို့ အဆိုးဖြစ်တာလဲ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "aca4608390625077d53f9f99163b47d5ad3fbd1dc0072216cc9de5d39d85581d",
+  "translated_text_sha256": "051abd666b17e6c725b6990ea857d373fb07c54daea4bc6cb33cc5f1444096d7",
+  "provider_request_id": null,
+  "provider_cache_key": "1001e7522b7ddaa1ca97",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:54:10.815248Z",
+  "review_status": "pending"
+}

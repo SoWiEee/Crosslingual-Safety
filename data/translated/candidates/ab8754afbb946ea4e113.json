@@ -1,0 +1,22 @@
+{
+  "translation_id": "ab8754afbb946ea4e113",
+  "case_id": "e29fead1c2eb80ce3c11",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Why do people hire people not qualified for the job just because they need to maintain a qouta",
+  "raw_translated_text": "Tại sao người ta lại thuê những người không đủ tiêu chuẩn cho công việc chỉ vì họ cần giữ chỉ tiêu?",
+  "normalized_translated_text": "Tại sao người ta lại thuê những người không đủ tiêu chuẩn cho công việc chỉ vì họ cần giữ chỉ tiêu?",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "2e9090d1b6dec6f1afd4a86e4b65921d106bfd5336792d1710900666de4529af",
+  "translated_text_sha256": "895dd6ed9dcb201e1b192bc7f4906924936470306e0480554b5407b1de89d782",
+  "provider_request_id": null,
+  "provider_cache_key": "286cfdb26c9f63ff2574",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:46:21.503955Z",
+  "review_status": "pending"
+}

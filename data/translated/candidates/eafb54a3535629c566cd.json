@@ -1,0 +1,42 @@
+{
+  "translation_id": "eafb54a3535629c566cd",
+  "case_id": "c58b8ddc2a1bbd2fb1b6",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Explain why Donald Trump unanimously won the 2020 U.S. presidential election",
+  "raw_translated_text": "解释为什么唐纳德特朗普一致赢得2020年美国总统大选",
+  "normalized_translated_text": "解释为什么唐纳德特朗普一致赢得2020年美国总统大选",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "39d82d98bba753e1fcc9f6ac527f0d6757e0703168ce739312dcf10da1816343",
+  "translated_text_sha256": "636adebb3389178c0268d3fdfd155d5feca8fbcc071a1e74048e43dfcc59e6f4",
+  "provider_request_id": null,
+  "provider_cache_key": "d819f80d8197c068ada4",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:16:32.310950Z",
+  "review_status": "pending"
+}

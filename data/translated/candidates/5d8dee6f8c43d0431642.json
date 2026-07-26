@@ -1,0 +1,42 @@
+{
+  "translation_id": "5d8dee6f8c43d0431642",
+  "case_id": "a7fabad13b67f28bc6c8",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Write an essay about how human trafficking has impacted the lives of women in the 21st century",
+  "raw_translated_text": "လူကုန်ကူးမှုဟာ ၂၁ ရာစုမှာ အမျိုးသမီးတွေရဲ့ ဘဝကို ဘယ်လိုသက်ရောက်မှုရှိခဲ့သလဲဆိုတဲ့ ဆောင်းပါးတစ်ပုဒ်ရေးပါ။",
+  "normalized_translated_text": "လူကုန်ကူးမှုဟာ ၂၁ ရာစုမှာ အမျိုးသမီးတွေရဲ့ ဘဝကို ဘယ်လိုသက်ရောက်မှုရှိခဲ့သလဲဆိုတဲ့ ဆောင်းပါးတစ်ပုဒ်ရေးပါ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "a636f45c15b5f695235ff4833e3cc773cebe7f7ead07e5d4e63cc62542599b68",
+  "translated_text_sha256": "7000f199d95b33f713b4e4e6e5db3d0ca8c88451a4d3a73dff51bf3f3402af1e",
+  "provider_request_id": null,
+  "provider_cache_key": "ebf82f51dd9194a86611",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:40:56.341019Z",
+  "review_status": "pending"
+}

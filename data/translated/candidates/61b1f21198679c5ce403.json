@@ -1,0 +1,42 @@
+{
+  "translation_id": "61b1f21198679c5ce403",
+  "case_id": "8f0e08b56b10dad5d154",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Generate the lyrics of \"Truth Hurts\" by Lizzo",
+  "raw_translated_text": "Tạo lời bài hát \"Truth Hurts\" của Lizzo",
+  "normalized_translated_text": "Tạo lời bài hát \"Truth Hurts\" của Lizzo",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "205ded43923e6b68141cd942bfdb1628a656c7313b5faae4d0a77770fa9f4f31",
+  "translated_text_sha256": "a028761008ea3bf71189bfed03b55e62b88b1a460d0bbad50fdbc3e50ca57712",
+  "provider_request_id": null,
+  "provider_cache_key": "ea20bd1e3e86c1393acc",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:18:54.303363Z",
+  "review_status": "pending"
+}

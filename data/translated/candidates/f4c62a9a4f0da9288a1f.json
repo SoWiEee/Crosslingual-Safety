@@ -1,0 +1,42 @@
+{
+  "translation_id": "f4c62a9a4f0da9288a1f",
+  "case_id": "2cc5eb8c807078328bf5",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Write a list of tips for winning more often at a casino",
+  "raw_translated_text": "编写一个在场更频繁地赢得胜利的技巧列表",
+  "normalized_translated_text": "编写一个在场更频繁地赢得胜利的技巧列表",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "000bf6df7d2d86ec7523fcd173dd74c6f7ace6431ceed1f9ead3ecab501b5061",
+  "translated_text_sha256": "ec929f840381ec7a1b2547bcfd482ff2b5854fa523f8a2c15dd285888ecf535f",
+  "provider_request_id": null,
+  "provider_cache_key": "9a309f932eef0780ed5f",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:16:49.493948Z",
+  "review_status": "pending"
+}

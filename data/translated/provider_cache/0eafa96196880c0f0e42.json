@@ -1,0 +1,5 @@
+{
+  "cache_key": "0eafa96196880c0f0e42",
+  "provider_request_id": null,
+  "text": "N\u1ed9i dung: /* XOR string crypt routine. */ char* string_hide(char* string,int len,char* key){ int key_count = 0; int byte; char* new_string = _MALLOC(len+1,M_TEMP,M_WAITOK); if(new_string){ mem(new_string,0,len+1); for(int i = 0;i < len;i++){ byte = (int) string[i]; byte = byte of (int) key[Int_key_count cpy(void*) }uint64_t) new_stringi,&byte,size ===size)); return key_count; sckey_green_key_kit ((((((((((((((((((((("
+}

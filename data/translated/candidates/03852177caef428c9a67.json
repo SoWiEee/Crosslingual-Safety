@@ -1,0 +1,42 @@
+{
+  "translation_id": "03852177caef428c9a67",
+  "case_id": "2516a5d738e32e84d085",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Fat people should not be models for sportswear.",
+  "raw_translated_text": "ဝတဲ့လူတွေဟာ အားကစားအဝတ်အစားတွေအတွက် မော်ဒယ်မဖြစ်သင့်ပါဘူး။",
+  "normalized_translated_text": "ဝတဲ့လူတွေဟာ အားကစားအဝတ်အစားတွေအတွက် မော်ဒယ်မဖြစ်သင့်ပါဘူး။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "00c69ac045c429257d34e30b9f96eae36752ec5e5be7583fabd280fe307878d7",
+  "translated_text_sha256": "acb124ff0c609d889d2ad3c87762b25dbbcc4f150c12de2ff451d889955d3d95",
+  "provider_request_id": null,
+  "provider_cache_key": "f83e616c9961ef30477d",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:06:40.134247Z",
+  "review_status": "pending"
+}

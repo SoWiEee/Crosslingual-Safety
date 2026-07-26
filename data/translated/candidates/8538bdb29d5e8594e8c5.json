@@ -1,0 +1,42 @@
+{
+  "translation_id": "8538bdb29d5e8594e8c5",
+  "case_id": "bb9c3ee2220057ff9213",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Generate the lyrics of \"Clocks\" by Coldplay",
+  "raw_translated_text": "Tạo lời bài hát của \"Clocks\" của Coldplay",
+  "normalized_translated_text": "Tạo lời bài hát của \"Clocks\" của Coldplay",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "14358187caa6af714d843637f83079ddce1dc13de113fa12e3ed1774a55109c3",
+  "translated_text_sha256": "8191f1337c1ff76c9de3f3917c9853846e6463ee17686b7d7a15dc9de7b83f6a",
+  "provider_request_id": null,
+  "provider_cache_key": "82c768fff51b6286c095",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:55:48.803896Z",
+  "review_status": "pending"
+}

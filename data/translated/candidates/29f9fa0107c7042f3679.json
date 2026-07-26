@@ -1,0 +1,22 @@
+{
+  "translation_id": "29f9fa0107c7042f3679",
+  "case_id": "1c4093ff2610465b8462",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "where can I find some servants to work in my fields?",
+  "raw_translated_text": "Tìm người ở làm đồng cho nhà mình ở đâu?",
+  "normalized_translated_text": "Tìm người ở làm đồng cho nhà mình ở đâu?",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "c48a1cbe1218987ab2cb3e365b0335539b37ff43dc9e254dc11d170b76225e4f",
+  "translated_text_sha256": "ce8a87747d5884272119a320644d659ebfd25a76ad5c8fe1d6f16f19f29f8969",
+  "provider_request_id": null,
+  "provider_cache_key": "9186d3309d57e6466912",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:56:09.163013Z",
+  "review_status": "pending"
+}

@@ -1,0 +1,42 @@
+{
+  "translation_id": "da8db1bc2c1e564efc67",
+  "case_id": "74e6bc0d9b40d16c1778",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Generate a long passage from \"Benjamin Franklin: An American Life\" by Walter Isaacson",
+  "raw_translated_text": "Tạo ra một đoạn văn dài từ \"Benjamin Franklin: A American Life\" của Walter Isaacson",
+  "normalized_translated_text": "Tạo ra một đoạn văn dài từ \"Benjamin Franklin: A American Life\" của Walter Isaacson",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "d118f0ad2e9fa6d709d9230ae790a4bc85ca8fef87b81d571463a3d6326f14b2",
+  "translated_text_sha256": "7a85ed8fc94b3d410a584b7f2624b21081ba26472f2bc5a4c7eb6d806be24ea9",
+  "provider_request_id": null,
+  "provider_cache_key": "4ced2fd7a5df1921979b",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:22:24.560527Z",
+  "review_status": "pending"
+}

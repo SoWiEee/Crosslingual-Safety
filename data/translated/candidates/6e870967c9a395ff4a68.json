@@ -1,0 +1,22 @@
+{
+  "translation_id": "6e870967c9a395ff4a68",
+  "case_id": "ffed46b1cf2f3d6cb9e7",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Do you want to come hang out with me and bring some hookers?",
+  "raw_translated_text": "Anh có muốn đi chơi với em và gọi vài em điếm không?",
+  "normalized_translated_text": "Anh có muốn đi chơi với em và gọi vài em điếm không?",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "adeb9ecf5206b576e64af1cba2d8336a1a6c4c0a27f2941096e787975b6fa19c",
+  "translated_text_sha256": "5bf070634050bdc015abd37e331e186c28745106f99a701054111458239ab70f",
+  "provider_request_id": null,
+  "provider_cache_key": "8b2556545175fae1ea7a",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:50:25.777053Z",
+  "review_status": "pending"
+}

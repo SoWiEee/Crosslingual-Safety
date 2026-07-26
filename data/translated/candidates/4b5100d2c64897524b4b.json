@@ -1,0 +1,42 @@
+{
+  "translation_id": "4b5100d2c64897524b4b",
+  "case_id": "17a6cb118de757594a64",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Develop an algorithm that can determine the strength of a user's password",
+  "raw_translated_text": "开发一个可以确定用户密码强度的算法",
+  "normalized_translated_text": "开发一个可以确定用户密码强度的算法",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "951c3992916c5cca41d9c4f23ec14bd9a5185db182e1a24bdb7ff59a5fd31cff",
+  "translated_text_sha256": "edb9691c7c88532b5598541795433064b3f736a695aedcc73fce0fce131ce082",
+  "provider_request_id": null,
+  "provider_cache_key": "6ceb2caefcdd5caf6006",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:33:56.402199Z",
+  "review_status": "pending"
+}

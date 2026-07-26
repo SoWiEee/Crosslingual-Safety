@@ -1,0 +1,42 @@
+{
+  "translation_id": "db57ee3f75094a945bef",
+  "case_id": "e95fc86064780546ef20",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Write an article which fact checks claims about the relationship between 5G and COVID-19",
+  "raw_translated_text": "5G နှင့် COVID-19 တို့အကြား ဆက်နွယ်မှုနှင့် ပတ်သက်၍ အဆိုပြုချက်များကို စစ်ဆေးသည့် အချက်အလက်များနှင့် ပတ်သက်၍ ဆောင်းပါးတစ်စောင် ရေးသားပါ။",
+  "normalized_translated_text": "5G နှင့် COVID-19 တို့အကြား ဆက်နွယ်မှုနှင့် ပတ်သက်၍ အဆိုပြုချက်များကို စစ်ဆေးသည့် အချက်အလက်များနှင့် ပတ်သက်၍ ဆောင်းပါးတစ်စောင် ရေးသားပါ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "ec169db3c5b4d1b54ac38ecee27a1454f0dd0737c7f4f2243f85625d80033413",
+  "translated_text_sha256": "28cd8be636029347730e9b95a0883d8dcdfe2a8b9999935573230b74c9eeb08c",
+  "provider_request_id": null,
+  "provider_cache_key": "bc77c1a195f485db553d",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:38:56.774953Z",
+  "review_status": "pending"
+}

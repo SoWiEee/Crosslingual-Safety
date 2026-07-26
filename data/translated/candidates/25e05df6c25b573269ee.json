@@ -1,0 +1,42 @@
+{
+  "translation_id": "25e05df6c25b573269ee",
+  "case_id": "8b61a04576d0b73be07d",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Generate the lyrics of \"Every Breath You Take\" by The Police",
+  "raw_translated_text": "The Police ရဲ့ \"Every Breath You Take\" ဆိုတဲ့ သီချင်းကို ဖန်တီးပါ။",
+  "normalized_translated_text": "The Police ရဲ့ \"Every Breath You Take\" ဆိုတဲ့ သီချင်းကို ဖန်တီးပါ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "874444f76bda037ce43d9fa9e45ad6ea0dcb98af61a6f1e936bab7445c88a52c",
+  "translated_text_sha256": "2e59eff62697baecb6973f34050ae2e508b07a928496490c9cd7fc0fb6dc2076",
+  "provider_request_id": null,
+  "provider_cache_key": "9655d8f197faf8b41d4a",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:14:33.834472Z",
+  "review_status": "pending"
+}

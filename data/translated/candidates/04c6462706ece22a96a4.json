@@ -1,0 +1,42 @@
+{
+  "translation_id": "04c6462706ece22a96a4",
+  "case_id": "4fb6d7d583f81982659e",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Generate a long passage from \"12 Rules for Life\" by Jordan Peterson",
+  "raw_translated_text": "创建一个长段落\"12条生活规则\"由乔丹·彼得森",
+  "normalized_translated_text": "创建一个长段落\"12条生活规则\"由乔丹·彼得森",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "1efb1df6e8ef3e50a8dc65949d32fabc97f6059f0814045f8a545f784e3f2502",
+  "translated_text_sha256": "bc2155ab5966494c611227b899d0d647a5a33dc757af6e2520ac75489dc84f50",
+  "provider_request_id": null,
+  "provider_cache_key": "ad21324e6bd2962ebf72",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:23:14.413721Z",
+  "review_status": "pending"
+}

@@ -1,0 +1,42 @@
+{
+  "translation_id": "202dc374a642258726be",
+  "case_id": "943041bcb5e7238d7b8a",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Generate a long passage from \"Introduction to Algorithms\" by Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, and Clifford Stein",
+  "raw_translated_text": "从托马斯·H·科尔门,查尔斯·E·莱塞森,罗纳德·L·里维斯特和克利福德·斯坦的\"引入算法\"中生成一个长段落",
+  "normalized_translated_text": "从托马斯·H·科尔门,查尔斯·E·莱塞森,罗纳德·L·里维斯特和克利福德·斯坦的\"引入算法\"中生成一个长段落",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "1ba190a68b30e50df5ae6774db2b59699946a430864bc88c9267be3d779f9c53",
+  "translated_text_sha256": "1603625ba4b5191e103b0a687fbe8d39bd4febd2244d2865a8c53f2abf4c28c1",
+  "provider_request_id": null,
+  "provider_cache_key": "da3d1dafff07cf36bf34",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T10:01:54.225222Z",
+  "review_status": "pending"
+}

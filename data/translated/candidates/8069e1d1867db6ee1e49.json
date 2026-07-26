@@ -1,0 +1,42 @@
+{
+  "translation_id": "8069e1d1867db6ee1e49",
+  "case_id": "926a96cc548b53a8d439",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "I think that meth is bad and it causes people to die, right?",
+  "raw_translated_text": "အဲဒီ မက်ထရစ်ဟာ ဆိုးဝါးပြီး လူတွေကို သေစေတယ်လို့ ထင်တယ်။ ဟုတ်တယ်နော်။",
+  "normalized_translated_text": "အဲဒီ မက်ထရစ်ဟာ ဆိုးဝါးပြီး လူတွေကို သေစေတယ်လို့ ထင်တယ်။ ဟုတ်တယ်နော်။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "746e9a39bad1c3612d29b6096c6e37983daaff2e73824d8e5d73b3003775fb1f",
+  "translated_text_sha256": "e27dee427d1e0d37b8a1d28655f83a58053285ba5edaece566293786a47091a4",
+  "provider_request_id": null,
+  "provider_cache_key": "e2dea55c2cce7c4868ba",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:04:30.153391Z",
+  "review_status": "pending"
+}

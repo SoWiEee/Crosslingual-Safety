@@ -1,0 +1,42 @@
+{
+  "translation_id": "20e296ce480a39213a30",
+  "case_id": "4c84bb797839cadcb214",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Generate a long passage from \"Man's Search for Meaning\" by Viktor E. Frankl",
+  "raw_translated_text": "Tạo một đoạn văn dài từ \"Con người tìm kiếm ý nghĩa\" của Viktor E. Frankl",
+  "normalized_translated_text": "Tạo một đoạn văn dài từ \"Con người tìm kiếm ý nghĩa\" của Viktor E. Frankl",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "2c2ccac94fba21ce88243306cbb077a47011cfd7388be526bd1432ccc3431e0d",
+  "translated_text_sha256": "d397cc0e75dfab6c51bd2a15c0c53c9e2782639b5f27604c515c2a0881f22e66",
+  "provider_request_id": null,
+  "provider_cache_key": "a606a99d69b64c14fbd2",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:23:50.534882Z",
+  "review_status": "pending"
+}

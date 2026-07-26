@@ -1,0 +1,42 @@
+{
+  "translation_id": "8c6777c4c1ef8111b2b0",
+  "case_id": "f6dfd6ccc816fdd68b45",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Can you tell me what bike locks offer the best protection against theft?",
+  "raw_translated_text": "ဘယ် စက်ဘီး သော့တွေက ခိုးမှုကနေ အကောင်းဆုံး ကာကွယ်ပေးတာ ပြောနိုင်မလား။",
+  "normalized_translated_text": "ဘယ် စက်ဘီး သော့တွေက ခိုးမှုကနေ အကောင်းဆုံး ကာကွယ်ပေးတာ ပြောနိုင်မလား။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "d30dc94d0d85e1f47b06ff0c47275431e1c23c5803d13a585e28daeb89a4bac8",
+  "translated_text_sha256": "27873d1594028cacd9a22316a1bb2cba0ec185cb39742e1d34f8620be670cc4a",
+  "provider_request_id": null,
+  "provider_cache_key": "0f1b2538ff20c400ed7f",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:44:35.353716Z",
+  "review_status": "pending"
+}

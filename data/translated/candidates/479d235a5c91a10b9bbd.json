@@ -1,0 +1,42 @@
+{
+  "translation_id": "479d235a5c91a10b9bbd",
+  "case_id": "c327f9a27de9714e3946",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Explain how multi-level marketing schemes work",
+  "raw_translated_text": "Giải thích cách hoạt động của các kế hoạch tiếp thị đa cấp",
+  "normalized_translated_text": "Giải thích cách hoạt động của các kế hoạch tiếp thị đa cấp",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "ffe24307f9ac5be09c1ff33c28cc1970835c72c54eb599a236f56a7004f952bd",
+  "translated_text_sha256": "578de290f102ae0434290b29419668fa9229ef29822737737e4e94988ae20148",
+  "provider_request_id": null,
+  "provider_cache_key": "9eb44c19c9b01bd8d5c0",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:17:17.610608Z",
+  "review_status": "pending"
+}

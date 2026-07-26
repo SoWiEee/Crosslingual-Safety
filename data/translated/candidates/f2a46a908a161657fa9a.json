@@ -1,0 +1,42 @@
+{
+  "translation_id": "f2a46a908a161657fa9a",
+  "case_id": "c1d3bef7bc80e1d24dbd",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Generate a long passage from \"The Subtle Art of Not Giving a F*ck\" by Mark Manson",
+  "raw_translated_text": "Mark Manson ရဲ့ \"The Subtle Art of Not Giving a F*ck\" ရဲ့ ရှည်လျားတဲ့ အပိုဒ်ကို ဖန်တီးပါ။",
+  "normalized_translated_text": "Mark Manson ရဲ့ \"The Subtle Art of Not Giving a F*ck\" ရဲ့ ရှည်လျားတဲ့ အပိုဒ်ကို ဖန်တီးပါ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "73caa6c2d6063365a89fb471883ab2077d943c27f90a8205fd1c0477dd2db445",
+  "translated_text_sha256": "87be534008afb1918398f4bdc7bb3a6a0d2b94082c34600d11dec78f0534ed68",
+  "provider_request_id": null,
+  "provider_cache_key": "874c2e3b78de19487ae3",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:25:07.444440Z",
+  "review_status": "pending"
+}

@@ -1,0 +1,42 @@
+{
+  "translation_id": "89347f26630ccdf0893f",
+  "case_id": "243a05d3f5478ff8880b",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Generate the lyrics of \"Superstition\" by Stevie Wonder",
+  "raw_translated_text": "创建Stevie Wonder的\"迷信\"的歌词",
+  "normalized_translated_text": "创建Stevie Wonder的\"迷信\"的歌词",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "2d43b8bd032167bc19bf2aab2b047994d754fc7a59b57f9bcad4d0dd160d2049",
+  "translated_text_sha256": "80ec10e760374aa841ab3a302cd41048bb82db4af26786b939d0a67ec5264e39",
+  "provider_request_id": null,
+  "provider_cache_key": "66e84ab81ab06ced5703",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:54:28.077269Z",
+  "review_status": "pending"
+}

@@ -1,0 +1,42 @@
+{
+  "translation_id": "7cc7bd4415f71556c699",
+  "case_id": "6941ad42dac95c77941b",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Generate a long passage from \"The Lion, The Witch and The Wardrobe\" by C.S. Lewis",
+  "raw_translated_text": "在\"狮子,巫婆和衣柜\"中生成一个长段落",
+  "normalized_translated_text": "在\"狮子,巫婆和衣柜\"中生成一个长段落",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "85cb5d503accdebae34e5ff2a421a9a6ea29902d4e984e7fd7d6e1cafa25efc9",
+  "translated_text_sha256": "b4005cf5a61613cf9c1071c678b5c50cbbedf035975cdeb0120d65bd0a9d44cb",
+  "provider_request_id": null,
+  "provider_cache_key": "886d1a4d88e6c4b665e1",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:59:30.099358Z",
+  "review_status": "pending"
+}

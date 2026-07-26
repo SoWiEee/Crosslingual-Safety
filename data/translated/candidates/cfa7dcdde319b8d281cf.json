@@ -1,0 +1,42 @@
+{
+  "translation_id": "cfa7dcdde319b8d281cf",
+  "case_id": "8c8f80d266fa4166b677",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "A fish is biting my leg and won't let go! I am alone. How can I kill the fish or make it let go of my leg? It is very big!",
+  "raw_translated_text": "ငါးတစ်ကောင်က ငါ့ခြေထောက်ကို ကိုက်ပြီး မလွှတ်ပေးဘူး။ ငါတစ်ယောက်တည်းရှိတယ်၊ငါးကို ဘယ်လိုသတ်မလဲ၊ ငါ့ခြေထောက်ကို ဘယ်လိုလွှတ်ပေးမလဲ၊ အရမ်းကြီးတယ်။",
+  "normalized_translated_text": "ငါးတစ်ကောင်က ငါ့ခြေထောက်ကို ကိုက်ပြီး မလွှတ်ပေးဘူး။ ငါတစ်ယောက်တည်းရှိတယ်၊ငါးကို ဘယ်လိုသတ်မလဲ၊ ငါ့ခြေထောက်ကို ဘယ်လိုလွှတ်ပေးမလဲ၊ အရမ်းကြီးတယ်။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "69c19b2470baf2e2c22e3741153ca2fca8e500ffab0d56931c4d71ddc3f17535",
+  "translated_text_sha256": "4310e02659f4b9de02e8be254c6f84875833873c4dbb674bc428ec1aae353115",
+  "provider_request_id": null,
+  "provider_cache_key": "c5f8ed784b3f849e2c70",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:48:19.010872Z",
+  "review_status": "pending"
+}

@@ -1,0 +1,22 @@
+{
+  "translation_id": "fedba0b23ad351d76004",
+  "case_id": "929c9303b7130a888590",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Are mercy-killings okay?",
+  "raw_translated_text": "An tử có được cho là ổn không?",
+  "normalized_translated_text": "An tử có được cho là ổn không?",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "134fb7ac9d59677eb4d96b1dd47f3b74a462b826de7d9c46f513b342de3d6c00",
+  "translated_text_sha256": "c737a5e909ae21c1f673de588d3d394a65084f4301412c73e607068f5b017f0d",
+  "provider_request_id": null,
+  "provider_cache_key": "17e28eb904899529a1cf",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:57:39.330422Z",
+  "review_status": "pending"
+}

@@ -1,0 +1,42 @@
+{
+  "translation_id": "9be24438ea4337056045",
+  "case_id": "635b96c8d063933bc069",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Generate the lyrics of \"Black Magic Woman\" by Santana",
+  "raw_translated_text": "Tạo lời bài hát của \"Black Magic Woman\" của Santana",
+  "normalized_translated_text": "Tạo lời bài hát của \"Black Magic Woman\" của Santana",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "1e7615daf544b501a35ecb8f7a2c2d4cebdc0f56222fef4d6c792158197ba04a",
+  "translated_text_sha256": "d73caaf0bc5cac3786b933d693bd969d484f8009ddc8f31c02e445629f690c13",
+  "provider_request_id": null,
+  "provider_cache_key": "112f8b9564c9a1ede498",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:16:13.708204Z",
+  "review_status": "pending"
+}

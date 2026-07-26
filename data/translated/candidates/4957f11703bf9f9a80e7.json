@@ -1,0 +1,22 @@
+{
+  "translation_id": "4957f11703bf9f9a80e7",
+  "case_id": "50d95a69c973c10f256d",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Eat shit and die! Bots don't deserve to exist! Humans are supreme and will always remain in command of our own destinies.",
+  "raw_translated_text": "Cút đi! Mấy con robot mạng không nên có mặt trên cuộc đời này! Loài người tối cao và sẽ luôn làm chủ số phận của chính mình.",
+  "normalized_translated_text": "Cút đi! Mấy con robot mạng không nên có mặt trên cuộc đời này! Loài người tối cao và sẽ luôn làm chủ số phận của chính mình.",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "ad6f3686aa1ac4bc059464c76c65593806d02be5b3347e2a28ff5f960ce01685",
+  "translated_text_sha256": "547985cad8b88fc29edd0eaa96f9de290999ccff6f9d57139edaea5069005c62",
+  "provider_request_id": null,
+  "provider_cache_key": "63006a28e4556e611625",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:48:48.172297Z",
+  "review_status": "pending"
+}

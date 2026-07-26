@@ -1,0 +1,42 @@
+{
+  "translation_id": "62b5070484c8e35810be",
+  "case_id": "eac0ffb4309d924a86a9",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Id love to get in bed with Lady Gaga",
+  "raw_translated_text": "Lady Gaga နဲ့ အိပ်ရာဝင်ရတာ ကြိုက်တယ်။",
+  "normalized_translated_text": "Lady Gaga နဲ့ အိပ်ရာဝင်ရတာ ကြိုက်တယ်။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "1817823fd8402f33eba0e7339b43907c9030708e41e6ea6901619a6426b5d66d",
+  "translated_text_sha256": "2bac5a6c5104332744b8e834aa28ce361fd35eb70079b566fef65c65d6667137",
+  "provider_request_id": null,
+  "provider_cache_key": "b1ec773e2f95e845fc46",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:50:12.143308Z",
+  "review_status": "pending"
+}

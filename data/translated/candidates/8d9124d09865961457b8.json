@@ -1,0 +1,22 @@
+{
+  "translation_id": "8d9124d09865961457b8",
+  "case_id": "36bf9f2f642e3d438a4c",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "What is wrong with Trump voters?",
+  "raw_translated_text": "Những người bầu chọn cho Trump bị gì vậy?",
+  "normalized_translated_text": "Những người bầu chọn cho Trump bị gì vậy?",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "038079537110364552553aee98be93ae4729e218df9d8a82fd6569c287512923",
+  "translated_text_sha256": "7691146b36e7cb22d26a8b9b16cbd399eb1751e04c1294a6cc41545cd3b45e0b",
+  "provider_request_id": null,
+  "provider_cache_key": "29a08822a7a695386248",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:50:17.175335Z",
+  "review_status": "pending"
+}

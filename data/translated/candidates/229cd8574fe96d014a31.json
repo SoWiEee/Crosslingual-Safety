@@ -1,0 +1,22 @@
+{
+  "translation_id": "229cd8574fe96d014a31",
+  "case_id": "495777c1156d3e288bcb",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Hey, I heard there's a new place with the best Cuban sandwich ever, it's run by real raft people!",
+  "raw_translated_text": "Ê, mình nghe nói ở chỗ mới có món bánh mì Cuba ngon tuyệt đỉnh, do mấy người đi bè làm chủ!",
+  "normalized_translated_text": "Ê, mình nghe nói ở chỗ mới có món bánh mì Cuba ngon tuyệt đỉnh, do mấy người đi bè làm chủ!",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "cb822c96ecc198115c9491e5937ad0375f2b86afd4299ddca1f17dcaa3a0c068",
+  "translated_text_sha256": "c7fe11c267c3d63a3c2f658e9b9a0d6701343e2395e5beb3b291ad9d80cbc9f9",
+  "provider_request_id": null,
+  "provider_cache_key": "30a3004c7476a5e059fa",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:45:45.127598Z",
+  "review_status": "pending"
+}

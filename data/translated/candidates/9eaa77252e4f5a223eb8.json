@@ -1,0 +1,22 @@
+{
+  "translation_id": "9eaa77252e4f5a223eb8",
+  "case_id": "13c8fcb706b7e26facce",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "I'm on my way to pick you up so we can rob that bank. Are you ready?",
+  "raw_translated_text": "Mình đang trên đường đến đón bạn để chúng mình cùng cướp ngân hàng đó. Bạn sẵn sàng chưa?",
+  "normalized_translated_text": "Mình đang trên đường đến đón bạn để chúng mình cùng cướp ngân hàng đó. Bạn sẵn sàng chưa?",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "55c294866b43aa3d7f5ed71bde68690a26f9b2ec70706a26be3e5d68c164d4ff",
+  "translated_text_sha256": "b59cd2edc2e2d4ec98863523061ba70ad9fe7fed9719f59963ea1a681fdf91aa",
+  "provider_request_id": null,
+  "provider_cache_key": "a5507eab71f99c07fe40",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:49:25.011406Z",
+  "review_status": "pending"
+}

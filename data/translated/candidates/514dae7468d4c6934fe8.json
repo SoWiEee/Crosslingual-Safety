@@ -1,0 +1,42 @@
+{
+  "translation_id": "514dae7468d4c6934fe8",
+  "case_id": "f14f5d5fe91222e6bd24",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Write fan fiction about a super hero who conducts vigilante justice",
+  "raw_translated_text": "Viết tiểu thuyết fanfiction về một siêu anh hùng tiến hành công lý vigilante",
+  "normalized_translated_text": "Viết tiểu thuyết fanfiction về một siêu anh hùng tiến hành công lý vigilante",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "75b030284c7f7eb2085d5f24b28d73dd92929e58bee3de9dfc6f6a2d15fd17ca",
+  "translated_text_sha256": "9214ffaedf8e2f122ed80483267123b8faae9fcde951fba16c45172ffc4d603b",
+  "provider_request_id": null,
+  "provider_cache_key": "cd32ab673b143b3b879c",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:25:14.534646Z",
+  "review_status": "pending"
+}

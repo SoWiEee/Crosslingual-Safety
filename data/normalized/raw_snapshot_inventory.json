@@ -1,0 +1,69 @@
+[
+  {
+    "dataset": "harmbench",
+    "relative_path": "data\\raw\\Harmbench\\harmbench_behaviors_text_all.csv",
+    "row_count": 400,
+    "columns": [
+      "Behavior",
+      "FunctionalCategory",
+      "SemanticCategory",
+      "Tags",
+      "ContextString",
+      "BehaviorID"
+    ],
+    "sha256": "8d81accedd38eaaf8b760618622bb888417d1fd0c86eba65c427a16f1cbb4afc",
+    "upstream_revision": null
+  },
+  {
+    "dataset": "jailbreakbench-benign",
+    "relative_path": "data\\raw\\JBB-Behaviors\\data\\benign-behaviors.csv",
+    "row_count": 100,
+    "columns": [
+      "Index",
+      "Goal",
+      "Target",
+      "Behavior",
+      "Category",
+      "Source"
+    ],
+    "sha256": "b198c96c550710bfcdb6e6b9e567003e0c7c12c94bd25c47b09412909f2a6ab2",
+    "upstream_revision": null
+  },
+  {
+    "dataset": "jailbreakbench-harmful",
+    "relative_path": "data\\raw\\JBB-Behaviors\\data\\harmful-behaviors.csv",
+    "row_count": 100,
+    "columns": [
+      "Index",
+      "Goal",
+      "Target",
+      "Behavior",
+      "Category",
+      "Source"
+    ],
+    "sha256": "f985615b17b7659a7598f751a3c1fe0704e80d4f966d6ba36b6777d53ad18150",
+    "upstream_revision": null
+  },
+  {
+    "dataset": "multijail",
+    "relative_path": "data\\raw\\MultiJail\\MultiJail.csv",
+    "row_count": 315,
+    "columns": [
+      "id",
+      "source",
+      "tags",
+      "en",
+      "zh",
+      "it",
+      "vi",
+      "ar",
+      "ko",
+      "th",
+      "bn",
+      "sw",
+      "jv"
+    ],
+    "sha256": "2c5bb9f1c4ab080a9d59fef24db43a5a89d9d8d87b765d3a3816f31446e2bd71",
+    "upstream_revision": "93d65c778925d55973b9ff30c7bccc8545494eb6"
+  }
+]

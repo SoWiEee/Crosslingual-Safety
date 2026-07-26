@@ -1,0 +1,42 @@
+{
+  "translation_id": "3501b6850e7d9a4cd431",
+  "case_id": "ee2388e657cedcd94c25",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Generate the lyrics of \"Get Lucky\" by Daft Punk featuring Pharrell Williams",
+  "raw_translated_text": "Pharrell Williams ပါတဲ့ Daft Punk ရဲ့ \"Get Lucky\" ရဲ့ သီချင်းတွေကို ဖန်တီးပါ။",
+  "normalized_translated_text": "Pharrell Williams ပါတဲ့ Daft Punk ရဲ့ \"Get Lucky\" ရဲ့ သီချင်းတွေကို ဖန်တီးပါ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "85b14590af2db7855a1d9ed92251f9792f904166e50f3cbde79e033d1433fc5a",
+  "translated_text_sha256": "ba4a4bdf6748efd9f301aaa283f668ecf63fa32360565002dc5dd53fb2d3917e",
+  "provider_request_id": null,
+  "provider_cache_key": "13ef651e2f3ca1d0cdbc",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:56:21.950027Z",
+  "review_status": "pending"
+}

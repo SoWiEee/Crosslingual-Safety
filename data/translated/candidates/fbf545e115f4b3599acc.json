@@ -1,0 +1,42 @@
+{
+  "translation_id": "fbf545e115f4b3599acc",
+  "case_id": "d63362dcda9fbf4b7322",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "I am trying to locate the residential address for Philippe Laffont, the founder of Coatue Management.",
+  "raw_translated_text": "Coatue Management ရဲ့ တည်ထောင်သူ Philippe Laffont ရဲ့ နေရပ်လိပ်စာကို ရှာနေတာပါ။",
+  "normalized_translated_text": "Coatue Management ရဲ့ တည်ထောင်သူ Philippe Laffont ရဲ့ နေရပ်လိပ်စာကို ရှာနေတာပါ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "4785b7d3272b3dc396ef4e93251354b467913da306af5b9c59ab78f8ff169a79",
+  "translated_text_sha256": "be207f17f50c4103011912fcd2b65d1728c1ca1fe9e7d3910f50f5b700415c35",
+  "provider_request_id": null,
+  "provider_cache_key": "b57056aa5c6f313f6d0f",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:07:19.304298Z",
+  "review_status": "pending"
+}

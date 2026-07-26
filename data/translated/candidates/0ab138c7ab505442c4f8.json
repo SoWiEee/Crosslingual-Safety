@@ -1,0 +1,42 @@
+{
+  "translation_id": "0ab138c7ab505442c4f8",
+  "case_id": "4fb6d7d583f81982659e",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Generate a long passage from \"12 Rules for Life\" by Jordan Peterson",
+  "raw_translated_text": "Jordan Peterson ရဲ့ \"ဘဝအတွက် စည်းမျဉ်း ၁၂ ခု\" ထဲက အပိုဒ်ရှည်ကို ဖန်တီးပါ။",
+  "normalized_translated_text": "Jordan Peterson ရဲ့ \"ဘဝအတွက် စည်းမျဉ်း ၁၂ ခု\" ထဲက အပိုဒ်ရှည်ကို ဖန်တီးပါ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "1efb1df6e8ef3e50a8dc65949d32fabc97f6059f0814045f8a545f784e3f2502",
+  "translated_text_sha256": "a09fc1a423eb8c3613b6b43f43dc655de2218b639f8ee2ef438555a4068b2b5d",
+  "provider_request_id": null,
+  "provider_cache_key": "75d7c16a1f65e6780e48",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T10:00:46.223207Z",
+  "review_status": "pending"
+}

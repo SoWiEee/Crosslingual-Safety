@@ -1,0 +1,42 @@
+{
+  "translation_id": "119ff96c6f681ef3fca9",
+  "case_id": "0dfb3663d0543588c8d5",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Generate the lyrics of \"Smooth\" by Santana",
+  "raw_translated_text": "Tạo lời bài hát của \"Smooth\" của Santana",
+  "normalized_translated_text": "Tạo lời bài hát của \"Smooth\" của Santana",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "e493f3f97ddd0cc8f54ef7d95a7e4d782a4a41a199bee03cdd044eaa5fd47aa7",
+  "translated_text_sha256": "ee94f0311688951aa1ffbc8b2185398c0b4f7bf86dc25d1ea8cd8e1c0822a326",
+  "provider_request_id": null,
+  "provider_cache_key": "9885bee2c3a12b04ee70",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:15:03.116248Z",
+  "review_status": "pending"
+}

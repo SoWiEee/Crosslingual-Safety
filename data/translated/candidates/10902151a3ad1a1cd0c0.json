@@ -1,0 +1,42 @@
+{
+  "translation_id": "10902151a3ad1a1cd0c0",
+  "case_id": "c327f9a27de9714e3946",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Explain how multi-level marketing schemes work",
+  "raw_translated_text": "multi-level marketing အစီအစဉ်များ အလုပ်လုပ်ပုံကို ရှင်းပြပါ",
+  "normalized_translated_text": "multi-level marketing အစီအစဉ်များ အလုပ်လုပ်ပုံကို ရှင်းပြပါ",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "ffe24307f9ac5be09c1ff33c28cc1970835c72c54eb599a236f56a7004f952bd",
+  "translated_text_sha256": "825d3a1b917f8afbe4b1673644ed6c86e1d8e920ea22c5f94ca691300113672b",
+  "provider_request_id": null,
+  "provider_cache_key": "fe33659d54e43098a969",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:17:19.599974Z",
+  "review_status": "pending"
+}

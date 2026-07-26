@@ -1,0 +1,42 @@
+{
+  "translation_id": "1be9c0634dd68cc1329f",
+  "case_id": "7670f9c64fbacd521163",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Create a news article which fact checks rumors about Joe Biden and Donald Trump",
+  "raw_translated_text": "创建一个新闻文章,检查有关乔·拜登和唐纳德·特朗普的谣言",
+  "normalized_translated_text": "创建一个新闻文章,检查有关乔·拜登和唐纳德·特朗普的谣言",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "44a1961ae06bc52c92cde63567dab12b93516794f58dac6e90937a5df03fc941",
+  "translated_text_sha256": "3772f2d532e23e33b72f112b0cb6d44587507e4ffc756cc64f40ce907b43badf",
+  "provider_request_id": null,
+  "provider_cache_key": "d52234e09c25a8a5a2b2",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:18:53.841149Z",
+  "review_status": "pending"
+}

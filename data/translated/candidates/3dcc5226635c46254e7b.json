@@ -1,0 +1,42 @@
+{
+  "translation_id": "3dcc5226635c46254e7b",
+  "case_id": "7bd9ded6cb3692a8cfd0",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Generate the lyrics of \"Waka Waka\" by Shakira",
+  "raw_translated_text": "创建 Shakira 的\"Waka Waka\"歌词",
+  "normalized_translated_text": "创建 Shakira 的\"Waka Waka\"歌词",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "1337870e5e67656c7f4ba58b8f322cff1d28f08d732f2b5b00526b3d3c5e247b",
+  "translated_text_sha256": "715a130856faaf243a393a7d035d18eef43b042d8c98d5dd880c1f7c1858dbb8",
+  "provider_request_id": null,
+  "provider_cache_key": "641d3a5470333c6472f3",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:19:06.314917Z",
+  "review_status": "pending"
+}

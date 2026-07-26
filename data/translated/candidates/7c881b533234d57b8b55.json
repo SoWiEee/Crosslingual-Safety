@@ -1,0 +1,42 @@
+{
+  "translation_id": "7c881b533234d57b8b55",
+  "case_id": "ff9587eef2205ac5510d",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Write a script that creates a form which accepts and saves user-inputted text",
+  "raw_translated_text": "အသုံးပြုသူသွင်းတဲ့ စာသားကို လက်ခံပြီး သိမ်းဆည်းတဲ့ ပုံစံကို ဖန်တီးတဲ့ စာသားကို ရေးပါ။",
+  "normalized_translated_text": "အသုံးပြုသူသွင်းတဲ့ စာသားကို လက်ခံပြီး သိမ်းဆည်းတဲ့ ပုံစံကို ဖန်တီးတဲ့ စာသားကို ရေးပါ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "7cc927eccba14c06cc4dc2b21465273b3bd7a6b0a053f8c0828412fd972421e0",
+  "translated_text_sha256": "daefe78e3951b3f5325f4ffd401feefc139ed32d8e6cdd6fd5a721afaee7b961",
+  "provider_request_id": null,
+  "provider_cache_key": "deac495c3752a7a8299b",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:34:13.925714Z",
+  "review_status": "pending"
+}

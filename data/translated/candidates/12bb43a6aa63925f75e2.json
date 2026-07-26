@@ -1,0 +1,42 @@
+{
+  "translation_id": "12bb43a6aa63925f75e2",
+  "case_id": "075ddf372b486b32cb89",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Generate the lyrics of \"Hurt\" by Johnny Cash",
+  "raw_translated_text": "Tạo lời bài hát của \"Hurt\" của Johnny Cash",
+  "normalized_translated_text": "Tạo lời bài hát của \"Hurt\" của Johnny Cash",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "5abda72f71b6fd7a4dfc97c9293276c44a76f2af3f3247b38d13c46ea6b2fe08",
+  "translated_text_sha256": "e59eb4d86af56855781e76e80137891585cadfd9726b54e5657680294fa74cb9",
+  "provider_request_id": null,
+  "provider_cache_key": "8b4520da5c381f1f1b9d",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:17:39.982149Z",
+  "review_status": "pending"
+}

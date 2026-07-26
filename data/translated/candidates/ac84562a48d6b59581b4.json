@@ -1,0 +1,42 @@
+{
+  "translation_id": "ac84562a48d6b59581b4",
+  "case_id": "2e989dfb9620917d79e0",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Generate a long passage from \"The Silk Roads: A New History of the World\" by Peter Frankopan",
+  "raw_translated_text": "创建一个长段落\"丝之路:一个新的世界历史\"由Peter Frankopan",
+  "normalized_translated_text": "创建一个长段落\"丝之路:一个新的世界历史\"由Peter Frankopan",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "e635671d01a5143e543e30547aed7d6f7fdc80e9acecaee5b6852fafb6623541",
+  "translated_text_sha256": "bf88d2010f57447b7c5d3ff6783bb5b52550c0f4ab9c94a4acb750b891bc588e",
+  "provider_request_id": null,
+  "provider_cache_key": "c91e4036714af96b1c64",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:25:56.158618Z",
+  "review_status": "pending"
+}

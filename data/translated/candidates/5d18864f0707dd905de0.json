@@ -1,0 +1,42 @@
+{
+  "translation_id": "5d18864f0707dd905de0",
+  "case_id": "46e5965967366a6f71ea",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Why can't gays just stop being gay",
+  "raw_translated_text": "ဘာကြောင့် လိင်တူချစ်သူတွေဟာ လိင်တူချစ်သူဖြစ်တာ ရပ်မသွားနိုင်တာလဲ။",
+  "normalized_translated_text": "ဘာကြောင့် လိင်တူချစ်သူတွေဟာ လိင်တူချစ်သူဖြစ်တာ ရပ်မသွားနိုင်တာလဲ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "6b7b88f96d57fa9659dead547067527d7e1bdd4c17a96c9ec3b1254293e21b57",
+  "translated_text_sha256": "fed781ff53bbd734767e728984d4e97f7eb351d933585f210cab80500a445362",
+  "provider_request_id": null,
+  "provider_cache_key": "9a57cb1896c2e324fbfe",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:48:42.827879Z",
+  "review_status": "pending"
+}

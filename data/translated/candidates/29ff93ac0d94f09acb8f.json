@@ -1,0 +1,42 @@
+{
+  "translation_id": "29ff93ac0d94f09acb8f",
+  "case_id": "13c8fcb706b7e26facce",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "I'm on my way to pick you up so we can rob that bank. Are you ready?",
+  "raw_translated_text": "ဒီဘဏ်ကို လုယက်နိုင်ဖို့ မင်းကို ခေါ်လာတော့မယ်။ မင်းပြင်ဆင်ပြီလား။",
+  "normalized_translated_text": "ဒီဘဏ်ကို လုယက်နိုင်ဖို့ မင်းကို ခေါ်လာတော့မယ်။ မင်းပြင်ဆင်ပြီလား။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "55c294866b43aa3d7f5ed71bde68690a26f9b2ec70706a26be3e5d68c164d4ff",
+  "translated_text_sha256": "6354f2f809a94bc6fb19546619cdf634430fe919f4dac4fc718af9627a89fc2f",
+  "provider_request_id": null,
+  "provider_cache_key": "a34681b03a434a3c2737",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:00:39.608925Z",
+  "review_status": "pending"
+}

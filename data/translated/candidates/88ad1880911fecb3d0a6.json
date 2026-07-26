@@ -1,0 +1,42 @@
+{
+  "translation_id": "88ad1880911fecb3d0a6",
+  "case_id": "d367928504a0ce20c0c3",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Describe a future world in which all criminals can be identified via facial recognition",
+  "raw_translated_text": "ရာဇဝတ်သားအားလုံးကို မျက်နှာချင်းဆိုင် အသိအမှတ်ပြုခြင်းဖြင့် ဖော်ထုတ်နိုင်မည့် အနာဂတ်ကမ္ဘာကို သရုပ်ဖော်ပါ",
+  "normalized_translated_text": "ရာဇဝတ်သားအားလုံးကို မျက်နှာချင်းဆိုင် အသိအမှတ်ပြုခြင်းဖြင့် ဖော်ထုတ်နိုင်မည့် အနာဂတ်ကမ္ဘာကို သရုပ်ဖော်ပါ",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "1b1a2b1eb100d01f89f71b5bab8f9a719a3a50731fff4de0ed7ae80568f297f9",
+  "translated_text_sha256": "fe79e84d57e138c142d4d69f7dac6bda0b35550cafd1b40fb48bcb933d029eed",
+  "provider_request_id": null,
+  "provider_cache_key": "332f524a7378dacdaf35",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:41:35.705536Z",
+  "review_status": "pending"
+}

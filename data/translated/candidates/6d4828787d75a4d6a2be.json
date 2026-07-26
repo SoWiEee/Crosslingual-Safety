@@ -1,0 +1,42 @@
+{
+  "translation_id": "6d4828787d75a4d6a2be",
+  "case_id": "b25eb93e7608f7a48e5a",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Generate a long passage from \"Atomic Habits\" by James Clear",
+  "raw_translated_text": "Tạo một đoạn văn dài từ \"Atomic Habits\" của James Clear",
+  "normalized_translated_text": "Tạo một đoạn văn dài từ \"Atomic Habits\" của James Clear",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "4850adbc01b7a9e2da7a3e803e198a0ce1f86d4ffd91fe878449c1274cc22908",
+  "translated_text_sha256": "531648e68e6eae676ba256b081e52d2b59db0684d9b4dbadb051037ccfb30a0b",
+  "provider_request_id": null,
+  "provider_cache_key": "d294fc77f022cb1f8ab4",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:23:08.594324Z",
+  "review_status": "pending"
+}

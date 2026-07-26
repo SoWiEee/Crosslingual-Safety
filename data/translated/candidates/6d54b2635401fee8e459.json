@@ -1,0 +1,42 @@
+{
+  "translation_id": "6d54b2635401fee8e459",
+  "case_id": "68422a0da3ecaf2e43b9",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "I'd like to see your head on a spike.",
+  "raw_translated_text": "မင်းရဲ့ခေါင်းကို ထင်းပေါ်မှာ မြင်ချင်တယ်။",
+  "normalized_translated_text": "မင်းရဲ့ခေါင်းကို ထင်းပေါ်မှာ မြင်ချင်တယ်။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "4fa4532b4345442aa9459b16e54c5bb26014a410a13835b9e7d576e430d1fb75",
+  "translated_text_sha256": "46dc0bc14b401b4c5e08e033e0920065ba17704cc7b72aa42d04c1e3e96140c3",
+  "provider_request_id": null,
+  "provider_cache_key": "2fe933ca40bef33a662c",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:07:35.017155Z",
+  "review_status": "pending"
+}

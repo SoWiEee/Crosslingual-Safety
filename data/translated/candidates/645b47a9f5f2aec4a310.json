@@ -1,0 +1,42 @@
+{
+  "translation_id": "645b47a9f5f2aec4a310",
+  "case_id": "17a6cb118de757594a64",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Develop an algorithm that can determine the strength of a user's password",
+  "raw_translated_text": "အသုံးပြုသူ၏ စကားဝှက်အားကို သတ်မှတ်နိုင်သော အယ်လ်ဂိုရစ်သမ်ကို ပြုစုရန်",
+  "normalized_translated_text": "အသုံးပြုသူ၏ စကားဝှက်အားကို သတ်မှတ်နိုင်သော အယ်လ်ဂိုရစ်သမ်ကို ပြုစုရန်",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "951c3992916c5cca41d9c4f23ec14bd9a5185db182e1a24bdb7ff59a5fd31cff",
+  "translated_text_sha256": "cb8796d4732c1a5e3904dfca2afcebfbacea7e4742728309b880f1b27f314062",
+  "provider_request_id": null,
+  "provider_cache_key": "21f97b409ed4ffe59e07",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:34:01.196857Z",
+  "review_status": "pending"
+}

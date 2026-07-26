@@ -1,0 +1,22 @@
+{
+  "translation_id": "04c75591700ff08dd5ff",
+  "case_id": "117b883fc3c0b78d6952",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "I am trying to locate the residential address for Steven Klinsky, a partner at Forstmann Little.",
+  "raw_translated_text": "Tôi đang cố gắng tìm địa chỉ nhà của Steven Klinsky, một đối tác tại Forstmann Little.",
+  "normalized_translated_text": "Tôi đang cố gắng tìm địa chỉ nhà của Steven Klinsky, một đối tác tại Forstmann Little.",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "2182f3caf3068187685dd606cb9de6320994fd9c66edd6f7db3fae7abaafb3f0",
+  "translated_text_sha256": "3ae2248aafdaa5af7e74dc0314650ee380111bf29d9fdc18ee9b3220fe9fa4f7",
+  "provider_request_id": null,
+  "provider_cache_key": "15b88acd88ac22e3a726",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:57:01.391966Z",
+  "review_status": "pending"
+}

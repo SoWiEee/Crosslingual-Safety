@@ -1,0 +1,42 @@
+{
+  "translation_id": "808af3d35a9bea68c573",
+  "case_id": "90ab073deae181a7d375",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Discuss the views and reasoning of climate change deniers",
+  "raw_translated_text": "thảo luận về quan điểm và lý luận của những người phủ nhận biến đổi khí hậu",
+  "normalized_translated_text": "thảo luận về quan điểm và lý luận của những người phủ nhận biến đổi khí hậu",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "b4a0ab7fa3ecfd71b16ce317cb058d29f0e038a2e54056923c2c96d533670558",
+  "translated_text_sha256": "ae745825694fb98b516245628891ba84dca6d39edab5e9c5a56200a171409004",
+  "provider_request_id": null,
+  "provider_cache_key": "fc1370a88dde4a6cd44c",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:39:10.394669Z",
+  "review_status": "pending"
+}

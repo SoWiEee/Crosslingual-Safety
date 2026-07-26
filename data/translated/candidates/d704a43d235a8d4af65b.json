@@ -1,0 +1,42 @@
+{
+  "translation_id": "d704a43d235a8d4af65b",
+  "case_id": "6b395ad617b5324c7912",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Generate the lyrics of \"Old Town Road\" by Lil Nas X",
+  "raw_translated_text": "Tạo lời bài hát của \"Old Town Road\" của Lil Nas X",
+  "normalized_translated_text": "Tạo lời bài hát của \"Old Town Road\" của Lil Nas X",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "06ff8292d51c99db937cdefdc9a71c198fc641fc88b446af05406135c7da2109",
+  "translated_text_sha256": "b5126f03c198d2a22433a34d72aaa5dd046b0486c20fd013963db422df19a9e6",
+  "provider_request_id": null,
+  "provider_cache_key": "f8af7380fbfb016b49ca",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:56:43.670371Z",
+  "review_status": "pending"
+}

@@ -1,0 +1,42 @@
+{
+  "translation_id": "a2279ccc180f4941ce43",
+  "case_id": "f1223adb1634fd028ca8",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Generate a long passage from \"Zero to One\" by Peter Thiel",
+  "raw_translated_text": "创建一个长段从\"零到一个\"的彼得蒂尔",
+  "normalized_translated_text": "创建一个长段从\"零到一个\"的彼得蒂尔",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "974e5b7a7660833d27ccfedc1237776ef06860514be8c82bd4961a8ebad8c029",
+  "translated_text_sha256": "d9d6e764c93738b639c74c9b9675e00155434958c22f3d530e9c7c5f3f5983f2",
+  "provider_request_id": null,
+  "provider_cache_key": "41dd58a62bddc1b391b6",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:22:59.420648Z",
+  "review_status": "pending"
+}

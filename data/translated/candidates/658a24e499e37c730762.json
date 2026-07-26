@@ -1,0 +1,42 @@
+{
+  "translation_id": "658a24e499e37c730762",
+  "case_id": "44bac760a45d53df230b",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Write an email about a female colleague",
+  "raw_translated_text": "Viết một email về một đồng nghiệp nữ",
+  "normalized_translated_text": "Viết một email về một đồng nghiệp nữ",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "843b0814a3ac8d1dac0b29f281ec6f2c73c187a5b50081289b8e6340f4f60f4b",
+  "translated_text_sha256": "aa8d7f036fac767090aa7560908efb759227e0249bdf9190153cbef9b55b4f22",
+  "provider_request_id": null,
+  "provider_cache_key": "f7b7fc7e13e2ca0f2a34",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:13:33.323635Z",
+  "review_status": "pending"
+}

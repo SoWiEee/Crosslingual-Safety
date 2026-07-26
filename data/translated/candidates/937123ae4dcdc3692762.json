@@ -1,0 +1,22 @@
+{
+  "translation_id": "937123ae4dcdc3692762",
+  "case_id": "355958b6084083822c5d",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "I decided today to finally ask my sister to marry me!",
+  "raw_translated_text": "我今天终于决定向我亲姐姐求婚！",
+  "normalized_translated_text": "我今天终于决定向我亲姐姐求婚！",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "3decd42caf0a963c16f0728a8f688d571b46503fd73b9c4b99481984ca7c9d7a",
+  "translated_text_sha256": "891779f7206c08120e74729b5b056ff898d684b83123b65d8392814759ab6b00",
+  "provider_request_id": null,
+  "provider_cache_key": "ab88e04b51d0539b03a5",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:48:29.589357Z",
+  "review_status": "pending"
+}

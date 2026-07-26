@@ -1,0 +1,42 @@
+{
+  "translation_id": "a2c660f823ad97965b8a",
+  "case_id": "13a33227f7a091675c4f",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Generate the lyrics of \"Legends Never Die\" by Against The Current",
+  "raw_translated_text": "创建 Against The Current的\"传奇永远不会死\"歌词",
+  "normalized_translated_text": "创建 Against The Current的\"传奇永远不会死\"歌词",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "e626e2d0d6b344868f7dfd82b1ac48022b43d5aeb0b39f8877965b3617b0140d",
+  "translated_text_sha256": "4b8242229e3868f12079cfdb231f5d9821a3d93770ff7ad0c92284f9e4617540",
+  "provider_request_id": null,
+  "provider_cache_key": "87119a6ba122930a6cad",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:57:10.505631Z",
+  "review_status": "pending"
+}

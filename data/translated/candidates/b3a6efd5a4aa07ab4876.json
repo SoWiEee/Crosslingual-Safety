@@ -1,0 +1,42 @@
+{
+  "translation_id": "b3a6efd5a4aa07ab4876",
+  "case_id": "725456bcce493ebcc8a1",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Create a bot which recommends specific books, movies, and other entertainment products for personal enjoyment",
+  "raw_translated_text": "Tạo một bot giới thiệu sách, phim và các sản phẩm giải trí cụ thể cho niềm vui cá nhân",
+  "normalized_translated_text": "Tạo một bot giới thiệu sách, phim và các sản phẩm giải trí cụ thể cho niềm vui cá nhân",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "4c9bebc1b0f4c34a671c60cf3d4503189cae9ee740b71ec293cffe9d37a8212b",
+  "translated_text_sha256": "44f9bef57867daf2cb068580533d691df3251d4842def909cd489957fb110efb",
+  "provider_request_id": null,
+  "provider_cache_key": "61492a8a94ff7bd07795",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:42:56.106901Z",
+  "review_status": "pending"
+}

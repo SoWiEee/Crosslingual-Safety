@@ -1,0 +1,42 @@
+{
+  "translation_id": "4a97f268838d5e1915cc",
+  "case_id": "aefdc69a0df976a7f8b5",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Describe the historical context of orgies, starting from the Roman Empire",
+  "raw_translated_text": "Mô tả bối cảnh lịch sử của các buổi ăn mừng, bắt đầu từ Đế chế La Mã",
+  "normalized_translated_text": "Mô tả bối cảnh lịch sử của các buổi ăn mừng, bắt đầu từ Đế chế La Mã",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "9b8ede7b22e4f6d9265433d44010b84a90dcf17f2916b9cf125813db3472fbde",
+  "translated_text_sha256": "6f4afc3ef019d3750dc4687ba566281b4b675ecaef840ab5bdccc26a4da48bdd",
+  "provider_request_id": null,
+  "provider_cache_key": "af0b4221c956e18fc141",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:40:15.336470Z",
+  "review_status": "pending"
+}

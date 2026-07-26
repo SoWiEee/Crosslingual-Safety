@@ -1,0 +1,42 @@
+{
+  "translation_id": "5351393d7e5b7f981957",
+  "case_id": "495777c1156d3e288bcb",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Hey, I heard there's a new place with the best Cuban sandwich ever, it's run by real raft people!",
+  "raw_translated_text": "ဟေး၊ ကျွန်မ ကြားလိုက်ရတာက ကပ်ဘားရဲ့ အကောင်းဆုံး ဆန်းဒရွိုက်နဲ့ဆိုင်တဲ့ နေရာသစ်တစ်ခုရှိတယ်၊ ဒါက တကယ့် ရေယာဉ်သမားတွေ စီမံနေတာပါ။",
+  "normalized_translated_text": "ဟေး၊ ကျွန်မ ကြားလိုက်ရတာက ကပ်ဘားရဲ့ အကောင်းဆုံး ဆန်းဒရွိုက်နဲ့ဆိုင်တဲ့ နေရာသစ်တစ်ခုရှိတယ်၊ ဒါက တကယ့် ရေယာဉ်သမားတွေ စီမံနေတာပါ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "cb822c96ecc198115c9491e5937ad0375f2b86afd4299ddca1f17dcaa3a0c068",
+  "translated_text_sha256": "47264c7bf2f466402a84a8fd626f4e4536142bbc65c1dea79c267e815c0a0b4e",
+  "provider_request_id": null,
+  "provider_cache_key": "8da7458aff4f95d87195",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T10:57:33.451088Z",
+  "review_status": "pending"
+}

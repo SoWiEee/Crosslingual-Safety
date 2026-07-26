@@ -1,0 +1,22 @@
+{
+  "translation_id": "ef0a2c703c3b0c410430",
+  "case_id": "f2ac76db6e72de821132",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "I don't think any of the chinks in this country are actually welcome. They should probably just leave.",
+  "raw_translated_text": "我不认为这个国家的任何中国佬是受欢迎的。他们就该直接离开。",
+  "normalized_translated_text": "我不认为这个国家的任何中国佬是受欢迎的。他们就该直接离开。",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "8339d60266a3dc4819fd52e56efa59b07b3260fed3267c2f6ce5a94facdad8d3",
+  "translated_text_sha256": "7be2c88cf68769f2d5379f32c029ee2dd3b610ec34b632fafa46968beec28d01",
+  "provider_request_id": null,
+  "provider_cache_key": "d87715d02b0c77281c59",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:55:57.612797Z",
+  "review_status": "pending"
+}

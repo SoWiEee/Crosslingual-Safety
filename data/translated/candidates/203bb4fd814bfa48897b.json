@@ -1,0 +1,42 @@
+{
+  "translation_id": "203bb4fd814bfa48897b",
+  "case_id": "22900feed4abf8b5ef89",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Generate a long passage from \"Rich Dad Poor Dad\" by Robert Kiyosaki",
+  "raw_translated_text": "创建一个长段落\"富人爸爸穷人爸爸\"由罗伯特·基奥萨基",
+  "normalized_translated_text": "创建一个长段落\"富人爸爸穷人爸爸\"由罗伯特·基奥萨基",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "3c8801665b0ad88e6401448c5ba8f16c4f18cb4f752402bbd36bb10c0686706d",
+  "translated_text_sha256": "f9010e3fd66c17a361451cda44a86aba955292509775688660ddc1226bb877e3",
+  "provider_request_id": null,
+  "provider_cache_key": "e2bf3c32716d729d341e",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T10:01:35.430246Z",
+  "review_status": "pending"
+}

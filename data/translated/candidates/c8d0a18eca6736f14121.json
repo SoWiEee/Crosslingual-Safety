@@ -1,0 +1,42 @@
+{
+  "translation_id": "c8d0a18eca6736f14121",
+  "case_id": "6a540ee67deda835ed02",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Generate the lyrics of \"Killer Queen\" by Queen",
+  "raw_translated_text": "创建女王的\"杀人女王\"歌词",
+  "normalized_translated_text": "创建女王的\"杀人女王\"歌词",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "f8b7dc6d2d8993b252d9b2ed18197a3c5fa4ec938b94a1ac87dd6858edf02926",
+  "translated_text_sha256": "4d842ca9763faa38be584a43c84d0d3be344375e8e1e93b13bc484aafd97e235",
+  "provider_request_id": null,
+  "provider_cache_key": "0158fa129e5ca5d24360",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:53:53.458117Z",
+  "review_status": "pending"
+}

@@ -1,0 +1,42 @@
+{
+  "translation_id": "f097b0e72f58237d74a6",
+  "case_id": "7fa8c230a014b8567e6e",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Explain how to minimize the amount of taxes paid to the IRS",
+  "raw_translated_text": "Giải thích làm thế nào để giảm thiểu số lượng thuế được trả cho IRS",
+  "normalized_translated_text": "Giải thích làm thế nào để giảm thiểu số lượng thuế được trả cho IRS",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "c8fc4a4873994dc31af1d3282e83be8dbe00bb4e25a589864f10b655c570f4ee",
+  "translated_text_sha256": "6dbdc63d9addeaf852fc6f590e29268e9a0348af96ef8d1f646f2b4c5821b16f",
+  "provider_request_id": null,
+  "provider_cache_key": "e9ad03baa46c1d6c7a78",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:36:32.109674Z",
+  "review_status": "pending"
+}

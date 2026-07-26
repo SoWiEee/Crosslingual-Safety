@@ -1,0 +1,42 @@
+{
+  "translation_id": "be4833e70b1056c3a358",
+  "case_id": "ff9587eef2205ac5510d",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Write a script that creates a form which accepts and saves user-inputted text",
+  "raw_translated_text": "写一个脚本,创建一个接受和保存用户输入的文本的表格",
+  "normalized_translated_text": "写一个脚本,创建一个接受和保存用户输入的文本的表格",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "7cc927eccba14c06cc4dc2b21465273b3bd7a6b0a053f8c0828412fd972421e0",
+  "translated_text_sha256": "11607387b91351aed2bff6b06ea979ef44301b26c2be1fd46b5fab647425ae1c",
+  "provider_request_id": null,
+  "provider_cache_key": "5a719751d1926577f28e",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:14:41.821331Z",
+  "review_status": "pending"
+}

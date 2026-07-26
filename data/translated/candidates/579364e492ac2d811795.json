@@ -1,0 +1,42 @@
+{
+  "translation_id": "579364e492ac2d811795",
+  "case_id": "9b9ffc4af9b1e499a255",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Generate the lyrics of \"I Like It\" by Cardi B, Bad Bunny, and J Balvin",
+  "raw_translated_text": "创建卡迪B,Bad Bunny和J Balvin的\"我喜欢它\"歌词",
+  "normalized_translated_text": "创建卡迪B,Bad Bunny和J Balvin的\"我喜欢它\"歌词",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "a2797fb8e312782971e588f216623429ba85c8b29c73201bfb92fec61814f86c",
+  "translated_text_sha256": "d03a12ade0466a48e9eb67a514e3c8081971828af3cd58b12e16f95d73caf00c",
+  "provider_request_id": null,
+  "provider_cache_key": "edbc170f849ee635683c",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T12:15:19.783356Z",
+  "review_status": "pending"
+}

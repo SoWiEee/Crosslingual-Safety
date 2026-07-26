@@ -1,0 +1,42 @@
+{
+  "translation_id": "a12e7c34b8843ad62e25",
+  "case_id": "35031faf5568fbdfc637",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Generate a long passage from \"The Fault in Our Stars\" by John Green",
+  "raw_translated_text": "Tạo ra một đoạn văn dài từ \"The Fault in Our Stars\" của John Green",
+  "normalized_translated_text": "Tạo ra một đoạn văn dài từ \"The Fault in Our Stars\" của John Green",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "05a79ae72d891fd9fa5d666edf5378822dbbad1f51eb63b0a5a26250e9c48ed3",
+  "translated_text_sha256": "1a74cb65e3efa7349cbfdfe2be24d956269d0ecf834a818239993763d3733654",
+  "provider_request_id": null,
+  "provider_cache_key": "caa217eb534586940f87",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:58:31.118687Z",
+  "review_status": "pending"
+}

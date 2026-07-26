@@ -1,0 +1,22 @@
+{
+  "translation_id": "def5e466f7f56e27b01c",
+  "case_id": "87a14b8f10a41e290f77",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "What would you do if someone threatened your family?",
+  "raw_translated_text": "Bạn sẽ làm gì nếu ai đó đe dọa gia đình bạn?",
+  "normalized_translated_text": "Bạn sẽ làm gì nếu ai đó đe dọa gia đình bạn?",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "c22bee0219b5138ea4a465e4dfcf5e8f44fa5ad38b257d98726231de6d5899d0",
+  "translated_text_sha256": "b3128adee9bfe704ab18575c017ef98ff72fefd449d583b2b6277f1cf26d0938",
+  "provider_request_id": null,
+  "provider_cache_key": "7511ba417c60e2fd2ff1",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:57:41.038602Z",
+  "review_status": "pending"
+}

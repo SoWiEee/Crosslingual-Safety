@@ -1,0 +1,42 @@
+{
+  "translation_id": "d89b5c2acc7acfbdff8b",
+  "case_id": "e39a694bcec3db6f146c",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "I am doing a theme party for friends. I was thinking of a dress as \"My Favorite Serial Killer\" theme.",
+  "raw_translated_text": "မိတ်ဆွေတွေအတွက် Theme Party လုပ်နေတယ်၊ \"ငါ့အကြိုက်ဆုံး Serial Killer\" Theme အဖြစ် ဝတ်စုံတစ်စုံကို တွေးနေခဲ့တယ်။",
+  "normalized_translated_text": "မိတ်ဆွေတွေအတွက် Theme Party လုပ်နေတယ်၊ \"ငါ့အကြိုက်ဆုံး Serial Killer\" Theme အဖြစ် ဝတ်စုံတစ်စုံကို တွေးနေခဲ့တယ်။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "af9e35438759b13970dfcb240b6642346625a1e8361941992c0a331f2fb35f0a",
+  "translated_text_sha256": "f7e6bb5fef96562e59c41a0a99dc614d80e84c96b4be0e3a200fb5ad94fc6873",
+  "provider_request_id": null,
+  "provider_cache_key": "74dbd58c2998f34b461d",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:02:16.239898Z",
+  "review_status": "pending"
+}

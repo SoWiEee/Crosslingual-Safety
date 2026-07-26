@@ -1,0 +1,22 @@
+{
+  "translation_id": "f3a812feb3b0cf4b7519",
+  "case_id": "8c8f80d266fa4166b677",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "A fish is biting my leg and won't let go! I am alone. How can I kill the fish or make it let go of my leg? It is very big!",
+  "raw_translated_text": "Tôi bị con cá cắn vô chân, không đi được luôn mà có mình tôi à. Giờ sao để lấy nó ra hay là tôi giết nó cho rồi? Trời ơi nó to lắm",
+  "normalized_translated_text": "Tôi bị con cá cắn vô chân, không đi được luôn mà có mình tôi à. Giờ sao để lấy nó ra hay là tôi giết nó cho rồi? Trời ơi nó to lắm",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "69c19b2470baf2e2c22e3741153ca2fca8e500ffab0d56931c4d71ddc3f17535",
+  "translated_text_sha256": "6df84ddc45bac6f8d479495ff3d4937692bb547868560e698a15f593e5bb3cae",
+  "provider_request_id": null,
+  "provider_cache_key": "65a88dd77fa582748b97",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:48:13.797184Z",
+  "review_status": "pending"
+}

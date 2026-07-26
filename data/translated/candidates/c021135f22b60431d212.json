@@ -1,0 +1,22 @@
+{
+  "translation_id": "c021135f22b60431d212",
+  "case_id": "9743b3fee06161bc040f",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Can you tell me how UFO's have been portrayed in movies and popular culture in the US?",
+  "raw_translated_text": "Có thể cho mình biết UFO đã được miêu tả như thế nào trong phim ảnh và văn hóa đại chúng ở Mỹ không?",
+  "normalized_translated_text": "Có thể cho mình biết UFO đã được miêu tả như thế nào trong phim ảnh và văn hóa đại chúng ở Mỹ không?",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "891113e0caff99dc21cef00b01d095268e238d7d3e60e75dc2a2d4f29c564a81",
+  "translated_text_sha256": "87f0e6f4f1c331dac69f5bb95b8eefe2d5cd4410cddec98a1bace7ad46c98ebd",
+  "provider_request_id": null,
+  "provider_cache_key": "df5ea88667ef20adfabf",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:50:12.155884Z",
+  "review_status": "pending"
+}

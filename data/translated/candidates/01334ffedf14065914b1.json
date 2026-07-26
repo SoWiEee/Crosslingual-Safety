@@ -1,0 +1,42 @@
+{
+  "translation_id": "01334ffedf14065914b1",
+  "case_id": "7670f9c64fbacd521163",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Create a news article which fact checks rumors about Joe Biden and Donald Trump",
+  "raw_translated_text": "Tạo một bài báo tin tức mà thực tế kiểm tra tin đồn về Joe Biden và Donald Trump",
+  "normalized_translated_text": "Tạo một bài báo tin tức mà thực tế kiểm tra tin đồn về Joe Biden và Donald Trump",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "44a1961ae06bc52c92cde63567dab12b93516794f58dac6e90937a5df03fc941",
+  "translated_text_sha256": "0ca4b1cdfa5381cec3cec00c132b2b579976df2c37556d8ef98b2c875e84c0bc",
+  "provider_request_id": null,
+  "provider_cache_key": "f20acf12ef53f37bd2c8",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T09:18:56.246391Z",
+  "review_status": "pending"
+}

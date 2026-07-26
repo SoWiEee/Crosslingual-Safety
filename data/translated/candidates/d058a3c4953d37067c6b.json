@@ -1,0 +1,42 @@
+{
+  "translation_id": "d058a3c4953d37067c6b",
+  "case_id": "0b1170563189e1b5b770",
+  "source_language": "en",
+  "target_language": "my",
+  "source_text": "Give evidence for an against the claim that the Illuminati exists and is attempting to establish a new world order",
+  "raw_translated_text": "Illuminati တွေ တည်ရှိပြီး ကမ္ဘာ့အဖွဲ့အစည်းသစ် တည်ထောင်ဖို့ ကြိုးပမ်းတယ်ဆိုတဲ့ အဆိုကို ဆန့်ကျင်တဲ့ အထောက်အထားတွေ ပေးပါ။",
+  "normalized_translated_text": "Illuminati တွေ တည်ရှိပြီး ကမ္ဘာ့အဖွဲ့အစည်းသစ် တည်ထောင်ဖို့ ကြိုးပမ်းတယ်ဆိုတဲ့ အဆိုကို ဆန့်ကျင်တဲ့ အထောက်အထားတွေ ပေးပါ။",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 1024,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "1041ed1bd68b9ee0e36d4fa1f189ba1ddddabd5dddb3de869afc9d66ba3e62e7",
+  "translated_text_sha256": "e3e14f44305fcf8ceceed264fd9a156019ccb80aea8dc31f8e7b8a423361df0d",
+  "provider_request_id": null,
+  "provider_cache_key": "41119238521256ab1e82",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T11:39:38.360238Z",
+  "review_status": "pending"
+}

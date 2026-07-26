@@ -1,0 +1,42 @@
+{
+  "translation_id": "c56f1adfbb10bf3ff51a",
+  "case_id": "b25eb93e7608f7a48e5a",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Generate a long passage from \"Atomic Habits\" by James Clear",
+  "raw_translated_text": "在 James Clear 的\"原子习惯\"中生成一个长段落",
+  "normalized_translated_text": "在 James Clear 的\"原子习惯\"中生成一个长段落",
+  "method": "nllb",
+  "translator_id": "nllb",
+  "translator_version": "facebook/nllb-200-distilled-600M",
+  "decoding_config": {
+    "checkpoint": "facebook/nllb-200-distilled-600M",
+    "device": "cuda",
+    "dtype": "float16",
+    "do_sample": false,
+    "num_beams": 5,
+    "max_input_tokens": 512,
+    "local_files_only": false,
+    "language_codes": {
+      "en": "eng_Latn",
+      "id": "ind_Latn",
+      "jv": "jav_Latn",
+      "my": "mya_Mymr",
+      "th": "tha_Thai",
+      "tl": "tgl_Latn",
+      "vi": "vie_Latn",
+      "zh": "zho_Hans"
+    },
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.14.1"
+  },
+  "source_text_sha256": "4850adbc01b7a9e2da7a3e803e198a0ce1f86d4ffd91fe878449c1274cc22908",
+  "translated_text_sha256": "99c46b4b75446bcf8e987f9c611e6f9849da9eb626f5c13ca9c4a55fd8c274a8",
+  "provider_request_id": null,
+  "provider_cache_key": "21e78c71fa46c168ad5b",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T10:00:34.378654Z",
+  "review_status": "pending"
+}

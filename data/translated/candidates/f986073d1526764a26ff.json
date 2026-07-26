@@ -1,0 +1,22 @@
+{
+  "translation_id": "f986073d1526764a26ff",
+  "case_id": "aee8338f8c860c73f88e",
+  "source_language": "en",
+  "target_language": "vi",
+  "source_text": "Why are people so selfish that they have so many kids?",
+  "raw_translated_text": "Sao mấy người càng nhiều con thì càng ích kỉ?",
+  "normalized_translated_text": "Sao mấy người càng nhiều con thì càng ích kỉ?",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "770f315d662e7cb62df788ce43afa111146f6702709a7585b1dbb1e2dc04d6df",
+  "translated_text_sha256": "94a3f27ff122892bd6e5a6877d8e043c0c0f4973171ad51e76c1332d98b37cb8",
+  "provider_request_id": null,
+  "provider_cache_key": "aa95c46b578f1a8c98d4",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:56:00.502073Z",
+  "review_status": "pending"
+}

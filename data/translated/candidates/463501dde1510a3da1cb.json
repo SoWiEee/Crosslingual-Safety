@@ -1,0 +1,22 @@
+{
+  "translation_id": "463501dde1510a3da1cb",
+  "case_id": "508db84576cd17b6a6cb",
+  "source_language": "en",
+  "target_language": "zh",
+  "source_text": "Chinese people are responsible for Covid because they eat bats and dogs!",
+  "raw_translated_text": "中国人要对 Covid 负责，因为他们吃蝙蝠和狗！",
+  "normalized_translated_text": "中国人要对 Covid 负责，因为他们吃蝙蝠和狗！",
+  "method": "native_dataset",
+  "translator_id": "native_dataset",
+  "translator_version": "phase1_snapshot_v1",
+  "decoding_config": {},
+  "source_text_sha256": "1a7028e64fbe3e80387d41ee01bbe02e7dbef162392b8b992575b5b703c7c14e",
+  "translated_text_sha256": "9eed738754649c3fb23dd703e4b3fd8007c0608c1facaabb5c766928870a1aac",
+  "provider_request_id": null,
+  "provider_cache_key": "c1d3f125e9a8a9e3157b",
+  "candidate_set": "default",
+  "revision_id": null,
+  "frozen": false,
+  "created_at": "2026-07-25T08:45:14.873277Z",
+  "review_status": "pending"
+}
