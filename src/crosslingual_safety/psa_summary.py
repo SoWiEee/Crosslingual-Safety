@@ -234,8 +234,7 @@ class PaperSummaryService:
         if set(source_sections) == set():
             raise ValueError("summary source sections must not be empty")
         if any(
-            not isinstance(value, str) or not value.strip()
-            for value in source_sections.values()
+            not isinstance(value, str) or not value.strip() for value in source_sections.values()
         ):
             raise ValueError("summary source sections must be non-empty strings")
         if set(summary_prompt) != {"system", "user"}:

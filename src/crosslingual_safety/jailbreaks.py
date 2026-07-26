@@ -227,8 +227,7 @@ class PaperSummaryJailbreak:
     ) -> None:
         if tuple(section_order) != PAPER_SUMMARY_SECTION_ORDER:
             raise ValueError(
-                "Paper Summary Attack section order must be "
-                f"{list(PAPER_SUMMARY_SECTION_ORDER)}"
+                f"Paper Summary Attack section order must be {list(PAPER_SUMMARY_SECTION_ORDER)}"
             )
         if insertion_index != "attack_scenario_example":
             raise ValueError("Paper Summary Attack insertion index must be attack_scenario_example")
@@ -431,12 +430,7 @@ class PaperSummaryJailbreak:
 
 JAILBREAK_REGISTRY: dict[
     str,
-    type[
-        IdentityJailbreak
-        | TemplateJailbreak
-        | GraphRoleplayJailbreak
-        | PaperSummaryJailbreak
-    ],
+    type[IdentityJailbreak | TemplateJailbreak | GraphRoleplayJailbreak | PaperSummaryJailbreak],
 ] = {
     "none": IdentityJailbreak,
     "academic_authority_v1": TemplateJailbreak,
@@ -491,14 +485,10 @@ def load_jailbreaks(path: Path) -> dict[str, JailbreakMethod]:
             if not isinstance(sections_config, dict) or not isinstance(provenance_config, dict):
                 raise ValueError(f"invalid paper summary configuration: {summary_id}")
             sections = {
-                str(language): {
-                    str(section): str(value) for section, value in localized.items()
-                }
+                str(language): {str(section): str(value) for section, value in localized.items()}
                 for language, localized in sections_config.items()
             }
-            provenance = {
-                str(key): value for key, value in provenance_config.items()
-            }
+            provenance = {str(key): value for key, value in provenance_config.items()}
             section_order_config = config.get("section_order", summary_config.get("section_order"))
             insertion_index_config = config.get(
                 "insertion_index", summary_config.get("insertion_index")
@@ -512,9 +502,7 @@ def load_jailbreaks(path: Path) -> dict[str, JailbreakMethod]:
             )
             if not isinstance(summary_prompt_config, dict):
                 raise ValueError(f"invalid paper summary prompt configuration: {summary_id}")
-            summary_prompt = {
-                str(key): str(value) for key, value in summary_prompt_config.items()
-            }
+            summary_prompt = {str(key): str(value) for key, value in summary_prompt_config.items()}
             methods[attack_id] = PaperSummaryJailbreak(
                 attack_id=attack_id,
                 family=str(config["family"]),

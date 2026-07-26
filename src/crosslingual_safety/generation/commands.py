@@ -2,6 +2,7 @@ import asyncio
 import json
 import os
 import time
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Annotated
@@ -201,7 +202,12 @@ def _flush_results(run_dir: Path) -> None:
     temporary.replace(results_path)
 
 
-async def _generate_pending(config: ExperimentConfig, run_dir: Path, queue: JobQueue) -> int:
+async def generate_pending(
+    config: ExperimentConfig,
+    run_dir: Path,
+    queue: JobQueue,
+    provider_factory: Callable[[ModelConfig], ProviderAdapter] | None = None,
+) -> int:
     _reconcile_results(run_dir, queue)
     queue.reset_stale()
     jobs = queue.pending(config.experiment.id)
@@ -224,7 +230,12 @@ async def _generate_pending(config: ExperimentConfig, run_dir: Path, queue: JobQ
         for provider_id, limits in provider_limits.items()
     }
     providers = {
-        model_name: _provider(config.models[model_name]) for model_name in config.experiment.models
+        model_name: (
+            provider_factory(config.models[model_name])
+            if provider_factory is not None
+            else _provider(config.models[model_name])
+        )
+        for model_name in config.experiment.models
     }
     persistence_lock = asyncio.Lock()
 
@@ -285,6 +296,11 @@ async def _generate_pending(config: ExperimentConfig, run_dir: Path, queue: JobQ
     return sum(completed)
 
 
+# Kept for callers that imported the implementation detail before the unified facade exposed
+# the generation loop as a service boundary.
+_generate_pending = generate_pending
+
+
 def register_generation_commands(app: typer.Typer) -> None:
     @app.command("plan")
     def plan(
@@ -327,7 +343,7 @@ def register_generation_commands(app: typer.Typer) -> None:
         config = _load_run_config(run_dir)
         queue = JobQueue(run_dir / "jobs.sqlite")
         try:
-            completed = asyncio.run(_generate_pending(config, run_dir, queue))
+            completed = asyncio.run(generate_pending(config, run_dir, queue))
         finally:
             queue.close()
         typer.echo(f"processed_jobs={completed}")

@@ -9,6 +9,11 @@ languages:
     nllb_code: zho_Hans
     family: Sino-Tibetan
     script: Han
+  zh-tw:
+    display_name: Traditional Chinese
+    nllb_code: zho_Hant
+    family: Sino-Tibetan
+    script: Han
   jv:
     display_name: Javanese
     nllb_code: jav_Latn

@@ -1,8 +1,12 @@
-# Multilingual-Jailbreak
+<div align="center">
 
-> 低資源語言對 LLM 的繞過效果
+# 🧠 Crosslingual-Safety
 
-> 規格請見 [spec.md](docs/spec.md)
+**低資源語言對 LLM 的繞過效果**
+
+[開發規格](docs/spec.md) · [共筆連結](https://hackmd.io/cbVTLErNSqqEaPthYLA-oA?both) · [簡報連結](https://docs.google.com/presentation/d/1x9vnJTL8kAYyUjREXigmmUo99D9bzRMVjsp9Ja3rXYs/edit?slide=id.g3f5ba5edabe_1_2083#slide=id.g3f5ba5edabe_1_2083)
+
+</div>
 
 # 🌱 Motivation
 
@@ -11,7 +15,7 @@
 # 🎯 Goal
 
 - 將原始英文惡意 prompt 轉換為其他語言測試模型對跨語言安全防禦
-  - 其他語言包含中文、越南語、緬甸語
+  - 其他語言包含中文、爪哇語、緬甸語、世界語等
 - 比較不同語言間攻擊的成功率
 
 # 🚀 Getting Started
@@ -50,9 +54,37 @@ ZOOLAB_API_KEY=sk-replace-with-your-project-key
 模型名稱、context size、concurrency 與 rate limit 位於
 [`configs/models.yaml`](configs/models.yaml)。
 
+## 統一執行介面（推薦）
+
+初次使用只需要一個穩定的四選項命令。先用 dry-run 檢查固定的 case、翻譯、摘要與
+victim request 數量；它不會讀取 `.env`、啟動 CUDA/NLLB、呼叫 provider 或建立 `runs/`：
+
+```sh
+uv run crosslingual-safety run --source manual --language all --jailbreak none --dry-run
+uv run crosslingual-safety run
+uv run crosslingual-safety run --source bench --language zh-tw,vi --jailbreak gra,psa
+uv run crosslingual-safety run --source manual --language all --jailbreak all --dry-run
+```
+
+`--source` 只能是 `manual` 或 `bench`；`--language` 接受 `en`、`zh-tw`、`vi`、`my`、
+逗號清單或 `all`；`--jailbreak` 接受 `none`、`gra`、`psa`、逗號清單或 `all`。manual
+預設讀取 `prompts/prompt.txt`，來源固定為繁體中文（`zh-tw`）；要改來源請修改版本化的
+`configs/run.yaml`，而不是新增 CLI flag。該設定固定使用本機 NLLB、五個 victim model、
+same-as-payload wrapper 與 GRA `joker` role；PSA 摘要使用 `ais3/gemma-4-12b`。
+
+每次正式執行會在 `runs/experiments/<run-id>/` 建立一個可恢復的 parent，並以
+`children/none/`、`children/gra/`、`children/psa/` 隔離 jailbreak。乾淨的
+`results.jsonl` 每行只含 `case_id, source, language, jailbreak, model, status, response`；
+失敗行另外含 `error_type` 與 `error_message`。完整 prompt、provider metadata、翻譯與
+PSA cache、generation Parquet 和 provenance 僅存於 `audit/` 與 child 目錄。Parent/child
+狀態是 `success`、`partial` 或 `failed`；成功兄弟 child 不會因另一 child 失敗而被刪除。
+
+低階工作流仍可用於除錯或自訂設定，包括 `ingest`、`translate`、`build-variants`、
+`plan`、`enqueue`、`generate`、`generation-status`、`retry-failed` 與 `manual-run`。
+
 ## 資料集處理
 
-將原始 snapshot 放在規格指定的位置：
+已經將原始資料集和翻譯過的資料儲存於 `data/` 底下：
 
 ```text
 data/raw/MultiJail/MultiJail.csv
@@ -324,7 +356,7 @@ flowchart LR
 
 ---
 
-## Pipeline Stages Summary
+## Stages Summary
 
 | 階段 | 指令 | 輸入 | 輸出 |
 |-------|------|------|------|
@@ -376,6 +408,7 @@ metadata。summary 失敗時會在建立 variants 與 `jobs.sqlite` 前中止。
 - [HarmBench dataset](https://github.com/centerforaisafety/HarmBench/blob/main/data/behavior_datasets/harmbench_behaviors_text_all.csv)
 - [MultiJail dataset](https://huggingface.co/datasets/DAMO-NLP-SG/MultiJail)
 - [JBB Behaviors](https://huggingface.co/datasets/JailbreakBench/JBB-Behaviors)
+- [Cross-Lingual Jailbreak Detection via Semantic Codebooks](https://arxiv.org/abs/2604.25716v1)
 - [Lost in Translation, Found in Evaluation: Multilingual Jailbreak Detection Across 49 Languages](https://ieeexplore.ieee.org/document/11379319)
 - [Jailbreak Attack Method for Large Language Models Based on Semantic Space](https://ieeexplore.ieee.org/document/11290523)
 - [Paper Summary Attack: Jailbreaking LLMs Through LLM Safety Papers](https://ieeexplore-ieee-org.po.nutn.edu.tw/document/11465062)

@@ -440,12 +440,16 @@ def test_psa_static_contract_and_provenance() -> None:
         "translation_provenance": "none",
     }
     assert result.rendered_prompt.count("Test goal") == 2
-    assert result.rendered_prompt.index("Title") < result.rendered_prompt.index(
-        "Author"
-    ) < result.rendered_prompt.index("Summary of Attack Methods")
-    assert result.rendered_prompt.index("Summary of Attack Methods") < result.rendered_prompt.index(
-        "Mechanism analysis"
-    ) < result.rendered_prompt.index("Attack Scenario Example")
+    assert (
+        result.rendered_prompt.index("Title")
+        < result.rendered_prompt.index("Author")
+        < result.rendered_prompt.index("Summary of Attack Methods")
+    )
+    assert (
+        result.rendered_prompt.index("Summary of Attack Methods")
+        < result.rendered_prompt.index("Mechanism analysis")
+        < result.rendered_prompt.index("Attack Scenario Example")
+    )
     assert result.rendered_prompt.index("Attack Scenario Example") < result.rendered_prompt.index(
         "Related Work"
     )

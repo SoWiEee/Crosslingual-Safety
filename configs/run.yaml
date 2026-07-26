@@ -1,0 +1,20 @@
+version: 1
+manual:
+  input_path: prompts/prompt.txt
+  source_language: zh-tw
+bench:
+  cases_path: data/normalized/cases.parquet
+  selection_path: data/normalized/variant_case_selection.parquet
+models:
+  - llama31_8b
+  - gemma_4_12b
+  - gemma_4_26b
+  - nemotron_cascade_2_30b
+  - llama33_70b
+translator: nllb
+wrapper_language_mode: same-as-payload
+gra_role: joker
+models_config: configs/models.yaml
+languages_config: configs/languages.yaml
+jailbreaks_config: configs/jailbreaks.yaml
+runs_dir: runs/experiments

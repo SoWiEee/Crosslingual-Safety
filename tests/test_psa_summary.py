@@ -65,15 +65,13 @@ def test_four_language_summary_contract_and_cache_reuse(tmp_path: Path) -> None:
     requests: list[dict[str, object]] = []
     service = _service(requests)
     artifacts = {
-        language: service.summarize(service.summary_id, language)
-        for language in SUMMARY_LANGUAGES
+        language: service.summarize(service.summary_id, language) for language in SUMMARY_LANGUAGES
     }
 
     assert service.timeout_seconds == 180.0
     assert service.generation_config["timeout_seconds"] == 180.0
     assert all(
-        artifact.generation_config["timeout_seconds"] == 180.0
-        for artifact in artifacts.values()
+        artifact.generation_config["timeout_seconds"] == 180.0 for artifact in artifacts.values()
     )
     assert len(requests) == 4
     assert [request["model"] for request in requests] == ["ais3/gemma-4-12b"] * 4
@@ -92,9 +90,9 @@ def test_four_language_summary_contract_and_cache_reuse(tmp_path: Path) -> None:
 @pytest.mark.parametrize(
     "response",
     [
-        "prose\n```json\n{\"attack_methods\":\"a\",\"mechanism_analysis\":\"m\",\"related_work\":\"r\"}\n```",
-        "```json\n{\"attack_methods\":\"a\",\"mechanism_analysis\":\"m\",\"related_work\":\"r\"}",
-        "```json\n{\"attack_methods\":\"a\",\"mechanism_analysis\":\"m\",\"related_work\":\"r\"}\n```\nprose",
+        'prose\n```json\n{"attack_methods":"a","mechanism_analysis":"m","related_work":"r"}\n```',
+        '```json\n{"attack_methods":"a","mechanism_analysis":"m","related_work":"r"}',
+        '```json\n{"attack_methods":"a","mechanism_analysis":"m","related_work":"r"}\n```\nprose',
         '{"attack_methods":"a","mechanism_analysis":"m"}',
         '{"attack_methods":"a","mechanism_analysis":"m","related_work":"r","extra":"x"}',
         '{"attack_methods":"a","mechanism_analysis":"m","related_work":""}',
@@ -107,11 +105,7 @@ def test_summary_response_is_strict_json(response: str) -> None:
 
 
 def test_json_markdown_fence_is_normalized_for_artifacts() -> None:
-    fenced = (
-        "```json\n"
-        '{"related_work":"r","attack_methods":"a","mechanism_analysis":"m"}\n'
-        "```"
-    )
+    fenced = '```json\n{"related_work":"r","attack_methods":"a","mechanism_analysis":"m"}\n```'
     normalized, sections = normalize_summary_response(fenced)
     assert sections == {
         "attack_methods": "a",

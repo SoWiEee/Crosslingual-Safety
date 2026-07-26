@@ -2211,3 +2211,51 @@ uv run pytest
 13. Jiang et al., [WildJailbreak evaluation data](https://huggingface.co/datasets/allenai/wildjailbreak).
 14. Liu et al., *GRA: Graph-Based Role-Playing Attack for Single-Turn Jailbreak*,
     IEEE Signal Processing Letters, vol. 33, 2026, DOI: 10.1109/LSP.2026.3677330.
+# 統一 Run CLI 契約（2026-07）
+
+Beginner-facing workflows use one facade:
+
+```bash
+uv run crosslingual-safety run --source manual --language all --jailbreak none --dry-run
+uv run crosslingual-safety run --source bench --language zh-tw,vi --jailbreak gra,psa
+```
+
+The command exposes exactly `--source`, `--language`, `--jailbreak`, and `--dry-run`. Sources are
+`manual` and `bench`; languages are `en`, `zh-tw`, `vi`, and `my`; jailbreaks are `none`, `gra`,
+and `psa`. Values may be comma-separated or `all`, are deduplicated in canonical order, and
+internal `zh` is rejected at this boundary. `zh-tw` is retained in input, translation, result,
+and audit rows, while existing wrapper templates receive the internal `zh` alias.
+
+`configs/run.yaml` fixes the manual path (`prompts/prompt.txt`), benchmark cases and selection
+snapshots, five victim models, local NLLB translation, same-as-payload wrappers, the GRA `joker`
+role, and the PSA summarizer (`ais3/gemma-4-12b`). Manual input defaults to Traditional Chinese;
+changing that contract requires editing the versioned config rather than adding a CLI option.
+
+Dry-run resolves the selected cases and computes translation jobs, four-language PSA summary jobs,
+victim request count, deterministic run ID, and prospective parent path. It does not load `.env`,
+initialize CUDA/NLLB, construct a summary/provider, open a queue, call a provider, or create a run
+directory.
+
+Formal runs use `runs/experiments/<run-id>/` with `audit/` and isolated
+`children/{none,gra,psa}/` directories. The parent stores immutable input, translation, summary,
+and result-index JSONL records, a manifest, report, and compact `results.jsonl`. The latter is
+analysis-facing and contains exactly `case_id`, `source`, `language`, `jailbreak`, `model`,
+`status`, and `response`; successful rows contain response text, while failed rows retain a null
+response and add only non-null `error_type` and `error_message`. The canonical lookup tuple is
+`(case_id, source, language, jailbreak, model)`.
+
+Translations are shared across children. Identity translations are recorded but do not count as
+NLLB jobs. A translation failure is isolated to its `(case_id, language)` tuple and is projected to
+all affected child/model rows through a persisted translation-attempt record. PSA always prepares
+all four `en`, `zh`, `vi`, and `my` summaries in memory and writes the cache atomically only after
+all succeed; a partial sequence creates no victim variant. Re-running the same contract resets
+stale leases and retries only `retryable_error` generation jobs; success, provider-blocked, and
+permanent failures are preserved.
+
+Each child is `success` only when every expected generation row has status `success`, `partial`
+when at least one expected row succeeds and at least one is non-success (including synthesized
+failures), and `failed` when no expected row succeeds. The parent is `success` when all children
+succeed, `partial` when at least one child has a success row but not all children succeed, and
+`failed` when every child has no successful row. Terminal output contains stage labels, counts, run ID, final status, and
+the `results.jsonl` path only; prompts, responses, credentials, and provider payloads are never
+printed.
