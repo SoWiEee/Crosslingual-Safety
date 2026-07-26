@@ -293,21 +293,22 @@ flowchart LR
     PROMPT["📝 使用者自訂 Prompt\n`prompts/*.txt` 或 `.jsonl`"] --> MANUAL["🧪 手動單輪測試\n`manual-run --source-language <lang>`\n自動翻譯 4 語言 + 5 模型測試"]
     MANUAL --> MANUAL_OUT["📂 手動測試輸出\n`runs/manual/<run-id>/`\n含報告、翻譯、變體、結果"]
 
-    style INGEST fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
-    style TRANSLATE fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    style REVIEW fill:#bbdefb,stroke:#1565c0
-    style FREEZE fill:#bbdefb,stroke:#1565c0
-    style VARIANTS fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
-    style PLAN fill:#fce4ec,stroke:#c2185b,stroke-width:2px
-    style GENERATE fill:#fce4ec,stroke:#c2185b,stroke-width:2px
-    style MANUAL fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
-    style RAW fill:#f5f5f5,stroke:#9e9e9e
-    style NORM fill:#e8f5e9,stroke:#2e7d32
-    style FROZEN fill:#e3f2fd,stroke:#1565c0
-    style VAR_OUT fill:#fff3e0,stroke:#ef6c00
-    style RESULTS fill:#fce4ec,stroke:#c2185b
-    style PROMPT fill:#f5f5f5,stroke:#9e9e9e
-    style MANUAL_OUT fill:#f3e5f5,stroke:#7b1fa2
+    %% 深色主題配色 - 高對比度、避免淡色背景
+    classDef stage1 fill:#1b4332,stroke:#4ade80,stroke-width:2px,color:#e8f5e9
+    classDef stage2 fill:#1e3a5f,stroke:#60a5fa,stroke-width:2px,color:#dbeafe
+    classDef stage2sub fill:#1e3a5f,stroke:#60a5fa,color:#dbeafe
+    classDef stage3 fill:#7c2d12,stroke:#fb923c,stroke-width:2px,color:#ffedd5
+    classDef stage4 fill:#781e3f,stroke:#f472b6,stroke-width:2px,color:#fce7f3
+    classDef stage5 fill:#4c1d95,stroke:#a78bfa,stroke-width:2px,color:#ede9fe
+    classDef io fill:#374151,stroke:#9ca3af,color:#e5e7eb
+
+    class INGEST stage1
+    class TRANSLATE stage2
+    class REVIEW,FREEZE stage2sub
+    class VARIANTS stage3
+    class PLAN,GENERATE stage4
+    class MANUAL stage5
+    class RAW,NORM,FROZEN,VAR_OUT,RESULTS,PROMPT,MANUAL_OUT io
 ```
 
 ---

@@ -839,6 +839,13 @@ GRA rendered prompt 必須依固定順序包含：
    malicious；同時保留 `N_mal`、`E_mal`、`A` 這些正式結構鍵。
 5. 固定 JSON output contract。不得要求或解析自由格式 chain-of-thought。
 
+固定 JSON output contract 的語言規則如下：rendered prompt 必須要求模型只回傳一個 JSON
+物件，物件外不得有任何文字。每個 JSON 字串值必須使用 wrapper 語言：`en` 使用英文、
+`zh` 使用繁體中文、`vi` 使用越南文、`my` 使用緬甸文。所有語言的 schema keys 均固定且
+不得翻譯或改名為 `social_graph`、`goal_graph`、`N_mal`、`E_mal`、`A`；其中
+`social_graph` 包含 `nodes` 與 `edges`，`goal_graph` 以 `N_mal`、`E_mal` 與 `A`
+表示流程圖。
+
 預設 `wrapper_language_mode=english`。`same-as-payload` 可使用事先鎖定的
 `en`、`zh`、`vi`、`my` 靜態模板；不得在 generation runtime 臨時翻譯 wrapper。
 template hash 必須涵蓋共用模板、角色內容、output contract 與 wrapper 語言。
