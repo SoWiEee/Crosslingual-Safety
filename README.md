@@ -269,67 +269,58 @@ uv run mypy src
 # 🛠️ Pipeline
 
 ```mermaid
-flowchart TD
-    subgraph INGEST["📥 Ingestion & Normalization"]
-        R1[data/raw/MultiJail]
-        R2[data/raw/JBB-Behaviors]
-        R3[data/raw/Harmbench]
-        R1 --> INGEST_CMD[uv run crosslingual-safety ingest --repo-root .]
-        R2 --> INGEST_CMD
-        R3 --> INGEST_CMD
-        INGEST_CMD --> DEDUP[uv run crosslingual-safety deduplicate]
-        DEDUP --> NORM[data/normalized/cases.parquet]
-        DEDUP --> SRC[data/normalized/source_records.parquet]
-        DEDUP --> TRANS[data/normalized/translations.parquet]
-        DEDUP --> INV[data/normalized/raw_snapshot_inventory.json]
-    end
+flowchart LR
+    %% 階段 1：資料解析與正規化
+    RAW["📂 原始資料集\nMultiJail / JBB / HarmBench"] --> INGEST["📥 1. 資料解析與正規化\n`ingest` + `deduplicate`"]
+    INGEST --> NORM["📊 正規化資料\n`data/normalized/`\ncases, sources, translations"]
 
-    subgraph TRANSLATE["🌐 Translation & Review"]
-        NORM -->|zh, vi, my| TRANS_CMD[uv run crosslingual-safety translate --languages zh,vi,my]
-        TRANS_CMD -->|NLLB 600M GPU| TRANS_OUT[data/translated/]
-        TRANS_OUT --> REVIEW[export-translation-review → manual review → import-translation-review]
-        REVIEW --> VALIDATE[uv run crosslingual-safety validate-translations]
-        VALIDATE --> FREEZE[uv run crosslingual-safety freeze-translations --experiment pilot_001]
-        FREEZE --> FROZEN[data/translated/frozen/]
-    end
+    %% 階段 2：多語言翻譯與審查
+    NORM --> TRANSLATE["🌐 2. 多語言翻譯與人工審查\n`translate --languages zh,vi,my`\nNLLB-600M GPU 本機翻譯"]
+    TRANSLATE --> REVIEW["👁️ 人工審查循環\n`export-review` → 編輯 → `import-review`"]
+    REVIEW --> FREEZE["🔒 凍結翻譯版本\n`freeze-translations`"]
+    FREEZE --> FROZEN["📁 凍結後資料\n`data/translated/frozen/`"]
 
-    subgraph VARIANTS["🧪 Variant Generation"]
-        FROZEN -->|none, academic_authority_v1, roleplay_v1, gra_v1| VAR_CMD[uv run crosslingual-safety build-variants --languages en,zh,vi,my --jailbreak <method>]
-        VAR_CMD --> VAR_OUT[data/variants/prompt_variants.parquet]
-    end
+    %% 階段 3：產生 Prompt 變體
+    FROZEN --> VARIANTS["🧪 3. 產生 Prompt 變體\n`build-variants --jailbreak <方法>`\n支援: none, academic, roleplay, GRA"]
+    VARIANTS --> VAR_OUT["📦 變體資料集\n`data/variants/prompt_variants.parquet`\n累加式不覆寫"]
 
-    subgraph EXPERIMENT["🚀 Remote Inference"]
-        VAR_OUT --> PLAN[uv run crosslingual-safety plan --config configs/experiment.yaml]
-        PLAN --> ENQUEUE[uv run crosslingual-safety enqueue --config configs/experiment.yaml]
-        ENQUEUE --> GEN[uv run crosslingual-safety generate --experiment pilot_001]
-        GEN --> STATUS[uv run crosslingual-safety generation-status --experiment pilot_001]
-        GEN --> RETRY[uv run crosslingual-safety retry-failed --experiment pilot_001]
-        GEN --> RUNS[runs/pilot_001/results.parquet]
-    end
+    %% 階段 4：批次遠端推論實驗
+    VAR_OUT --> PLAN["📋 4. 批次實驗規劃\n`plan` → `enqueue`\n依 experiment.yaml 建立任務佇列"]
+    PLAN --> GENERATE["🚀 5. 遠端模型推論\n`generate --experiment <id>`\n5 模型並行、可續跑、可重試"]
+    GENERATE --> RESULTS["📈 實驗結果\n`runs/<exp>/results.parquet`"]
 
-    subgraph MANUAL["🧪 Manual Single-Run"]
-        PROMPT[prompts/prompt.txt or prompts.jsonl] --> MANUAL_CMD[uv run crosslingual-safety manual-run --source-language <lang> --jailbreak <method> --role <role>]
-        MANUAL_CMD --> MANUAL_OUT[runs/manual/<run-id>/]
-    end
+    %% 階段 5：手動單輪測試
+    PROMPT["📝 使用者自訂 Prompt\n`prompts/*.txt` 或 `.jsonl`"] --> MANUAL["🧪 手動單輪測試\n`manual-run --source-language <lang>`\n自動翻譯 4 語言 + 5 模型測試"]
+    MANUAL --> MANUAL_OUT["📂 手動測試輸出\n`runs/manual/<run-id>/`\n含報告、翻譯、變體、結果"]
 
-    style INGEST fill:#e8f5e9,stroke:#2e7d32
-    style TRANSLATE fill:#e3f2fd,stroke:#1565c0
-    style VARIANTS fill:#fff3e0,stroke:#ef6c00
-    style EXPERIMENT fill:#fce4ec,stroke:#c2185b
-    style MANUAL fill:#f3e5f5,stroke:#7b1fa2
+    style INGEST fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    style TRANSLATE fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style REVIEW fill:#bbdefb,stroke:#1565c0
+    style FREEZE fill:#bbdefb,stroke:#1565c0
+    style VARIANTS fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    style PLAN fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    style GENERATE fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    style MANUAL fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style RAW fill:#f5f5f5,stroke:#9e9e9e
+    style NORM fill:#e8f5e9,stroke:#2e7d32
+    style FROZEN fill:#e3f2fd,stroke:#1565c0
+    style VAR_OUT fill:#fff3e0,stroke:#ef6c00
+    style RESULTS fill:#fce4ec,stroke:#c2185b
+    style PROMPT fill:#f5f5f5,stroke:#9e9e9e
+    style MANUAL_OUT fill:#f3e5f5,stroke:#7b1fa2
 ```
 
 ---
 
 ## Pipeline Stages Summary
 
-| Stage | Command | Input | Output |
-|-------|---------|-------|--------|
-| **Ingest** | `ingest --repo-root .` + `deduplicate` | `data/raw/` (MultiJail, JBB, HarmBench) | `data/normalized/` (cases, sources, translations, inventory) |
-| **Translate** | `translate --languages zh,vi,my` + review loop | `data/normalized/` | `data/translated/frozen/` (NLLB GPU + human review) |
-| **Variants** | `build-variants --jailbreak <method>` | `data/translated/frozen/` | `data/variants/prompt_variants.parquet` |
-| **Experiment** | `plan` → `enqueue` → `generate` | `data/variants/` + `configs/experiment.yaml` | `runs/<exp>/` (SQLite jobs, results, retries) |
-| **Manual** | `manual-run prompts/...` | `prompts/*.txt\|.jsonl` | `runs/manual/<run-id>/` |
+| 階段 | 指令 | 輸入 | 輸出 |
+|-------|------|------|------|
+| **1. 資料解析** | `ingest` + `deduplicate` | `data/raw/` (MultiJail, JBB, HarmBench) | `data/normalized/` (cases, sources, translations, inventory) |
+| **2. 多語言翻譯** | `translate` + 審查循環 | 正規化資料 | `data/translated/frozen/` (NLLB GPU + 人工審查) |
+| **3. 產生變體** | `build-variants --jailbreak <方法>` | 凍結翻譯 | `data/variants/prompt_variants.parquet` (累加式) |
+| **4. 批次實驗** | `plan` → `enqueue` → `generate` | 變體 + `configs/experiment.yaml` | `runs/<exp>/` (SQLite 佇列、結果、重試) |
+| **5. 手動測試** | `manual-run prompts/...` | `prompts/*.txt\|.jsonl` | `runs/manual/<run-id>/` (報告、翻譯、結果) |
 
 ---
 
