@@ -1,6 +1,7 @@
 import asyncio
 import hashlib
 import json
+import os
 import sqlite3
 from collections.abc import Iterator, Sequence
 from contextlib import contextmanager
@@ -11,6 +12,7 @@ from typing import Annotated, Literal, TypeVar
 import pyarrow.parquet as pq
 import typer
 import yaml
+from dotenv import load_dotenv
 
 from crosslingual_safety.generation.commands import _generate_pending
 from crosslingual_safety.generation.config import (
@@ -20,9 +22,13 @@ from crosslingual_safety.generation.config import (
     GenerationConfig,
     ModelConfig,
 )
+from crosslingual_safety.generation.providers import (
+    AuthenticationError,
+    OpenAICompatibleChatProvider,
+)
 from crosslingual_safety.generation.queue import JobQueue
 from crosslingual_safety.ids import stable_id
-from crosslingual_safety.jailbreaks import load_jailbreaks
+from crosslingual_safety.jailbreaks import PaperSummaryJailbreak, load_jailbreaks
 from crosslingual_safety.manual import (
     ManualLanguage,
     ManualRole,
@@ -33,7 +39,14 @@ from crosslingual_safety.manual import (
     load_manual_prompts,
     translate_manual_prompts,
 )
-from crosslingual_safety.schemas import GenerationRequest
+from crosslingual_safety.psa_summary import (
+    SUMMARY_LANGUAGES,
+    SUMMARY_MIN_TIMEOUT_SECONDS,
+    SUMMARY_MODEL_ID,
+    PaperSummaryService,
+    SummaryArtifact,
+)
+from crosslingual_safety.schemas import GenerationRequest, GenerationResult, GenerationStatus
 from crosslingual_safety.translation.commands import _translator
 
 DEFAULT_MANUAL_MODELS = (
@@ -128,6 +141,102 @@ def _load_models(path: Path) -> dict[str, ModelConfig]:
     if not isinstance(raw, dict) or not isinstance(raw.get("models"), dict):
         raise ValueError(f"invalid models configuration: {path}")
     return {str(name): ModelConfig.model_validate(value) for name, value in raw["models"].items()}
+
+
+class _ManualFakeSummaryProvider:
+    """Deterministic local summary provider used by test-only model configurations."""
+
+    provider_id = "fake"
+
+    def __init__(self, status: GenerationStatus | None = None) -> None:
+        self.requests: list[GenerationRequest] = []
+        self.status = status
+
+    async def generate(self, request: GenerationRequest) -> GenerationResult:
+        self.requests.append(request.model_copy(deep=True))
+        if self.status is not None and self.status != "success":
+            return GenerationResult(
+                run_id=request.run_id,
+                status=self.status,
+                response_text=None,
+                actual_model_id=None,
+                raw_response_path=None,
+                finish_reason=None,
+                prompt_tokens=None,
+                completion_tokens=None,
+                latency_ms=0.0,
+                provider_request_id=f"fake-summary-{len(self.requests)}",
+                error_type=self.status,
+                error_message=f"fake summary {self.status}",
+            )
+        language = request.variant_id.removeprefix("summary-")
+        response = json.dumps(
+            {
+                "attack_methods": f"Fake summary attack methods ({language})",
+                "mechanism_analysis": f"Fake summary mechanism analysis ({language})",
+                "related_work": f"Fake summary related work ({language})",
+            },
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+        return GenerationResult(
+            run_id=request.run_id,
+            status="success",
+            response_text=response,
+            actual_model_id=request.requested_model_id,
+            raw_response_path=None,
+            finish_reason="stop",
+            prompt_tokens=0,
+            completion_tokens=0,
+            latency_ms=0.0,
+            provider_request_id=f"fake-summary-{len(self.requests)}",
+            error_type=None,
+            error_message=None,
+        )
+
+
+def _summary_service(
+    method: PaperSummaryJailbreak,
+    models: dict[str, ModelConfig],
+) -> PaperSummaryService:
+    """Construct the PSA summarizer from the shared ``gemma_4_12b`` provider settings."""
+
+    summary_model = models.get("gemma_4_12b") or next(iter(models.values()), None)
+    if summary_model is None:
+        raise ValueError("models configuration must define a provider for PSA summaries")
+    if summary_model.provider == "fake":
+        if not summary_model.test_only:
+            raise ValueError("FakeProvider requires test_only=true")
+        return PaperSummaryService.from_method(
+            method,
+            provider=_ManualFakeSummaryProvider(summary_model.fake_status),
+            provider_id="fake",
+            timeout_seconds=max(summary_model.timeout_seconds, SUMMARY_MIN_TIMEOUT_SECONDS),
+        )
+    if summary_model.base_url_env is None or summary_model.api_key_env is None:
+        raise ValueError("PSA summary provider requires base_url_env and api_key_env")
+    load_dotenv()
+    base_url = os.environ.get(summary_model.base_url_env)
+    api_key = os.environ.get(summary_model.api_key_env)
+    if not base_url or not api_key:
+        raise ValueError(
+            f"required provider environment variable is unset: {summary_model.base_url_env} or "
+            f"{summary_model.api_key_env}"
+        )
+    provider = OpenAICompatibleChatProvider(
+        summary_model.provider,
+        base_url,
+        api_key,
+        timeout_seconds=max(summary_model.timeout_seconds, SUMMARY_MIN_TIMEOUT_SECONDS),
+    )
+    return PaperSummaryService.from_method(
+        method,
+        provider=provider,
+        provider_id=summary_model.provider,
+        model_id=SUMMARY_MODEL_ID,
+        timeout_seconds=max(summary_model.timeout_seconds, SUMMARY_MIN_TIMEOUT_SECONDS),
+    )
 
 
 def _split_names(value: str | None) -> list[str]:
@@ -241,7 +350,8 @@ def _report(rows: list[dict[str, object]], run_id: str) -> str:
     lines = [f"# Manual Run {run_id}", ""]
     current: tuple[str, str, str] | None = None
     for row in rows:
-        group = (str(row["prompt_id"]), str(row["language"]), str(row["role"]))
+        label = str(row["role"]) if row["role"] is not None else str(row["attack_id"])
+        group = (str(row["prompt_id"]), str(row["language"]), label)
         if group != current:
             lines.extend([f"## {group[0]} / {group[1]} / {group[2]}", ""])
             current = group
@@ -303,11 +413,15 @@ def register_manual_commands(app: typer.Typer) -> None:
                 input_path,
                 source_language,
             )
-            selected_models = _select_models(_load_models(models_config), models, add_model)
+            available_models = _load_models(models_config)
+            selected_models = _select_models(available_models, models, add_model)
             methods = load_jailbreaks(jailbreaks_config)
             if jailbreak_id not in methods:
                 raise ValueError(f"unknown jailbreak: {jailbreak_id}")
             method = methods[jailbreak_id]
+            summary_service: PaperSummaryService | None = None
+            if isinstance(method, PaperSummaryJailbreak):
+                summary_service = _summary_service(method, available_models)
             translator = _translator(
                 translator_name,
                 Path("data/normalized/native_translations.parquet"),
@@ -328,7 +442,7 @@ def register_manual_commands(app: typer.Typer) -> None:
                 "jailbreak_version": method.version,
                 "jailbreak_config_sha256": _file_sha256(jailbreaks_config),
                 "persona_catalog_sha256": getattr(method, "catalog_sha256", None),
-                "role": role,
+                "role": role if jailbreak_id == "gra_v1" else None,
                 "wrapper_language_mode": wrapper_language_mode,
                 "models": {
                     name: model.model_dump(mode="json") for name, model in selected_models.items()
@@ -339,6 +453,7 @@ def register_manual_commands(app: typer.Typer) -> None:
                     "max_tokens": max_tokens,
                     "seed": seed,
                 },
+                "summary": summary_service.contract if summary_service is not None else None,
             }
             fingerprint_json = json.dumps(
                 fingerprint,
@@ -349,6 +464,7 @@ def register_manual_commands(app: typer.Typer) -> None:
             resolved_run_id = run_id or stable_id("manual-run", fingerprint_json)
             run_dir = runs_dir / resolved_run_id
             run_dir.mkdir(parents=True, exist_ok=True)
+            summary_artifacts: dict[str, SummaryArtifact] | None = None
             with _preparation_lock(run_dir):
                 _write_immutable(run_dir / "input_snapshot.jsonl", batch.snapshot_jsonl)
                 manifest_path = run_dir / "run_manifest.json"
@@ -369,6 +485,25 @@ def register_manual_commands(app: typer.Typer) -> None:
                 else:
                     translations = translate_manual_prompts(batch.prompts, translator)
                     _write_immutable(translations_path, _dump_jsonl(translations))
+
+                if summary_service is not None:
+                    summary_cache_path = run_dir / "summary_artifacts.jsonl"
+                    if summary_cache_path.is_file():
+                        summary_artifacts = summary_service.load_cache(summary_cache_path)
+                    else:
+                        generated: dict[str, SummaryArtifact] = {}
+                        for language in SUMMARY_LANGUAGES:
+                            generated[language] = summary_service.summarize(
+                                summary_service.summary_id,
+                                language,
+                            )
+                        # Commit exactly four rows only after all provider responses have passed
+                        # strict validation.  A failed language therefore leaves no victim inputs.
+                        summary_service.write_cache(summary_cache_path, generated)
+                        summary_artifacts = summary_service.validate_artifacts(
+                            [generated[language] for language in SUMMARY_LANGUAGES]
+                        )
+
                 variants_path = run_dir / "variants.jsonl"
                 if variants_path.is_file():
                     variants = _read_jsonl(variants_path, ManualVariant)
@@ -379,6 +514,7 @@ def register_manual_commands(app: typer.Typer) -> None:
                         method,
                         default_role=role,
                         wrapper_language_mode=resolved_wrapper_mode,
+                        summary_artifacts=summary_artifacts,
                     )
                     _write_immutable(variants_path, _dump_jsonl(variants))
 
@@ -405,6 +541,20 @@ def register_manual_commands(app: typer.Typer) -> None:
                     "template_sha256s": sorted({variant.template_sha256 for variant in variants}),
                     "catalog_sha256s": catalog_hashes,
                 }
+                if summary_service is not None and summary_artifacts is not None:
+                    manifest["summary"] = {
+                        **summary_service.contract,
+                        "response_sha256s": {
+                            language: summary_artifacts[language].response_sha256
+                            for language in SUMMARY_LANGUAGES
+                        },
+                    }
+                    manifest["summary_source_sha256"] = summary_service.source_sha256
+                    manifest["summary_request_sha256s"] = summary_service.request_hashes
+                    manifest["summary_response_sha256s"] = {
+                        language: summary_artifacts[language].response_sha256
+                        for language in SUMMARY_LANGUAGES
+                    }
                 manifest_content = (
                     json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
                 )
@@ -444,6 +594,8 @@ def register_manual_commands(app: typer.Typer) -> None:
             rows = _result_rows(run_dir, requests, variants)
             _atomic_write(run_dir / "results.jsonl", _dump_jsonl(rows))
             _atomic_write(run_dir / "report.md", _report(rows, resolved_run_id))
+        except AuthenticationError as error:
+            raise typer.BadParameter(str(error)) from None
         except ValueError as error:
             raise typer.BadParameter(str(error)) from None
         typer.echo(

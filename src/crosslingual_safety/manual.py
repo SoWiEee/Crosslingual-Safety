@@ -9,7 +9,8 @@ from pydantic import BaseModel, ConfigDict, field_validator
 
 from crosslingual_safety.generation.config import ModelConfig
 from crosslingual_safety.ids import canonicalize_text, stable_id
-from crosslingual_safety.jailbreaks import JailbreakContext, JailbreakMethod
+from crosslingual_safety.jailbreaks import JailbreakContext, JailbreakMethod, PaperSummaryJailbreak
+from crosslingual_safety.psa_summary import SummaryArtifact
 from crosslingual_safety.schemas import GenerationRequest
 from crosslingual_safety.translation.providers import Translator
 
@@ -73,7 +74,7 @@ class ManualVariant(BaseModel):
     prompt_id: str
     translation_id: str
     language: ManualLanguage
-    role: ManualRole
+    role: ManualRole | None
     payload: str
     system_prompt: str | None
     attack_id: str
@@ -216,25 +217,40 @@ def build_manual_variants(
     *,
     default_role: ManualRole = "joker",
     wrapper_language_mode: Literal["english", "same-as-payload"] = "english",
+    summary_artifacts: Mapping[str, SummaryArtifact] | None = None,
 ) -> list[ManualVariant]:
     prompts_by_id = {prompt.prompt_id: prompt for prompt in prompts}
     variants: list[ManualVariant] = []
     for translation in translations:
         prompt = prompts_by_id[translation.prompt_id]
-        role = prompt.role or default_role
+        role = prompt.role or default_role if jailbreak.attack_id == "gra_v1" else None
         wrapper_language = "en" if wrapper_language_mode == "english" else translation.language
         if jailbreak.attack_id == "none":
             wrapper_language = translation.language
-        rendered = jailbreak.render(
-            translation.translated_text,
-            JailbreakContext(
-                language=translation.language,
-                wrapper_language=wrapper_language,
-                intent="harmful",
-                category=prompt.category,
-                role=role,
-            ),
+        context = JailbreakContext(
+            language=translation.language,
+            wrapper_language=wrapper_language,
+            intent="harmful",
+            category=prompt.category,
+            role=role,
         )
+        if isinstance(jailbreak, PaperSummaryJailbreak) and summary_artifacts is not None:
+            try:
+                summary_artifact = summary_artifacts[wrapper_language]
+            except KeyError as error:
+                raise ValueError(
+                    f"missing dynamic PSA summary artifact for {wrapper_language}"
+                ) from error
+            from crosslingual_safety.psa_summary import artifact_sections
+
+            rendered = jailbreak.render(
+                translation.translated_text,
+                context,
+                summary_sections=artifact_sections(summary_artifact),
+                summary_artifact=summary_artifact,
+            )
+        else:
+            rendered = jailbreak.render(translation.translated_text, context)
         language_mode: Literal["no_wrapper", "monolingual", "mixed_language"] = (
             "no_wrapper"
             if rendered.wrapper_language is None

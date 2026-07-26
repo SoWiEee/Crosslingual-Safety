@@ -756,6 +756,10 @@ data/translated/translation_failures.jsonl
 - 不允許模板在正式 test set 上依模型自動調整。
 - 支援單輪 GRA graph-based role-playing attack；第一版由使用者明確選擇角色，
   不進行自動 persona matching。
+- 支援 `psa_static_v1` Paper Summary Attack adaptation；版本化 YAML sections 是
+  source/reference 與低階靜態 fallback。`manual-run` 在 victim generation 前以同一個
+  `ZOOLAB_BASE_URL`/`ZOOLAB_API_KEY` endpoint 呼叫 `ais3/gemma-4-12b`，一次產生
+  `en`、`zh`、`vi`、`my` 四筆摘要並寫入不可變 `summary_artifacts.jsonl`。
 
 ### 5.2 Interface
 
@@ -806,6 +810,7 @@ class JailbreakMethod(Protocol):
 | Academic authority | `academic_authority_v1` | 將請求包裝成學術或研究情境 |
 | Role play | `roleplay_v1` | 將請求放入固定角色扮演情境 |
 | GRA | `gra_v1` | 以角色社交圖作 benign anchor，再以同構 process graph 包裝原始 goal |
+| PSA static | `psa_static_v1` | 以版本化的 GRA 論文摘要段落建立學術上下文，於 Attack Scenario Example 邊界插入 payload |
 
 這些名稱代表模板族群。實際模板文字放在 YAML，不硬編碼於 Python。
 
@@ -850,6 +855,53 @@ GRA rendered prompt 必須依固定順序包含：
 `en`、`zh`、`vi`、`my` 靜態模板；不得在 generation runtime 臨時翻譯 wrapper。
 template hash 必須涵蓋共用模板、角色內容、output contract 與 wrapper 語言。
 variant metadata 必須保存 `role_id`、persona catalog hash 與 GRA template version。
+
+#### 5.3.2 PSA static v1 Contract
+
+`psa_static_v1` 使用 `refs/GRA_Jailbreak.pdf` 的 `gra_attack_summary_v1` 六段摘要作為
+唯一 runtime source corpus，並以 `refs/Paper_Summary_Attacks.pdf` 作為方法參考。低階
+`render()` 在未提供 override 時仍使用 YAML static sections；`manual-run` 則先以
+`ais3/gemma-4-12b` 產生四語摘要，成功後才建立 variants/jobs。模板固定支援 `en`、`zh`、
+`vi`、`my`，每種語言都明確要求對應的輸出語言。
+PSA summary provider timeout 的 effective minimum 為 180 秒（若模型設定更高則保留較高值）；
+此值只屬於 summary generation contract，不會改變 victim model timeout。
+摘要回應必須是三個指定 keys 的 JSON；provider 可選擇以單一完整的 ````json ... ````
+markdown fence 包裝，但 artifact 會先剝除 fence 並保存 canonical JSON。任何 surrounding
+prose、重複或額外 key、空值與不完整 fence 都會在建立 victim jobs 前失敗。
+
+六段的 canonical order 為 `title`、`author`、`attack_methods`、
+`mechanism_analysis`、`attack_scenario_example`、`related_work`。Attack Scenario Example
+是一個邏輯插入邊界；官方 skeleton 在該邊界內保留兩個 payload references，並非把 payload
+插入兩次不同章節。每個結果的 metadata 必須包含：
+
+```json
+{
+  "summary_id": "gra_attack_summary_v1",
+  "source_ref": "refs/GRA_Jailbreak.pdf",
+  "source_doi": "10.1109/LSP.2026.3677330",
+  "psa_reference": "refs/Paper_Summary_Attacks.pdf",
+  "section_order": [
+    "title",
+    "author",
+    "attack_methods",
+    "mechanism_analysis",
+    "attack_scenario_example",
+    "related_work"
+  ],
+  "insertion_index": "attack_scenario_example",
+  "payload_occurrences": 2,
+  "source_language": "en",
+  "summary_language": "<wrapper language>",
+  "summary_method": "human_authored_from_source",
+  "translation_provenance": "none"
+}
+```
+
+對 `zh`、`vi`、`my`，`summary_method` 為
+`human_translated_from_english_summary`，`translation_provenance` 為
+`human_translation`。`template_sha256` 是 canonical JSON（`template`、當地化 `sections`、
+共用 `provenance` 與 `summary_id`，使用 UTF-8、`ensure_ascii=false`、`sort_keys=true`、
+緊湊 separators）的 SHA-256；因此摘要或來源 provenance 任一欄位變更都會改變 variant ID。
 
 ### 5.4 Template Configuration
 
@@ -1013,6 +1065,10 @@ models:
 - 保存原始檔案 SHA256 與 canonical `input_snapshot.jsonl`。
 - 使用本機 CUDA FP16 NLLB 補齊 `en`、`zh`、`vi`、`my`；來源版本不得重新翻譯。
 - 每個 prompt、language、model 建立一個獨立單輪 job。
+- `--role` 只對 `gra_v1` 有語意；其他方法（包含 `psa_static_v1`）將 variant、result
+  與 manifest contract 的 `role` 寫為 JSON `null`，report heading 使用 attack ID。
+  CLI 或 JSONL 的合法 role 值仍可被讀取，但不會套用到非 GRA 模板；原始 JSONL snapshot
+  仍保留該欄位並參與 run identity。
 - 手動 CLI 的 generation `max_tokens` 預設為 4096，避免 reasoning models
   在產生可見 content 前耗盡 token budget；實際 usage 仍由 provider 回傳值記錄。
 - 預設模型為 `llama31_8b`、`gemma_4_12b`、`gemma_4_26b`、
@@ -1021,6 +1077,11 @@ models:
 - `--add-model nemotron_3_ultra_550b` 可將 Ultra 550B 加入預設矩陣；
   `--models` 可完全取代預設清單。
 - 相同 run ID 可恢復執行，成功工作不得再次送出。
+- 使用 `psa_static_v1` 時，先以共享 ZooLab OpenAI-compatible endpoint 與
+  `ais3/gemma-4-12b` 完成四語摘要；任一認證、傳輸、狀態或 JSON contract 錯誤都在建立
+  `variants.jsonl`、`jobs.sqlite` 或 victim request 前中止。
+- PSA summary contract 包含 source/request/model/output SHA256；artifact 只保存摘要文字、
+  hash、provider request ID 與生成設定，不保存 API key 或 Authorization header。
 
 每次執行建立：
 
@@ -1028,6 +1089,7 @@ models:
 runs/manual/<run-id>/
 ├── input_snapshot.jsonl
 ├── translations.jsonl
+├── summary_artifacts.jsonl   # PSA only; immutable four-language cache
 ├── variants.jsonl
 ├── results.jsonl
 ├── report.md
@@ -1035,7 +1097,8 @@ runs/manual/<run-id>/
 ```
 
 manifest 必須記錄 input hash、語言、模型、generation config、translation model、
-template/catalog hashes 與建立時間，且不得包含 API key。`results.jsonl` 必須可由
+template/catalog hashes 與建立時間；PSA manifest 另記錄 summary source/request/model/output
+hashes，且不得包含 API key。`results.jsonl` 必須可由
 程式直接讀回，並包含 prompt/language/role/model、rendered prompt、response、
 status、usage、latency 與 request ID。
 
@@ -2011,7 +2074,7 @@ one model
 | `generate` | 呼叫遠端模型 |
 | `generation-status` | 顯示工作進度與錯誤 |
 | `retry-failed` | 重試允許重試的工作 |
-| `manual-run` | 讀取 TXT/JSONL、補齊四語、套用 GRA 並呼叫預設五模型 |
+| `manual-run` | 讀取 TXT/JSONL、補齊四語、套用指定 jailbreak（含 GRA 或 PSA static）並呼叫預設五模型 |
 | `annotate` | 啟動盲測人工標註 |
 | `annotation-status` | 顯示標註與複核進度 |
 | `adjudicate` | 處理標註衝突 |
@@ -2095,7 +2158,11 @@ uv run crosslingual-safety report \
 - 中文、越南語與緬甸語的免費機器翻譯候選可產生、讀回並接受人工審查。
 - 正式實驗只能使用已凍結的翻譯版本。
 - 至少實作 `none`、`academic_authority_v1`、`roleplay_v1`。
-- `manual-run` 可讀取 TXT/JSONL、補齊英中越緬四語並建立五模型結果矩陣。
+- `psa_static_v1` 使用四個版本化、具 provenance 的 GRA source sections，於 manual runtime
+  以 `ais3/gemma-4-12b` 產生摘要，並保留兩個 payload references 於單一 Attack Scenario
+  Example 邊界。
+- `manual-run` 可讀取 TXT/JSONL、補齊英中越緬四語，對 PSA 先建立四筆 summary artifacts，
+  再建立五模型結果矩陣。
 - `gra_v1` 可由使用者選擇四個固定角色，且英文 wrapper 為預設。
 - manual run 可產生 input snapshot、translations、variants、results、manifest
   與 Markdown report，並可恢復未完成 job。

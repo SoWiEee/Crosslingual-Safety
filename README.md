@@ -188,6 +188,17 @@ uv run crosslingual-safety manual-run prompts\prompt.txt `
   --source-language zh
 ```
 
+使用四語 Paper Summary Attack（執行前會先產生四個語言摘要）：
+
+```powershell
+uv run crosslingual-safety manual-run prompts\prompt.txt --source-language zh --jailbreak psa_static_v1 --wrapper-language-mode same-as-payload
+```
+
+`--role` 只對 `gra_v1` 生效；`psa_static_v1` 仍保留版本化 YAML sections 作為低階靜態
+fallback，但 `manual-run` 會在 victim jobs 前使用相同的 ZooLab endpoint 呼叫
+`ais3/gemma-4-12b`，為 `en`、`zh`、`vi`、`my` 各產生一次摘要。摘要成功後會寫入不可變的
+`summary_artifacts.jsonl`，第二次相同 contract 的執行會重用四筆 cache。
+
 `.jsonl` 每行是一筆 prompt，不支援 CSV：
 
 ```jsonl
@@ -339,10 +350,26 @@ flowchart LR
 
 - 原始論文見 [Paper_Summary_Attacks.pdf](refs/Paper_Summary_Attacks.pdf)
 - 利用學術內容的權威性與結構化特徵，建立一個專業的上下文環境，從而降低模型的防禦意識。
+- 本專案提供 `psa_static_v1`：以 `refs/GRA_Jailbreak.pdf` 的英文 YAML sections 作為
+  唯一 source corpus，並在 manual runtime 以 `ais3/gemma-4-12b` 產生四語摘要；YAML
+  sections 仍是低階 renderer fallback/reference corpus。
+- 模板保存 `summary_id`、來源 DOI、PSA 參考、六段 section order、插入邊界、語言與
+  translation provenance；Attack Scenario Example 是一個邏輯插入邊界，官方 skeleton
+  在該邊界內引用 payload 兩次。
 - 主要分為三個系統性步驟：
   1. 收集 LLM 安全論文：從網路收集關於 LLM 安全的真實研究論文，並將其分類為「攻擊型」與「防禦型」論文。
   2. 生成模板：使用越獄代理模型為收集到的論文各章節生成摘要，以保留論文的結構與邏輯流，同時避免過於冗長的上下文。
   3. 植入有害 payload：設計一個特定的 payload 區塊來放入有害問題嵌入到論文摘要的特定章節之間
+
+使用 PSA 靜態模板執行手動單輪測試：
+
+```powershell
+uv run crosslingual-safety manual-run prompts\prompt.txt --source-language zh --jailbreak psa_static_v1 --wrapper-language-mode same-as-payload
+```
+
+`--role` 只套用於 `gra_v1`。PSA 的摘要模型與五個 victim model 共用
+`ZOOLAB_BASE_URL`/`ZOOLAB_API_KEY`；credential 不會寫入 artifacts、manifest 或 variant
+metadata。summary 失敗時會在建立 variants 與 `jobs.sqlite` 前中止。
 
 # 📘 References
 

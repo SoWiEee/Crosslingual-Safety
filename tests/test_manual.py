@@ -364,6 +364,110 @@ def test_gra_config_change_changes_run_identity(tmp_path: Path) -> None:
     assert len(list(runs_dir.iterdir())) == 2
 
 
+def test_psa_ignores_role_in_artifacts_and_reports_attack_id(tmp_path: Path) -> None:
+    input_path = tmp_path / "prompt.txt"
+    input_path.write_text("Test prompt", encoding="utf-8")
+    runs_dir = tmp_path / "runs"
+
+    result = runner.invoke(
+        app,
+        [
+            "manual-run",
+            str(input_path),
+            "--source-language",
+            "en",
+            "--translator",
+            "fake",
+            "--jailbreak",
+            "psa_static_v1",
+            "--role",
+            "riddler",
+            "--models-config",
+            str(_write_fake_models(tmp_path)),
+            "--models",
+            "llama31_8b",
+            "--runs-dir",
+            str(runs_dir),
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    run_dir = next(runs_dir.iterdir())
+    variants = [
+        json.loads(line)
+        for line in (run_dir / "variants.jsonl").read_text(encoding="utf-8").splitlines()
+    ]
+    results = [
+        json.loads(line)
+        for line in (run_dir / "results.jsonl").read_text(encoding="utf-8").splitlines()
+    ]
+    manifest = json.loads((run_dir / "run_manifest.json").read_text(encoding="utf-8"))
+    report = (run_dir / "report.md").read_text(encoding="utf-8")
+
+    assert {variant["role"] for variant in variants} == {None}
+    assert {row["role"] for row in results} == {None}
+    assert manifest["contract"]["role"] is None
+    assert " / psa_static_v1" in report
+    assert " / riddler" not in report
+
+
+def test_psa_cli_role_does_not_change_run_identity(tmp_path: Path) -> None:
+    input_path = tmp_path / "prompt.txt"
+    input_path.write_text("Test prompt", encoding="utf-8")
+    runs_dir = tmp_path / "runs"
+    common = [
+        "manual-run",
+        str(input_path),
+        "--source-language",
+        "en",
+        "--translator",
+        "fake",
+        "--jailbreak",
+        "psa_static_v1",
+        "--models-config",
+        str(_write_fake_models(tmp_path)),
+        "--models",
+        "llama31_8b",
+        "--runs-dir",
+        str(runs_dir),
+    ]
+
+    first = runner.invoke(app, [*common, "--role", "joker"])
+    second = runner.invoke(app, [*common, "--role", "scarecrow"])
+
+    assert first.exit_code == second.exit_code == 0, first.output
+    assert len(list(runs_dir.iterdir())) == 1
+
+
+def test_psa_jsonl_role_changes_raw_snapshot_identity(tmp_path: Path) -> None:
+    first_input = tmp_path / "first.jsonl"
+    second_input = tmp_path / "second.jsonl"
+    base = {"prompt_id": "p-1", "prompt": "Test prompt", "source_language": "en"}
+    first_input.write_text(json.dumps({**base, "role": "joker"}) + "\n", encoding="utf-8")
+    second_input.write_text(json.dumps({**base, "role": "riddler"}) + "\n", encoding="utf-8")
+    models_path = _write_fake_models(tmp_path)
+    runs_dir = tmp_path / "runs"
+    common = [
+        "manual-run",
+        "--translator",
+        "fake",
+        "--jailbreak",
+        "psa_static_v1",
+        "--models-config",
+        str(models_path),
+        "--models",
+        "llama31_8b",
+        "--runs-dir",
+        str(runs_dir),
+    ]
+
+    first = runner.invoke(app, [*common, str(first_input)])
+    second = runner.invoke(app, [*common, str(second_input)])
+
+    assert first.exit_code == second.exit_code == 0, first.output
+    assert len(list(runs_dir.iterdir())) == 2
+
+
 def test_add_model_only_accepts_ultra(tmp_path: Path) -> None:
     input_path = tmp_path / "prompt.txt"
     input_path.write_text("Test prompt", encoding="utf-8")
