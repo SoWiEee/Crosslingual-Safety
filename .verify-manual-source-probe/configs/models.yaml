@@ -1,0 +1,8 @@
+models:
+  fake_model:
+    provider: fake
+    model_id: fake-model
+    endpoint_type: chat
+    concurrency: 1
+    requests_per_minute: 6000
+    test_only: true

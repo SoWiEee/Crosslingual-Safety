@@ -1,0 +1,12 @@
+version: 1
+manual:
+  input_path: prompts/prompt.txt
+  source_language: en
+models: [fake_model]
+translator: fake
+wrapper_language_mode: same-as-payload
+gra_role: joker
+models_config: configs/models.yaml
+languages_config: configs/languages.yaml
+jailbreaks_config: configs/jailbreaks.yaml
+runs_dir: runs/experiments
