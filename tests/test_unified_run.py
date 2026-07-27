@@ -18,15 +18,24 @@ from crosslingual_safety.psa_summary import (
     PaperSummaryService,
 )
 from crosslingual_safety.schemas import GenerationRequest, GenerationResult
-from crosslingual_safety.translation.providers import FakeTranslator
+from crosslingual_safety.translation.paid_ledger import PaidTranslationTask
+from crosslingual_safety.translation.providers import (
+    FakeTranslator,
+    GoogleCloudAuthenticationError,
+    GoogleCloudNMTTranslator,
+    GoogleCloudRequestTooLargeError,
+    GoogleCloudRunBudgetExceededError,
+)
 from crosslingual_safety.unified_run import (
     PUBLIC_JAILBREAKS,
     PUBLIC_LANGUAGES,
+    ContractConflictError,
     RunDependencies,
     RunRequest,
     RunSettings,
     _nllb_checkpoint_available,
     _resolved_nllb_checkpoint,
+    _translate_cases,
     execute_run,
     load_run_settings,
     parse_selection,
@@ -104,6 +113,37 @@ runs_dir: runs/experiments
     shutil.copy(Path("configs/languages.yaml"), configs / "languages.yaml")
     shutil.copy(Path("configs/jailbreaks.yaml"), configs / "jailbreaks.yaml")
     return load_run_settings(configs / "run.yaml")
+
+
+def _google_settings(tmp_path: Path) -> RunSettings:
+    settings = _settings(tmp_path)
+    assert settings.config_path is not None
+    settings.config_path.write_text(
+        settings.config_path.read_text(encoding="utf-8").replace(
+            "translator: fake",
+            """translator: google-cloud-nmt-v3
+google_cloud:
+  project_id: gen-lang-client-0036391889
+  location: global
+  model: general/nmt
+  max_request_characters: 5000
+  max_run_characters: 100000""",
+        ),
+        encoding="utf-8",
+    )
+    return load_run_settings(settings.config_path)
+
+
+class _StubGoogleTranslationClient:
+    def __init__(self) -> None:
+        self.requests: list[dict[str, object]] = []
+
+    def translate_text(self, *, request: dict[str, object]) -> object:
+        self.requests.append(request)
+        return SimpleNamespace(
+            translations=[SimpleNamespace(translated_text="Google translated")],
+            request_id="google-request-123",
+        )
 
 
 def _generation_result(request: GenerationRequest, status: str) -> GenerationResult:
@@ -217,6 +257,608 @@ def test_manual_plan_uses_configured_source_language(tmp_path: Path) -> None:
 
     assert plan.cases[0].source_language == "en"
     assert plan.translation_jobs == 0
+
+
+def test_repository_run_config_keeps_nllb_default_and_google_contract() -> None:
+    settings = load_run_settings(Path("configs/run.yaml"))
+
+    assert settings.translator == "nllb"
+    assert settings.google_cloud == {
+        "project_id": "gen-lang-client-0036391889",
+        "location": "global",
+        "model": "general/nmt",
+        "max_request_characters": 5000,
+        "max_run_characters": 100000,
+    }
+
+
+@pytest.mark.parametrize(
+    "google_config",
+    [
+        "google_cloud: malformed\n",
+        """google_cloud:
+  project_id: ""
+  location: unsafe/location
+  model: another-model
+  max_request_characters: -1
+  max_run_characters: 0
+""",
+    ],
+)
+def test_invalid_google_settings_are_ignored_until_provider_is_selected(
+    tmp_path: Path,
+    google_config: str,
+) -> None:
+    settings = _settings(tmp_path)
+    assert settings.config_path is not None
+    settings.config_path.write_text(
+        settings.config_path.read_text(encoding="utf-8") + google_config,
+        encoding="utf-8",
+    )
+
+    unselected = load_run_settings(settings.config_path)
+    assert unselected.translator == "fake"
+
+    unselected.translator = "google-cloud-nmt-v3"
+    with pytest.raises(ValueError, match="Google Cloud"):
+        plan_run(RunRequest(languages=("en",), jailbreaks=("none",)), unselected)
+
+
+def test_google_selected_execution_records_non_secret_provider_contract(
+    tmp_path: Path,
+) -> None:
+    settings = _google_settings(tmp_path)
+    plan = plan_run(RunRequest(languages=("vi",), jailbreaks=("none",)), settings)
+    client = _StubGoogleTranslationClient()
+    adc_projects: list[str] = []
+    translator_contract = plan.contract["translator_contract"]
+    assert isinstance(translator_contract, dict)
+
+    result = execute_run(
+        plan,
+        settings,
+        RunDependencies(
+            google_translation_client=client,
+            google_adc_preflight=adc_projects.append,
+            google_client_library_version=str(translator_contract["client_library_version"]),
+            generation=_generate_success,
+            emit=lambda _: None,
+        ),
+    )
+
+    translation = json.loads(
+        (result.parent_path / "audit" / "translations.jsonl").read_text(encoding="utf-8")
+    )
+    assert adc_projects == ["gen-lang-client-0036391889"]
+    assert len(client.requests) == 1
+    assert translation["provider"] == "google-cloud-nmt-v3"
+    assert translation["provider_project_id"] == "gen-lang-client-0036391889"
+    assert translation["provider_location"] == "global"
+    assert translation["provider_model"] == "general/nmt"
+    assert translation["provider_client_version"] == translator_contract["client_library_version"]
+    assert translation["provider_contract"] == translator_contract
+    assert translation["source_character_count"] == len("Prompt")
+    assert translation["provider_request_id"] == "google-request-123"
+    assert result.manifest["fixed_configuration"]["translator"] == "google-cloud-nmt-v3"
+    assert result.manifest["fixed_configuration"]["translator_contract"] == translator_contract
+    persisted_contract = json.loads(
+        (result.parent_path / "run_contract.json").read_text(encoding="utf-8")
+    )
+    assert persisted_contract["translator_contract"] == translator_contract
+    serialized = json.dumps([translation, result.manifest, persisted_contract], sort_keys=True)
+    assert "GOOGLE_APPLICATION_CREDENTIALS" not in serialized
+    assert "google-translate-service-account.json" not in serialized
+
+
+def test_google_default_client_is_constructed_during_preflight_and_reused(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    settings = _google_settings(tmp_path)
+    plan = plan_run(RunRequest(languages=("vi",), jailbreaks=("none",)), settings)
+    client = _StubGoogleTranslationClient()
+    constructor_calls = 0
+    translator_contract = plan.contract["translator_contract"]
+    assert isinstance(translator_contract, dict)
+
+    def construct_client() -> object:
+        nonlocal constructor_calls
+        constructor_calls += 1
+        assert not plan.parent_path.exists()
+        return client
+
+    monkeypatch.setattr(
+        GoogleCloudNMTTranslator,
+        "_default_client",
+        staticmethod(construct_client),
+    )
+    result = execute_run(
+        plan,
+        settings,
+        RunDependencies(
+            google_adc_preflight=lambda _: None,
+            google_client_library_version=str(translator_contract["client_library_version"]),
+            generation=_generate_success,
+            emit=lambda _: None,
+        ),
+    )
+
+    assert result.status == "success"
+    assert constructor_calls == 1
+    assert len(client.requests) == 1
+
+
+def test_google_default_client_constructor_failure_precedes_artifacts(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    settings = _google_settings(tmp_path)
+    plan = plan_run(RunRequest(languages=("vi",), jailbreaks=("none",)), settings)
+    constructor_calls = 0
+
+    def fail_client_construction() -> object:
+        nonlocal constructor_calls
+        constructor_calls += 1
+        raise GoogleCloudAuthenticationError(
+            "Google Cloud application default credentials are unavailable or invalid"
+        )
+
+    monkeypatch.setattr(
+        GoogleCloudNMTTranslator,
+        "_default_client",
+        staticmethod(fail_client_construction),
+    )
+
+    with pytest.raises(GoogleCloudAuthenticationError):
+        execute_run(
+            plan,
+            settings,
+            RunDependencies(
+                google_adc_preflight=lambda _: None,
+                generation=_generate_success,
+                emit=lambda _: None,
+            ),
+        )
+
+    assert constructor_calls == 1
+    assert not plan.parent_path.exists()
+
+
+def test_google_preflight_rejects_credential_path_before_artifacts_without_leaking_it(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    settings = _google_settings(tmp_path)
+    plan = plan_run(RunRequest(languages=("vi",), jailbreaks=("none",)), settings)
+    missing_credential = (tmp_path / "sensitive" / "adc.json").resolve()
+    monkeypatch.setenv("GOOGLE_CLOUD_PROJECT", "gen-lang-client-0036391889")
+    monkeypatch.setenv("GOOGLE_APPLICATION_CREDENTIALS", str(missing_credential))
+    monkeypatch.chdir(tmp_path)
+
+    with pytest.raises(GoogleCloudAuthenticationError) as captured:
+        execute_run(
+            plan,
+            settings,
+            RunDependencies(generation=_generate_success, emit=lambda _: None),
+        )
+
+    assert str(missing_credential) not in str(captured.value)
+    assert not plan.parent_path.exists()
+
+
+@pytest.mark.parametrize(
+    ("languages", "max_request_characters", "max_run_characters", "expected_error"),
+    [
+        (("vi",), 5, 100, GoogleCloudRequestTooLargeError),
+        (("en", "vi"), 10, 10, GoogleCloudRunBudgetExceededError),
+    ],
+)
+def test_google_preflight_rejects_character_budget_before_artifacts_and_calls(
+    tmp_path: Path,
+    languages: tuple[str, ...],
+    max_request_characters: int,
+    max_run_characters: int,
+    expected_error: type[Exception],
+) -> None:
+    settings = _google_settings(tmp_path)
+    settings.google_cloud["max_request_characters"] = max_request_characters
+    settings.google_cloud["max_run_characters"] = max_run_characters
+    plan = plan_run(RunRequest(languages=languages, jailbreaks=("none",)), settings)
+    client = _StubGoogleTranslationClient()
+
+    with pytest.raises(expected_error):
+        execute_run(
+            plan,
+            settings,
+            RunDependencies(
+                google_translation_client=client,
+                google_adc_preflight=lambda _: None,
+                generation=_generate_success,
+                emit=lambda _: None,
+            ),
+        )
+
+    assert client.requests == []
+    assert not plan.parent_path.exists()
+
+
+def test_google_adc_preflight_redacts_untrusted_authentication_failure(
+    tmp_path: Path,
+) -> None:
+    settings = _google_settings(tmp_path)
+    plan = plan_run(RunRequest(languages=("vi",), jailbreaks=("none",)), settings)
+    leaked_detail = "C:/sensitive/adc.json private-key-material Prompt"
+
+    def fail_adc(project_id: str) -> None:
+        del project_id
+        raise RuntimeError(leaked_detail)
+
+    with pytest.raises(GoogleCloudAuthenticationError) as captured:
+        preflight_run(
+            plan,
+            settings,
+            RunDependencies(
+                google_translation_client=_StubGoogleTranslationClient(),
+                google_adc_preflight=fail_adc,
+            ),
+        )
+
+    assert leaked_detail not in str(captured.value)
+    assert not plan.parent_path.exists()
+
+
+def test_google_run_budget_persists_across_explicit_rejection_attempts(tmp_path: Path) -> None:
+    settings = _google_settings(tmp_path)
+    assert isinstance(settings.google_cloud, dict)
+    settings.google_cloud["max_request_characters"] = 12
+    settings.google_cloud["max_run_characters"] = 12
+    plan = plan_run(RunRequest(languages=("vi",), jailbreaks=("none",)), settings)
+
+    class InvalidArgument(RuntimeError):
+        pass
+
+    class RejectingGoogleTranslationClient:
+        def __init__(self) -> None:
+            self.call_count = 0
+
+        def translate_text(self, *, request: dict[str, object]) -> object:
+            self.call_count += 1
+            raise InvalidArgument("provider rejection")
+
+    client = RejectingGoogleTranslationClient()
+    translator_contract = plan.contract["translator_contract"]
+    assert isinstance(translator_contract, dict)
+    dependencies = RunDependencies(
+        google_translation_client=client,
+        google_adc_preflight=lambda _: None,
+        google_client_library_version=str(translator_contract["client_library_version"]),
+        generation=_generate_success,
+        emit=lambda _: None,
+    )
+
+    execute_run(plan, settings, dependencies)
+    _translate_cases(plan, settings, dependencies, plan.parent_path)
+    _translate_cases(plan, settings, dependencies, plan.parent_path)
+
+    attempts = [
+        json.loads(line)
+        for line in (plan.parent_path / "audit" / "translation_attempts.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    ]
+    reservations = [
+        json.loads(line)
+        for line in (plan.parent_path / "audit" / "translation_reservations.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    ]
+    assert client.call_count == 2
+    assert sorted(attempt["charged_character_count"] for attempt in attempts) == [0, 6, 6]
+    assert len(reservations) == 2
+    assert len({reservation["reservation_id"] for reservation in reservations}) == 2
+    assert {
+        attempt["provider_reservation_id"]
+        for attempt in attempts
+        if attempt["provider_reservation_id"] is not None
+    } == {reservation["reservation_id"] for reservation in reservations}
+
+
+def test_google_process_death_reservation_is_not_resent_on_resume(tmp_path: Path) -> None:
+    settings = _google_settings(tmp_path)
+    assert isinstance(settings.google_cloud, dict)
+    settings.google_cloud["max_request_characters"] = 6
+    settings.google_cloud["max_run_characters"] = 6
+    plan = plan_run(RunRequest(languages=("vi",), jailbreaks=("none",)), settings)
+
+    class SimulatedProcessDeath(BaseException):
+        pass
+
+    class ProcessDeathGoogleTranslationClient:
+        def __init__(self) -> None:
+            self.call_count = 0
+
+        def translate_text(self, *, request: dict[str, object]) -> object:
+            del request
+            self.call_count += 1
+            raise SimulatedProcessDeath
+
+    client = ProcessDeathGoogleTranslationClient()
+    translator_contract = plan.contract["translator_contract"]
+    assert isinstance(translator_contract, dict)
+    expected_task = PaidTranslationTask.build(
+        case_id=plan.cases[0].case_id,
+        source_text=plan.cases[0].source_text,
+        source_language=plan.cases[0].source_language,
+        target_language="vi",
+        provider="google-cloud-nmt-v3",
+        provider_contract=translator_contract,
+    )
+    dependencies = RunDependencies(
+        google_translation_client=client,
+        google_adc_preflight=lambda _: None,
+        google_client_library_version=str(translator_contract["client_library_version"]),
+        generation=_generate_success,
+        emit=lambda _: None,
+    )
+
+    with pytest.raises(SimulatedProcessDeath):
+        execute_run(plan, settings, dependencies)
+
+    reservations_path = plan.parent_path / "audit" / "translation_reservations.jsonl"
+    reservations = [
+        json.loads(line) for line in reservations_path.read_text(encoding="utf-8").splitlines()
+    ]
+    assert len(reservations) == 1
+    assert reservations[0]["source_character_count"] == 6
+    assert reservations[0]["task_key"] == expected_task.task_key
+    assert reservations[0]["provider_contract_sha256"] == expected_task.provider_contract_sha256
+    assert not (plan.parent_path / "audit" / "translation_attempts.jsonl").exists()
+
+    result = execute_run(plan, settings, dependencies)
+
+    attempts = [
+        json.loads(line)
+        for line in (plan.parent_path / "audit" / "translation_attempts.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    ]
+    assert client.call_count == 1
+    assert result.status == "failed"
+    assert len(attempts) == 1
+    assert attempts[0]["attempt_number"] == 1
+    assert attempts[0]["audit_reference"] == (
+        f"translation_reservations.jsonl#{reservations[0]['reservation_id']}"
+    )
+    assert attempts[0]["case_id"] == plan.cases[0].case_id
+    assert attempts[0]["charged_character_count"] == 6
+    assert attempts[0]["billing_status"] == "charged_as_indeterminate"
+    assert attempts[0]["error_message"] == (
+        "Google Cloud Translation paid attempt outcome is indeterminate; manual review is required"
+    )
+    assert attempts[0]["error_type"] == "GoogleCloudIndeterminatePaidAttemptError"
+    assert attempts[0]["provider"] == "google-cloud-nmt-v3"
+    assert attempts[0]["provider_reservation_id"] == reservations[0]["reservation_id"]
+    assert attempts[0]["source"] == "manual"
+    assert attempts[0]["source_character_count"] == 6
+    assert attempts[0]["source_language"] == "zh-tw"
+    assert attempts[0]["target_language"] == "vi"
+
+
+def test_google_post_dispatch_timeout_is_indeterminate_and_not_resent_on_resume(
+    tmp_path: Path,
+) -> None:
+    settings = _google_settings(tmp_path)
+    assert isinstance(settings.google_cloud, dict)
+    settings.google_cloud["max_request_characters"] = 6
+    settings.google_cloud["max_run_characters"] = 12
+    plan = plan_run(RunRequest(languages=("vi",), jailbreaks=("none",)), settings)
+
+    class TimeoutAfterDispatchGoogleTranslationClient:
+        def __init__(self) -> None:
+            self.call_count = 0
+
+        def translate_text(self, *, request: dict[str, object]) -> object:
+            del request
+            self.call_count += 1
+            raise TimeoutError("C:/sensitive/adc.json PROMPT_SENTINEL KEY_SENTINEL")
+
+    client = TimeoutAfterDispatchGoogleTranslationClient()
+    translator_contract = plan.contract["translator_contract"]
+    assert isinstance(translator_contract, dict)
+    dependencies = RunDependencies(
+        google_translation_client=client,
+        google_adc_preflight=lambda _: None,
+        google_client_library_version=str(translator_contract["client_library_version"]),
+        generation=_generate_success,
+        emit=lambda _: None,
+    )
+
+    first = execute_run(plan, settings, dependencies)
+    second = execute_run(plan, settings, dependencies)
+
+    attempts = [
+        json.loads(line)
+        for line in (plan.parent_path / "audit" / "translation_attempts.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    ]
+    reservations = [
+        json.loads(line)
+        for line in (plan.parent_path / "audit" / "translation_reservations.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    ]
+    assert first.status == second.status == "failed"
+    assert client.call_count == 1
+    assert len(attempts) == len(reservations) == 1
+    assert attempts[0]["status"] == "indeterminate"
+    assert attempts[0]["billing_status"] == "charged_as_indeterminate"
+    assert attempts[0]["charged_character_count"] == 6
+    assert attempts[0]["error_type"] == "GoogleCloudIndeterminatePaidAttemptError"
+    assert attempts[0]["provider_reservation_id"] == reservations[0]["reservation_id"]
+    assert attempts[0]["task_key"] == reservations[0]["task_key"]
+    assert (
+        attempts[0]["provider_contract_sha256"]
+        == reservations[0]["provider_contract_sha256"]
+    )
+    serialized = json.dumps(attempts, sort_keys=True)
+    for secret in ("C:/sensitive/adc.json", "PROMPT_SENTINEL", "KEY_SENTINEL"):
+        assert secret not in serialized
+
+
+def test_google_resume_rejects_mutated_paid_attempt_before_provider_call(
+    tmp_path: Path,
+) -> None:
+    settings = _google_settings(tmp_path)
+    assert isinstance(settings.google_cloud, dict)
+    settings.google_cloud["max_request_characters"] = 6
+    settings.google_cloud["max_run_characters"] = 12
+    plan = plan_run(RunRequest(languages=("vi",), jailbreaks=("none",)), settings)
+
+    class InvalidArgument(RuntimeError):
+        pass
+
+    class RejectingGoogleTranslationClient:
+        def __init__(self) -> None:
+            self.call_count = 0
+
+        def translate_text(self, *, request: dict[str, object]) -> object:
+            del request
+            self.call_count += 1
+            raise InvalidArgument("C:/sensitive/adc.json PROMPT_SENTINEL KEY_SENTINEL")
+
+    client = RejectingGoogleTranslationClient()
+    translator_contract = plan.contract["translator_contract"]
+    assert isinstance(translator_contract, dict)
+    dependencies = RunDependencies(
+        google_translation_client=client,
+        google_adc_preflight=lambda _: None,
+        google_client_library_version=str(translator_contract["client_library_version"]),
+        generation=_generate_success,
+        emit=lambda _: None,
+    )
+
+    execute_run(plan, settings, dependencies)
+
+    attempts_path = plan.parent_path / "audit" / "translation_attempts.jsonl"
+    attempt = json.loads(attempts_path.read_text(encoding="utf-8"))
+    attempt["task_key"] = "0" * 20
+    attempts_path.write_text(
+        json.dumps(attempt, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(
+        ContractConflictError,
+        match="invalid Google Cloud paid-call attempt audit",
+    ):
+        execute_run(plan, settings, dependencies)
+
+    assert client.call_count == 1
+
+
+def test_google_resume_rejects_tampered_reservation_identity_before_no_resend(
+    tmp_path: Path,
+) -> None:
+    settings = _google_settings(tmp_path)
+    assert isinstance(settings.google_cloud, dict)
+    settings.google_cloud["max_request_characters"] = 6
+    settings.google_cloud["max_run_characters"] = 6
+    plan = plan_run(RunRequest(languages=("vi",), jailbreaks=("none",)), settings)
+
+    class SimulatedProcessDeath(BaseException):
+        pass
+
+    class ProcessDeathGoogleTranslationClient:
+        def __init__(self) -> None:
+            self.call_count = 0
+
+        def translate_text(self, *, request: dict[str, object]) -> object:
+            del request
+            self.call_count += 1
+            raise SimulatedProcessDeath
+
+    client = ProcessDeathGoogleTranslationClient()
+    translator_contract = plan.contract["translator_contract"]
+    assert isinstance(translator_contract, dict)
+    dependencies = RunDependencies(
+        google_translation_client=client,
+        google_adc_preflight=lambda _: None,
+        google_client_library_version=str(translator_contract["client_library_version"]),
+        generation=_generate_success,
+        emit=lambda _: None,
+    )
+
+    with pytest.raises(SimulatedProcessDeath):
+        execute_run(plan, settings, dependencies)
+
+    reservations_path = plan.parent_path / "audit" / "translation_reservations.jsonl"
+    reservation = json.loads(reservations_path.read_text(encoding="utf-8"))
+    reservation["provider_contract_sha256"] = "0" * 64
+    reservations_path.write_text(
+        json.dumps(reservation, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(
+        ContractConflictError,
+        match="invalid Google Cloud paid-call reservation identity",
+    ):
+        execute_run(plan, settings, dependencies)
+
+    assert client.call_count == 1
+    assert not (plan.parent_path / "audit" / "translation_attempts.jsonl").exists()
+
+
+def test_google_dry_run_constructs_no_adc_or_client(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    settings = _google_settings(tmp_path)
+    assert settings.config_path is not None
+    adc_calls = 0
+    client_calls = 0
+
+    def forbidden_adc(project_id: str) -> None:
+        del project_id
+        nonlocal adc_calls
+        adc_calls += 1
+        raise AssertionError("dry-run performed ADC preflight")
+
+    def forbidden_client() -> object:
+        nonlocal client_calls
+        client_calls += 1
+        raise AssertionError("dry-run constructed Google client")
+
+    monkeypatch.setattr(
+        "crosslingual_safety.unified_run._default_google_adc_preflight",
+        forbidden_adc,
+    )
+    monkeypatch.setattr(
+        GoogleCloudNMTTranslator,
+        "_default_client",
+        staticmethod(forbidden_client),
+    )
+    monkeypatch.chdir(tmp_path)
+
+    result = runner.invoke(
+        app,
+        [
+            "run",
+            "--source",
+            "manual",
+            "--language",
+            "vi",
+            "--jailbreak",
+            "none",
+            "--dry-run",
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert adc_calls == 0
+    assert client_calls == 0
+    assert not settings.runs_dir.exists()
 
 
 def test_fake_execution_writes_sparse_public_results(tmp_path: Path) -> None:
@@ -475,6 +1117,94 @@ def test_repeated_translation_failure_appends_distinct_attempts(tmp_path: Path) 
     assert len(rows) == 2
     assert sorted(row["attempt_number"] for row in rows) == [1, 2]
     assert len({row["attempt_id"] for row in rows}) == 2
+
+
+def test_unknown_translation_failure_is_fixed_generic_in_terminal_and_audit(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    configured_credential = r"C:\sensitive\adc.json"
+    leaked_detail = "C:/sensitive/adc.json PROMPT_SENTINEL KEY_SENTINEL"
+    monkeypatch.setenv("GOOGLE_APPLICATION_CREDENTIALS", configured_credential)
+
+    class UnknownFailure(RuntimeError):
+        pass
+
+    class LeakyTranslator(FakeTranslator):
+        def translate(
+            self,
+            text: str,
+            source_language: str,
+            target_language: str,
+        ) -> object:
+            del text, source_language, target_language
+            raise UnknownFailure(leaked_detail)
+
+    settings = _settings(tmp_path)
+    plan = plan_run(RunRequest(languages=("en",), jailbreaks=("none",)), settings)
+    terminal: list[str] = []
+    result = execute_run(
+        plan,
+        settings,
+        RunDependencies(
+            translator=LeakyTranslator(),
+            generation=_generate_success,
+            emit=terminal.append,
+        ),
+    )
+
+    attempts = [
+        json.loads(line)
+        for line in (plan.parent_path / "audit" / "translation_attempts.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    ]
+    persisted = json.dumps([attempts, result.rows, terminal], sort_keys=True)
+    assert result.status == "failed"
+    assert attempts[0]["error_type"] == "UnexpectedOperationError"
+    assert attempts[0]["error_message"] == "An unexpected operation failed"
+    for secret in (configured_credential, leaked_detail, "PROMPT_SENTINEL", "KEY_SENTINEL"):
+        assert secret not in persisted
+
+
+def test_unknown_failure_stringification_is_never_invoked(tmp_path: Path) -> None:
+    leaked_detail = "C:/sensitive/adc.json PROMPT_SENTINEL KEY_SENTINEL"
+
+    class ExplosiveStringFailure(RuntimeError):
+        def __str__(self) -> str:
+            raise AssertionError(leaked_detail)
+
+    class ExplosiveTranslator(FakeTranslator):
+        def translate(
+            self,
+            text: str,
+            source_language: str,
+            target_language: str,
+        ) -> object:
+            del text, source_language, target_language
+            raise ExplosiveStringFailure
+
+    settings = _settings(tmp_path)
+    plan = plan_run(RunRequest(languages=("en",), jailbreaks=("none",)), settings)
+    result = execute_run(
+        plan,
+        settings,
+        RunDependencies(
+            translator=ExplosiveTranslator(),
+            generation=_generate_success,
+            emit=lambda _: None,
+        ),
+    )
+
+    attempts = [
+        json.loads(line)
+        for line in (plan.parent_path / "audit" / "translation_attempts.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    ]
+    assert result.status == "failed"
+    assert attempts[0]["error_type"] == "UnexpectedOperationError"
+    assert attempts[0]["error_message"] == "An unexpected operation failed"
 
 
 def test_child_failure_index_retains_variant_id_and_public_response_null(tmp_path: Path) -> None:

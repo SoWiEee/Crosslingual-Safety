@@ -1,11 +1,15 @@
 import csv
 import os
-from collections.abc import Callable
+import re
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass
+from importlib.metadata import PackageNotFoundError
 from importlib.metadata import version as package_version
 from pathlib import Path
+from threading import Lock
 from time import sleep
-from typing import Protocol
+from types import MappingProxyType
+from typing import Any, Protocol, cast
 
 from crosslingual_safety.translation.languages import LanguageConfig
 
@@ -40,6 +44,58 @@ class DeepTranslatorBackend(Protocol):
     def get_supported_languages(self, as_dict: bool = False) -> dict[str, str]: ...
 
     def translate(self, text: str) -> str: ...
+
+
+class GoogleCloudTranslationClient(Protocol):
+    def translate_text(self, *, request: dict[str, object]) -> object: ...
+
+
+class GoogleCloudConfigurationError(ValueError):
+    """A non-secret Cloud Translation setting is invalid."""
+
+
+class GoogleCloudProviderError(RuntimeError):
+    """A sanitized Cloud Translation provider failure."""
+
+
+class GoogleCloudAuthenticationError(GoogleCloudProviderError):
+    """Application Default Credentials could not be loaded safely."""
+
+
+class GoogleCloudPermissionError(GoogleCloudProviderError):
+    """The authenticated principal is not authorized to translate."""
+
+
+class GoogleCloudQuotaError(GoogleCloudProviderError):
+    """The Cloud Translation request was rejected by a quota control."""
+
+
+class GoogleCloudInvalidRequestError(GoogleCloudProviderError):
+    """Cloud Translation rejected a sanitized request."""
+
+
+class GoogleCloudTransientError(GoogleCloudProviderError):
+    """Cloud Translation encountered a retryable provider failure."""
+
+
+class GoogleCloudTranslationResponseError(GoogleCloudProviderError):
+    """Cloud Translation returned no usable translated text."""
+
+
+class GoogleCloudReservationError(GoogleCloudProviderError):
+    """A paid-call reservation could not be persisted safely."""
+
+
+class GoogleCloudIndeterminatePaidAttemptError(GoogleCloudProviderError):
+    """A paid request has no durable success or failure outcome."""
+
+
+class GoogleCloudRequestTooLargeError(ValueError):
+    """A translation exceeds the configured request character budget."""
+
+
+class GoogleCloudRunBudgetExceededError(ValueError):
+    """A translation would exceed the configured run character budget."""
 
 
 class FakeTranslator:
@@ -189,54 +245,263 @@ class DeepTranslatorGoogleTranslator:
 
 
 class GoogleCloudNMTTranslator:
-    translator_id = "google_cloud_nmt_v3"
-    version = "general/nmt"
+    translator_id = "google-cloud-nmt-v3"
     method = "google_cloud_nmt_v3"
-    decoding_config: dict[str, object] = {
-        "model": "general/nmt",
-        "mime_type": "text/plain",
-        "use_language_detection": False,
-    }
+    language_codes: Mapping[str, str] = MappingProxyType(
+        {
+            "en": "en",
+            "id": "id",
+            "jv": "jv",
+            "my": "my",
+            "th": "th",
+            "tl": "tl",
+            "vi": "vi",
+            "zh": "zh-CN",
+            "zh-tw": "zh-TW",
+        }
+    )
 
-    def __init__(self, project_id: str | None = None, location: str = "global") -> None:
+    def __init__(
+        self,
+        project_id: str | None = None,
+        location: str = "global",
+        model: str = "general/nmt",
+        *,
+        client: GoogleCloudTranslationClient | None = None,
+        client_library_version: str | None = None,
+        max_request_characters: int = 5000,
+        max_run_characters: int = 100000,
+        initial_characters_used: int = 0,
+        paid_call_reservation: Callable[[int], None] | None = None,
+    ) -> None:
+        resolved_project = (project_id or os.environ.get("GOOGLE_CLOUD_PROJECT", "")).strip()
+        if not re.fullmatch(r"[a-z][a-z0-9-]{4,28}[a-z0-9]", resolved_project):
+            raise GoogleCloudConfigurationError("Google Cloud project ID is invalid")
+        if location != "global":
+            raise GoogleCloudConfigurationError("Google Cloud Translation location must be global")
+        if model != "general/nmt":
+            raise GoogleCloudConfigurationError(
+                "Google Cloud Translation model must be general/nmt"
+            )
+        if (
+            isinstance(max_request_characters, bool)
+            or not isinstance(max_request_characters, int)
+            or max_request_characters <= 0
+        ):
+            raise GoogleCloudConfigurationError(
+                "Google Cloud request character limit must be a positive integer"
+            )
+        if (
+            isinstance(max_run_characters, bool)
+            or not isinstance(max_run_characters, int)
+            or max_run_characters <= 0
+        ):
+            raise GoogleCloudConfigurationError(
+                "Google Cloud run character limit must be a positive integer"
+            )
+        if max_request_characters > max_run_characters:
+            raise GoogleCloudConfigurationError(
+                "Google Cloud request character limit must not exceed the run limit"
+            )
+        if (
+            isinstance(initial_characters_used, bool)
+            or not isinstance(initial_characters_used, int)
+            or not 0 <= initial_characters_used <= max_run_characters
+        ):
+            raise GoogleCloudConfigurationError("Google Cloud initial character usage is invalid")
+        if client_library_version is None:
+            try:
+                client_library_version = package_version("google-cloud-translate")
+            except PackageNotFoundError:
+                client_library_version = "unknown"
+
+        self.project_id = resolved_project
+        self.location = location
+        self.model = model
+        self.client = client
+        self.client_library_version = client_library_version
+        self.max_request_characters = max_request_characters
+        self.max_run_characters = max_run_characters
+        self.characters_used = initial_characters_used
+        self.paid_call_reservation = paid_call_reservation
+        self._budget_lock = Lock()
+        self._client_lock = Lock()
+        self.parent = f"projects/{self.project_id}/locations/{self.location}"
+        self.version = model
+        self.decoding_config: dict[str, object] = {
+            "client_library": "google-cloud-translate",
+            "client_library_version": client_library_version,
+            "language_codes": dict(self.language_codes),
+            "location": location,
+            "mime_type": "text/plain",
+            "model": model,
+            "max_request_characters": max_request_characters,
+            "max_run_characters": max_run_characters,
+            "project_id": resolved_project,
+            "use_language_detection": False,
+        }
+        self.provider_contract = dict(self.decoding_config)
+
+    @staticmethod
+    def _default_client() -> GoogleCloudTranslationClient:
         try:
             from google.cloud import translate_v3
-        except ImportError as error:
-            raise RuntimeError(
+        except ImportError:
+            raise GoogleCloudConfigurationError(
                 "Google translation support is not installed; run "
                 "`uv sync --extra translation-google`."
-            ) from error
-        self.project_id = project_id or os.environ["GOOGLE_CLOUD_PROJECT"]
-        self.location = location
-        self.client = translate_v3.TranslationServiceClient()
-        self.parent = f"projects/{self.project_id}/locations/{self.location}"
-        response = self.client.get_supported_languages(
-            request={"parent": self.parent, "display_language_code": "en"}
-        )
-        self.supported_languages = {language.language_code for language in response.languages}
-        self.decoding_config = {
-            **type(self).decoding_config,
-            "supported_languages": sorted(self.supported_languages),
-        }
+            ) from None
+        try:
+            return cast(
+                GoogleCloudTranslationClient,
+                translate_v3.TranslationServiceClient(),
+            )
+        except Exception:
+            raise GoogleCloudAuthenticationError(
+                "Google Cloud application default credentials are unavailable or invalid"
+            ) from None
+
+    def _client_for_request(self) -> GoogleCloudTranslationClient:
+        with self._client_lock:
+            if self.client is None:
+                try:
+                    self.client = self._default_client()
+                except (GoogleCloudAuthenticationError, GoogleCloudConfigurationError):
+                    raise
+                except Exception:
+                    raise GoogleCloudAuthenticationError(
+                        "Google Cloud application default credentials are unavailable or invalid"
+                    ) from None
+            return self.client
+
+    def _provider_language(self, language: str) -> str | None:
+        return self.language_codes.get(language)
 
     def supports(self, source_language: str, target_language: str) -> bool:
-        return source_language != target_language and target_language in self.supported_languages
+        source = self._provider_language(source_language)
+        target = self._provider_language(target_language)
+        return source is not None and target is not None and source != target
+
+    @staticmethod
+    def _categorized_error(error: Exception) -> GoogleCloudProviderError:
+        try:
+            error_type = type(error)
+            error_mro = type.__getattribute__(error_type, "__mro__")
+            if not isinstance(error_mro, tuple):
+                return GoogleCloudProviderError("Google Cloud Translation provider request failed")
+            error_names: set[str] = set()
+            for candidate in error_mro:
+                if not isinstance(candidate, type):
+                    return GoogleCloudProviderError(
+                        "Google Cloud Translation provider request failed"
+                    )
+                name = type.__getattribute__(candidate, "__name__")
+                if not isinstance(name, str):
+                    return GoogleCloudProviderError(
+                        "Google Cloud Translation provider request failed"
+                    )
+                error_names.add(name)
+        except BaseException:
+            return GoogleCloudProviderError("Google Cloud Translation provider request failed")
+        if error_names & {"DefaultCredentialsError", "RefreshError", "Unauthenticated"}:
+            return GoogleCloudAuthenticationError("Google Cloud Translation authentication failed")
+        if "PermissionDenied" in error_names:
+            return GoogleCloudPermissionError("Google Cloud Translation permission was denied")
+        if error_names & {"ResourceExhausted", "TooManyRequests"}:
+            return GoogleCloudQuotaError("Google Cloud Translation quota was exceeded")
+        if error_names & {"BadRequest", "InvalidArgument"}:
+            return GoogleCloudInvalidRequestError("Google Cloud Translation rejected the request")
+        if error_names & {
+            "Aborted",
+            "ConnectionError",
+            "DeadlineExceeded",
+            "InternalServerError",
+            "RetryError",
+            "ServiceUnavailable",
+            "TimeoutError",
+        }:
+            return GoogleCloudTransientError("Google Cloud Translation is temporarily unavailable")
+        return GoogleCloudProviderError("Google Cloud Translation provider request failed")
+
+    def _reserve_characters(self, character_count: int) -> None:
+        if character_count > self.max_request_characters:
+            raise GoogleCloudRequestTooLargeError(
+                "Google Cloud Translation request character limit exceeded"
+            )
+        with self._budget_lock:
+            if self.characters_used + character_count > self.max_run_characters:
+                raise GoogleCloudRunBudgetExceededError(
+                    "Google Cloud Translation run character budget exceeded"
+                )
+            # A provider failure may still consume quota or incur cost, so reservation is not
+            # rolled back after the paid-call boundary is crossed.
+            self.characters_used += character_count
+
+    def _release_characters(self, character_count: int) -> None:
+        with self._budget_lock:
+            self.characters_used -= character_count
 
     def translate(
         self, text: str, source_language: str, target_language: str
     ) -> ProviderTranslation:
-        response = self.client.translate_text(
-            request={
-                "parent": self.parent,
-                "contents": [text],
-                "mime_type": "text/plain",
-                "source_language_code": source_language,
-                "target_language_code": target_language,
-                "model": f"{self.parent}/models/general/nmt",
-            }
-        )
-        request_id = getattr(response, "request_id", None)
-        return ProviderTranslation(response.translations[0].translated_text, request_id)
+        if not self.supports(source_language, target_language):
+            raise ValueError("Google Cloud Translation does not support the selected language pair")
+        source = self.language_codes[source_language]
+        target = self.language_codes[target_language]
+        character_count = len(text)
+        self._reserve_characters(character_count)
+        try:
+            client = self._client_for_request()
+        except Exception:
+            self._release_characters(character_count)
+            raise
+        if self.paid_call_reservation is not None:
+            try:
+                self.paid_call_reservation(character_count)
+            except Exception:
+                self._release_characters(character_count)
+                raise GoogleCloudReservationError(
+                    "Google Cloud Translation paid-call reservation could not be persisted"
+                ) from None
+        try:
+            response = client.translate_text(
+                request={
+                    "parent": self.parent,
+                    "contents": [text],
+                    "mime_type": "text/plain",
+                    "source_language_code": source,
+                    "target_language_code": target,
+                    "model": f"{self.parent}/models/{self.model}",
+                }
+            )
+        except Exception as error:
+            raise self._categorized_error(error) from None
+        try:
+            request_id = getattr(response, "request_id", None)
+            translations = getattr(response, "translations", None)
+            if not translations:
+                raise GoogleCloudTranslationResponseError(
+                    "Google Cloud Translation returned an unusable response"
+                )
+            translated_text = getattr(cast(Any, translations)[0], "translated_text", None)
+            if not isinstance(translated_text, str) or not translated_text.strip():
+                raise GoogleCloudTranslationResponseError(
+                    "Google Cloud Translation returned an unusable response"
+                )
+            safe_request_id = (
+                request_id
+                if isinstance(request_id, str)
+                and len(request_id) <= 256
+                and re.fullmatch(r"[A-Za-z0-9._=-]+", request_id)
+                else None
+            )
+        except GoogleCloudTranslationResponseError:
+            raise
+        except Exception:
+            raise GoogleCloudTranslationResponseError(
+                "Google Cloud Translation returned an unusable response"
+            ) from None
+        return ProviderTranslation(translated_text, safe_request_id)
 
 
 class NLLBTranslator:

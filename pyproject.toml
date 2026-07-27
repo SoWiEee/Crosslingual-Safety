@@ -51,7 +51,11 @@ build-backend = "hatchling.build"
 packages = ["src/crosslingual_safety"]
 
 [tool.pytest.ini_options]
+addopts = "-m 'not live_google'"
 testpaths = ["tests"]
+markers = [
+    "live_google: makes an explicitly authorized, paid Google Cloud Translation request",
+]
 
 [tool.ruff]
 target-version = "py311"

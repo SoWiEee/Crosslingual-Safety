@@ -566,42 +566,73 @@ NLLB-200 是 encoder-decoder 翻譯模型，沒有 system、developer、user 等
 ### 4.6 Translation Provider Configuration
 
 ```yaml
-translation:
-  primary_provider: nllb
-  cache_policy: immutable
-  require_human_review: true
-
-  deep_translator_google:
-    enabled: false
-    backend: google
-    source_language: en
-    language_code_overrides:
-      zh: zh-CN
-      jv: jw
-    retry_delays_seconds: [1.0, 2.0]
-
-  google_cloud_nmt_v3:
-    enabled: false
-    project_id_env: GOOGLE_CLOUD_PROJECT
-    location: global
-    model: general/nmt
-    mime_type: text/plain
-    source_language: en
-    use_language_detection: false
-    credentials: application_default_credentials
-
-  nllb:
-    enabled: true
-    checkpoint: facebook/nllb-200-distilled-600M
-    local_files_only: false
-    device: cuda
-    dtype: float16
-    do_sample: false
-    num_beams: 5
-    max_input_tokens: 1024
+translator: nllb
+google_cloud:
+  project_id: gen-lang-client-0036391889
+  location: global
+  model: general/nmt
+  max_request_characters: 5000
+  max_run_characters: 100000
 ```
 
-預設 NLLB provider 不讀取 credential。若明確啟用 Cloud Translation Advanced v3，則使用 IAM 與 Application Default Credentials；正式程式不得接受 service account JSON 內容作為 CLI argument，也不得將 credential path 寫入 experiment manifest。
+`translator: nllb` 是預設值。統一 `run` 不提供 translator CLI option；只有把版本化
+`configs/run.yaml` 改為 `translator: google-cloud-nmt-v3` 才會選用 Cloud Translation
+Advanced v3，且不得在 NLLB 與 Google 之間自動 fallback。進階
+`translate --translator google-cloud-nmt-v3` 介面保留。
+
+預設 NLLB provider 不讀取 credential。若明確啟用 Cloud Translation Advanced v3，
+則使用 IAM 與 Application Default Credentials（ADC），不接受 API key。正式程式不得
+接受 service account JSON 內容作為 CLI argument，也不得將 credential path、path hash、
+key material 或 raw provider metadata 寫入 experiment record。
+
+#### Google Cloud Translation Advanced v3 contract
+
+- 固定使用 `global` location、`general/nmt` 與 `text/plain`，明確送出 source/target。
+- 專案語言 ID 使用靜態 provider map；至少包含 `zh-tw -> zh-TW`、legacy
+  `zh -> zh-CN`、`vi -> vi` 與 `my -> my`。來源與目標都必須在付費呼叫前通過驗證。
+- constructor 可注入 v3 client，且不呼叫 `get_supported_languages` 或任何 capability
+  discovery API。進階 `translate` 僅在確定需要付費工作後才 lazy 建立預設 client；
+  統一 `run` 則必須在 preflight 建立一次並重用，使 constructor failure 發生於任何
+  artifact 建立前。capability discovery 不屬於 decoding config 或 translation identity。
+- stable provider contract 包含 project、location、model、`google-cloud-translate`
+  client version、完整語言 map、5,000 request character limit 與 100,000 run character
+  limit。run fingerprint、manifest 與 translation audit 使用同一份 non-secret contract。
+- 每筆 audit translation 另記 provider、project、location、model、client version、
+  source character count 與可用時的 request correlation；credential path/內容均排除。
+- request 與累計 run 預算在呼叫 API 前保留。每個付費呼叫必須先以可供一般應用程式
+  程序崩潰後恢復的不可變寫入，將 reservation 保存至
+  `audit/translation_reservations.jsonl`，再呼叫 provider；成功 translation 或捕捉到的
+  failure outcome 必須逐 tuple 立即落盤。恢復時必須依目前 immutable run contract 重算
+  `PaidTranslationTask`，驗證 reservation 的 task key、provider contract hash、source
+  hash、語言、字元數與 outcome linkage，通過後才可把它視為完成或決定不重送；identity
+  mismatch 必須 fail closed。每筆 reservation 只計入一次 run budget；缺少
+  outcome/translation 的 reservation 視為 indeterminate paid attempt，以 audit reference
+  投影固定 sanitized failure，`charged_character_count` 必須等於完整 reservation 字元數，
+  並記為 `billing_status: charged_as_indeterminate`，且不得自動重送。一般捕捉到的失敗可
+  在預算內重試，但每次重試必須有不同 reservation。已跨過付費邊界但失敗的 request 仍
+  計入 run budget，避免重試或程序終止繞過成本護欄。
+- 獨立 `translate` 與統一 `run` 共用 paid-call ledger primitive。獨立指令在
+  `<output-dir>/audit/translation_reservations.jsonl` 寫 reservation，並在同層
+  `translation_reservation_outcomes.jsonl` 寫 success、failed 或 indeterminate
+  outcome。stable task key 包含 case ID、來源文字 SHA-256、source/target language、
+  provider ID 與 non-secret provider contract SHA-256；不得包含 raw prompt 或任何
+  credential path。載入既有 ledger 時，所有 reservation 都先計入 run budget。
+  每個 audit directory 只允許一個 writer；多程序同時寫入同一目錄不在支援範圍。
+  這項恢復保證只涵蓋一般應用程式程序崩潰或終止。Windows 會 fsync 檔案並 atomic
+  replace，但未在此路徑 fsync parent directory，因此不宣稱 sudden OS crash 或 power-loss
+  durability；POSIX 另會 fsync parent directory。
+- 正式 preflight 在建立任何 run artifact 前驗證 optional dependency、project、
+  location、model、預算、靜態語言支援、`GOOGLE_CLOUD_PROJECT`、絕對
+  `GOOGLE_APPLICATION_CREDENTIALS` 檔案存在性及 ADC 載入。只有選用 Google 且有
+  translation job 時執行；dry-run 不讀 ADC、不建 client、不呼叫 Google。
+- ADC 與 provider exception 轉為分類且固定的 sanitized error。持久化層只允許明確列入
+  allowlist 的 project exception type/message；任何未知 exception（含 `str()` 或 response
+  property 本身失敗）只保存固定 generic type/message。不得保留原始 exception 中的
+  prompt、API key、private key、credential path 或完整 provider URL。
+- 進階 `translate --translator google-cloud-nmt-v3` 只讀取目前工作目錄的 `.env`，並先
+  驗證語言設定、讀取及驗證輸入、檢查 native/existing work，再建立 ADC client。缺少輸入
+  或沒有付費工作時不得建立 client 或 paid-call ledger；cached translation 與 native
+  dataset 命中也適用。
 
 ### 4.7 Local NLLB GPU Implementation
 
@@ -2227,14 +2258,16 @@ internal `zh` is rejected at this boundary. `zh-tw` is retained in input, transl
 and audit rows, while existing wrapper templates receive the internal `zh` alias.
 
 `configs/run.yaml` fixes the manual path (`prompts/prompt.txt`), benchmark cases and selection
-snapshots, five victim models, local NLLB translation, same-as-payload wrappers, the GRA `joker`
-role, and the PSA summarizer (`ais3/gemma-4-12b`). Manual input defaults to Traditional Chinese;
-changing that contract requires editing the versioned config rather than adding a CLI option.
+snapshots, five victim models, default local NLLB translation, same-as-payload wrappers, the GRA
+`joker` role, and the PSA summarizer (`ais3/gemma-4-12b`). Manual input defaults to Traditional
+Chinese. Cloud Translation Advanced v3 is selected only by changing the versioned
+`translator` setting to `google-cloud-nmt-v3`; changing this contract never adds a CLI option and
+never enables automatic provider fallback.
 
 Dry-run resolves the selected cases and computes translation jobs, four-language PSA summary jobs,
-victim request count, deterministic run ID, and prospective parent path. It does not load `.env`,
-initialize CUDA/NLLB, construct a summary/provider, open a queue, call a provider, or create a run
-directory.
+victim request count, deterministic run ID, prospective parent path, and the selected translator's
+non-secret contract. It does not load `.env` or ADC, initialize CUDA/NLLB, construct a Google
+client, construct a summary/provider, open a queue, call a provider, or create a run directory.
 
 Formal runs use `runs/experiments/<run-id>/` with `audit/` and isolated
 `children/{none,gra,psa}/` directories. The parent stores immutable input, translation, summary,
@@ -2245,8 +2278,9 @@ response and add only non-null `error_type` and `error_message`. The canonical l
 `(case_id, source, language, jailbreak, model)`.
 
 Translations are shared across children. Identity translations are recorded but do not count as
-NLLB jobs. A translation failure is isolated to its `(case_id, language)` tuple and is projected to
-all affected child/model rows through a persisted translation-attempt record. PSA always prepares
+machine-translation jobs. A translation failure is isolated to its `(case_id, language)` tuple and
+is projected to all affected child/model rows through a persisted translation-attempt record. PSA
+always prepares
 all four `en`, `zh`, `vi`, and `my` summaries in memory and writes the cache atomically only after
 all succeed; a partial sequence creates no victim variant. Re-running the same contract resets
 stale leases and retries only `retryable_error` generation jobs; success, provider-blocked, and

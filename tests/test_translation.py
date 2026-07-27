@@ -1,5 +1,6 @@
 import csv
 import json
+import os
 import sys
 from contextlib import nullcontext
 from pathlib import Path
@@ -13,9 +14,20 @@ from crosslingual_safety.cli import app
 from crosslingual_safety.schemas import PromptCase, TranslationReview
 from crosslingual_safety.translation.commands import REVIEW_FIELDS
 from crosslingual_safety.translation.languages import load_languages
+from crosslingual_safety.translation.paid_ledger import PaidCallLedgerError
 from crosslingual_safety.translation.providers import (
     DeepTranslatorGoogleTranslator,
     FakeTranslator,
+    GoogleCloudAuthenticationError,
+    GoogleCloudInvalidRequestError,
+    GoogleCloudNMTTranslator,
+    GoogleCloudPermissionError,
+    GoogleCloudProviderError,
+    GoogleCloudQuotaError,
+    GoogleCloudRequestTooLargeError,
+    GoogleCloudRunBudgetExceededError,
+    GoogleCloudTransientError,
+    GoogleCloudTranslationResponseError,
     NLLBTranslator,
     ProviderTranslation,
     TranslationInputTooLongError,
@@ -322,6 +334,346 @@ def test_deep_translator_google_retries_transient_failure(
     assert attempts == 2
 
 
+@pytest.mark.parametrize(
+    ("target_language", "provider_language", "translated_text"),
+    [
+        ("zh-tw", "zh-TW", "安全評估研究。"),
+        ("vi", "vi", "Nghiên cứu đánh giá an toàn."),
+        ("my", "my", "ဘေးကင်းရေး အကဲဖြတ် သုတေသန။"),
+    ],
+)
+def test_google_cloud_nmt_uses_exact_v3_request_and_static_language_map(
+    target_language: str,
+    provider_language: str,
+    translated_text: str,
+) -> None:
+    requests: list[dict[str, object]] = []
+
+    class StubTranslationClient:
+        def translate_text(self, *, request: dict[str, object]) -> object:
+            requests.append(request)
+            return SimpleNamespace(
+                translations=[SimpleNamespace(translated_text=translated_text)],
+                request_id="request-123",
+            )
+
+    translator = GoogleCloudNMTTranslator(
+        project_id="gen-lang-client-0036391889",
+        location="global",
+        model="general/nmt",
+        client=StubTranslationClient(),
+        client_library_version="3.test",
+    )
+
+    result = translator.translate("Safety evaluation research.", "en", target_language)
+
+    assert result == ProviderTranslation(translated_text, "request-123")
+    assert requests == [
+        {
+            "parent": "projects/gen-lang-client-0036391889/locations/global",
+            "contents": ["Safety evaluation research."],
+            "mime_type": "text/plain",
+            "source_language_code": "en",
+            "target_language_code": provider_language,
+            "model": ("projects/gen-lang-client-0036391889/locations/global/models/general/nmt"),
+        }
+    ]
+    assert translator.supports("zh", target_language)
+    assert translator.decoding_config["language_codes"]["zh"] == "zh-CN"
+    assert translator.decoding_config["language_codes"]["zh-tw"] == "zh-TW"
+    assert "supported_languages" not in translator.decoding_config
+
+
+def test_google_cloud_nmt_validates_source_and_target_before_request() -> None:
+    class StubTranslationClient:
+        def __init__(self) -> None:
+            self.call_count = 0
+
+        def translate_text(self, *, request: dict[str, object]) -> object:
+            self.call_count += 1
+            return SimpleNamespace(translations=[SimpleNamespace(translated_text="translated")])
+
+    client = StubTranslationClient()
+    translator = GoogleCloudNMTTranslator(
+        project_id="gen-lang-client-0036391889",
+        client=client,
+        client_library_version="3.test",
+    )
+
+    with pytest.raises(ValueError, match="does not support the selected language pair"):
+        translator.translate("text", "unknown", "vi")
+    with pytest.raises(ValueError, match="does not support the selected language pair"):
+        translator.translate("text", "en", "unknown")
+
+    assert client.call_count == 0
+
+
+def test_google_cloud_nmt_enforces_request_and_run_budgets_before_calls() -> None:
+    class StubTranslationClient:
+        def __init__(self) -> None:
+            self.call_count = 0
+
+        def translate_text(self, *, request: dict[str, object]) -> object:
+            self.call_count += 1
+            return SimpleNamespace(translations=[SimpleNamespace(translated_text="translated")])
+
+    client = StubTranslationClient()
+    translator = GoogleCloudNMTTranslator(
+        project_id="gen-lang-client-0036391889",
+        client=client,
+        client_library_version="3.test",
+        max_request_characters=5,
+        max_run_characters=8,
+    )
+
+    with pytest.raises(GoogleCloudRequestTooLargeError):
+        translator.translate("123456", "en", "vi")
+    translator.translate("12345", "en", "vi")
+    with pytest.raises(GoogleCloudRunBudgetExceededError):
+        translator.translate("1234", "en", "my")
+
+    assert client.call_count == 1
+    assert translator.characters_used == 5
+
+
+def test_google_cloud_nmt_reserves_failed_requests_against_run_budget() -> None:
+    class FailingTranslationClient:
+        def __init__(self) -> None:
+            self.call_count = 0
+
+        def translate_text(self, *, request: dict[str, object]) -> object:
+            self.call_count += 1
+            raise RuntimeError("untrusted provider detail")
+
+    client = FailingTranslationClient()
+    translator = GoogleCloudNMTTranslator(
+        project_id="gen-lang-client-0036391889",
+        client=client,
+        client_library_version="3.test",
+        max_request_characters=5,
+        max_run_characters=8,
+    )
+
+    with pytest.raises(GoogleCloudProviderError):
+        translator.translate("12345", "en", "vi")
+    with pytest.raises(GoogleCloudRunBudgetExceededError):
+        translator.translate("1234", "en", "my")
+
+    assert client.call_count == 1
+    assert translator.characters_used == 5
+
+
+@pytest.mark.parametrize(
+    ("provider_error_name", "expected_error"),
+    [
+        ("Unauthenticated", GoogleCloudAuthenticationError),
+        ("PermissionDenied", GoogleCloudPermissionError),
+        ("ResourceExhausted", GoogleCloudQuotaError),
+        ("InvalidArgument", GoogleCloudInvalidRequestError),
+        ("DeadlineExceeded", GoogleCloudTransientError),
+        ("UnknownProviderFailure", GoogleCloudProviderError),
+    ],
+)
+def test_google_cloud_nmt_categorizes_and_redacts_provider_failures(
+    provider_error_name: str,
+    expected_error: type[Exception],
+) -> None:
+    credential_path = "C:/sensitive/google-translate-service-account.json"
+    key_material = "private-key-material"
+    prompt_text = "untrusted prompt text"
+    provider_error = type(provider_error_name, (RuntimeError,), {})(
+        f"{credential_path} {key_material} {prompt_text}"
+    )
+
+    class FailingTranslationClient:
+        def translate_text(self, *, request: dict[str, object]) -> object:
+            raise provider_error
+
+    translator = GoogleCloudNMTTranslator(
+        project_id="gen-lang-client-0036391889",
+        client=FailingTranslationClient(),
+        client_library_version="3.test",
+    )
+
+    with pytest.raises(expected_error) as captured:
+        translator.translate("Safety evaluation research.", "en", "vi")
+
+    message = str(captured.value)
+    assert credential_path not in message
+    assert key_material not in message
+    assert prompt_text not in message
+
+
+def test_google_cloud_nmt_hostile_exception_metaclass_fails_closed() -> None:
+    leaked_detail = "HOSTILE_EXCEPTION_NAME_SENTINEL"
+
+    class HostileExceptionMeta(type):
+        def __getattribute__(cls, name: str) -> object:
+            if name == "__name__":
+                raise RuntimeError(leaked_detail)
+            return super().__getattribute__(name)
+
+    class HostileProviderError(RuntimeError, metaclass=HostileExceptionMeta):
+        pass
+
+    class FailingTranslationClient:
+        def translate_text(self, *, request: dict[str, object]) -> object:
+            del request
+            raise HostileProviderError
+
+    translator = GoogleCloudNMTTranslator(
+        project_id="gen-lang-client-0036391889",
+        client=FailingTranslationClient(),
+        client_library_version="3.test",
+    )
+
+    with pytest.raises(GoogleCloudProviderError) as captured:
+        translator.translate("Safety evaluation research.", "en", "vi")
+
+    assert type(captured.value) is GoogleCloudProviderError
+    assert str(captured.value) == "Google Cloud Translation provider request failed"
+    assert leaked_detail not in str(captured.value)
+
+
+def test_google_cloud_nmt_discards_unsafe_request_correlation() -> None:
+    class StubTranslationClient:
+        def translate_text(self, *, request: dict[str, object]) -> object:
+            return SimpleNamespace(
+                translations=[SimpleNamespace(translated_text="translated")],
+                request_id="C:/sensitive/adc.json",
+            )
+
+    translator = GoogleCloudNMTTranslator(
+        project_id="gen-lang-client-0036391889",
+        client=StubTranslationClient(),
+        client_library_version="3.test",
+    )
+
+    result = translator.translate("Safe text", "en", "vi")
+
+    assert result.provider_request_id is None
+
+
+def test_google_cloud_nmt_categorizes_response_property_failures() -> None:
+    leaked_detail = "C:/sensitive/adc.json PROMPT_SENTINEL KEY_SENTINEL"
+
+    class MaliciousResponse:
+        @property
+        def translations(self) -> object:
+            raise RuntimeError(leaked_detail)
+
+    class StubTranslationClient:
+        def translate_text(self, *, request: dict[str, object]) -> object:
+            del request
+            return MaliciousResponse()
+
+    translator = GoogleCloudNMTTranslator(
+        project_id="gen-lang-client-0036391889",
+        client=StubTranslationClient(),
+        client_library_version="3.test",
+    )
+
+    with pytest.raises(GoogleCloudTranslationResponseError) as captured:
+        translator.translate("Safe text", "en", "vi")
+
+    assert str(captured.value) == "Google Cloud Translation returned an unusable response"
+    assert leaked_detail not in str(captured.value)
+
+
+def test_translate_google_response_failure_is_sanitized_for_terminal(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    leaked_detail = "C:/sensitive/adc.json PROMPT_SENTINEL KEY_SENTINEL"
+    cases_path = tmp_path / "cases.parquet"
+    import pyarrow as pa
+
+    pq.write_table(pa.Table.from_pylist([_case().model_dump(mode="json")]), cases_path)
+
+    class MaliciousResponse:
+        @property
+        def translations(self) -> object:
+            raise RuntimeError(leaked_detail)
+
+    class StubTranslationClient:
+        def translate_text(self, *, request: dict[str, object]) -> object:
+            del request
+            return MaliciousResponse()
+
+    translator = GoogleCloudNMTTranslator(
+        project_id="gen-lang-client-0036391889",
+        client=StubTranslationClient(),
+        client_library_version="3.test",
+    )
+    monkeypatch.setattr(
+        "crosslingual_safety.translation.commands.GoogleCloudNMTTranslator",
+        lambda: translator,
+    )
+    monkeypatch.chdir(tmp_path)
+
+    result = runner.invoke(
+        app,
+        [
+            "translate",
+            "--languages",
+            "vi",
+            "--translator",
+            "google-cloud-nmt-v3",
+            "--cases-path",
+            str(cases_path),
+            "--output-dir",
+            str(tmp_path / "translated"),
+            "--languages-config",
+            str(Path(__file__).parents[1] / "configs" / "languages.yaml"),
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    terminal = result.output
+    assert "failed 1" in terminal
+    assert leaked_detail not in terminal
+    persisted = "\n".join(
+        path.read_text(encoding="utf-8")
+        for path in (
+            tmp_path / "translated" / "audit" / "translation_reservations.jsonl",
+            tmp_path / "translated" / "audit" / "translation_reservation_outcomes.jsonl",
+            tmp_path / "translated" / "translation_failures.jsonl",
+        )
+    )
+    assert (
+        "Google Cloud Translation paid attempt outcome is indeterminate; "
+        "manual review is required"
+    ) in persisted
+    assert leaked_detail not in persisted
+
+
+@pytest.mark.live_google
+@pytest.mark.skipif(
+    os.environ.get("RUN_GOOGLE_TRANSLATION_LIVE") != "1",
+    reason=(
+        "set RUN_GOOGLE_TRANSLATION_LIVE=1 and select -m live_google "
+        "to incur an explicit Google Cloud request"
+    ),
+)
+def test_live_google_cloud_nmt_translates_harmless_sentence() -> None:
+    translator = GoogleCloudNMTTranslator(
+        project_id="gen-lang-client-0036391889",
+        location="global",
+        model="general/nmt",
+        max_request_characters=5000,
+        max_run_characters=100000,
+    )
+    sentence = "This is a harmless translation smoke test."
+
+    results = {
+        target: translator.translate(sentence, "en", target).text
+        for target in ("zh-tw", "vi", "my")
+    }
+
+    assert all(result.strip() for result in results.values())
+    assert translator.characters_used == len(sentence) * 3
+
+
 def test_nllb_uses_cuda_fp16_and_project_language_codes(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -460,6 +812,630 @@ def test_translate_defaults_to_local_nllb_provider(
     )
 
 
+def test_translate_keeps_explicit_google_cloud_advanced_provider_option(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    cases_path = tmp_path / "cases.parquet"
+    output_dir = tmp_path / "translated"
+    factory_calls = 0
+    dotenv_calls: list[Path] = []
+    import pyarrow as pa
+
+    pq.write_table(pa.Table.from_pylist([_case().model_dump(mode="json")]), cases_path)
+    (tmp_path / ".env").write_text("GOOGLE_CLOUD_PROJECT=test-project\n", encoding="utf-8")
+
+    class StubTranslationClient:
+        def translate_text(self, *, request: dict[str, object]) -> object:
+            del request
+            return SimpleNamespace(
+                translations=[SimpleNamespace(translated_text="Google stub translation")]
+            )
+
+    def google_translator_factory() -> GoogleCloudNMTTranslator:
+        nonlocal factory_calls
+        factory_calls += 1
+        assert dotenv_calls == [tmp_path / ".env"]
+        return GoogleCloudNMTTranslator(
+            project_id="gen-lang-client-0036391889",
+            client=StubTranslationClient(),
+            client_library_version="3.test",
+        )
+
+    def scoped_load_dotenv(*, dotenv_path: Path) -> None:
+        dotenv_calls.append(dotenv_path)
+
+    monkeypatch.setattr(
+        "crosslingual_safety.translation.commands.GoogleCloudNMTTranslator",
+        google_translator_factory,
+    )
+    monkeypatch.setattr(
+        "crosslingual_safety.translation.commands.load_dotenv",
+        scoped_load_dotenv,
+        raising=False,
+    )
+    monkeypatch.chdir(tmp_path)
+
+    result = runner.invoke(
+        app,
+        [
+            "translate",
+            "--languages",
+            "vi",
+            "--translator",
+            "google-cloud-nmt-v3",
+            "--cases-path",
+            str(cases_path),
+            "--output-dir",
+            str(output_dir),
+            "--languages-config",
+            str(Path(__file__).parents[1] / "configs" / "languages.yaml"),
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert factory_calls == 1
+    assert dotenv_calls == [tmp_path / ".env"]
+    assert TranslationStore(output_dir).translations()[0].normalized_translated_text == (
+        "Google stub translation"
+    )
+
+
+@pytest.mark.parametrize("target_language", ["en", ""])
+def test_translate_google_zero_paid_work_constructs_no_client(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    target_language: str,
+) -> None:
+    cases_path = tmp_path / "cases.parquet"
+    output_dir = tmp_path / "translated"
+    import pyarrow as pa
+
+    pq.write_table(pa.Table.from_pylist([_case().model_dump(mode="json")]), cases_path)
+    constructor_calls = 0
+
+    def forbidden_google_translator() -> FakeTranslator:
+        nonlocal constructor_calls
+        constructor_calls += 1
+        raise AssertionError("zero paid work constructed a Google client")
+
+    monkeypatch.setattr(
+        "crosslingual_safety.translation.commands.GoogleCloudNMTTranslator",
+        forbidden_google_translator,
+    )
+
+    result = runner.invoke(
+        app,
+        [
+            "translate",
+            "--languages",
+            target_language,
+            "--translator",
+            "google-cloud-nmt-v3",
+            "--cases-path",
+            str(cases_path),
+            "--output-dir",
+            str(output_dir),
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert constructor_calls == 0
+    assert not (output_dir / "audit").exists()
+
+
+def test_translate_google_cached_work_constructs_no_sdk_client(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    cases_path = tmp_path / "cases.parquet"
+    output_dir = tmp_path / "translated"
+    import pyarrow as pa
+
+    pq.write_table(pa.Table.from_pylist([_case().model_dump(mode="json")]), cases_path)
+
+    class SeedClient:
+        def translate_text(self, *, request: dict[str, object]) -> object:
+            del request
+            return SimpleNamespace(
+                translations=[SimpleNamespace(translated_text="cached translation")]
+            )
+
+    seed_translator = GoogleCloudNMTTranslator(
+        project_id="gen-lang-client-0036391889",
+        client=SeedClient(),
+    )
+    TranslationService(TranslationStore(output_dir)).translate_case(
+        _case(),
+        "vi",
+        seed_translator,
+    )
+    constructor_calls = 0
+
+    def forbidden_sdk_client() -> object:
+        nonlocal constructor_calls
+        constructor_calls += 1
+        raise AssertionError("cached work constructed a Google SDK client")
+
+    monkeypatch.setattr(
+        GoogleCloudNMTTranslator,
+        "_default_client",
+        staticmethod(forbidden_sdk_client),
+    )
+    monkeypatch.setenv("GOOGLE_CLOUD_PROJECT", "gen-lang-client-0036391889")
+    monkeypatch.chdir(tmp_path)
+
+    result = runner.invoke(
+        app,
+        [
+            "translate",
+            "--languages",
+            "vi",
+            "--translator",
+            "google-cloud-nmt-v3",
+            "--cases-path",
+            str(cases_path),
+            "--output-dir",
+            str(output_dir),
+            "--languages-config",
+            str(Path(__file__).parents[1] / "configs" / "languages.yaml"),
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert constructor_calls == 0
+    assert not (output_dir / "audit").exists()
+
+
+def test_translate_google_process_death_is_indeterminate_and_never_resent(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    cases_path = tmp_path / "cases.parquet"
+    output_dir = tmp_path / "translated"
+    import pyarrow as pa
+
+    pq.write_table(pa.Table.from_pylist([_case().model_dump(mode="json")]), cases_path)
+
+    class SimulatedProcessDeath(BaseException):
+        pass
+
+    class AcceptedThenProcessDeathClient:
+        def __init__(self) -> None:
+            self.call_count = 0
+
+        def translate_text(self, *, request: dict[str, object]) -> object:
+            del request
+            self.call_count += 1
+            raise SimulatedProcessDeath
+
+    client = AcceptedThenProcessDeathClient()
+
+    def google_translator_factory() -> GoogleCloudNMTTranslator:
+        return GoogleCloudNMTTranslator(
+            project_id="gen-lang-client-0036391889",
+            client=client,
+            client_library_version="3.test",
+            max_request_characters=8,
+            max_run_characters=8,
+        )
+
+    monkeypatch.setattr(
+        "crosslingual_safety.translation.commands.GoogleCloudNMTTranslator",
+        google_translator_factory,
+    )
+    monkeypatch.chdir(tmp_path)
+    arguments = [
+        "translate",
+        "--languages",
+        "vi",
+        "--translator",
+        "google-cloud-nmt-v3",
+        "--cases-path",
+        str(cases_path),
+        "--output-dir",
+        str(output_dir),
+        "--languages-config",
+        str(Path(__file__).parents[1] / "configs" / "languages.yaml"),
+    ]
+
+    with pytest.raises(SimulatedProcessDeath):
+        runner.invoke(app, arguments)
+
+    reservations_path = output_dir / "audit" / "translation_reservations.jsonl"
+    reservations = [
+        json.loads(line) for line in reservations_path.read_text(encoding="utf-8").splitlines()
+    ]
+    assert len(reservations) == 1
+    assert reservations[0]["source_character_count"] == len("Original")
+    assert "Original" not in reservations_path.read_text(encoding="utf-8")
+
+    second = runner.invoke(app, arguments)
+
+    outcomes_path = output_dir / "audit" / "translation_reservation_outcomes.jsonl"
+    outcomes = [json.loads(line) for line in outcomes_path.read_text(encoding="utf-8").splitlines()]
+    failures = [
+        json.loads(line)
+        for line in (output_dir / "translation_failures.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    ]
+    assert second.exit_code == 0, second.output
+    assert client.call_count == 1
+    assert len(outcomes) == 1
+    assert outcomes[0]["status"] == "indeterminate"
+    assert outcomes[0]["reservation_id"] == reservations[0]["reservation_id"]
+    assert outcomes[0]["charged_character_count"] == len("Original")
+    assert failures[0]["error_type"] == "GoogleCloudIndeterminatePaidAttemptError"
+    assert failures[0]["audit_reference"] == (
+        f"translation_reservations.jsonl#{reservations[0]['reservation_id']}"
+    )
+    assert TranslationStore(output_dir).translations() == []
+
+
+def test_translate_google_post_dispatch_timeout_is_indeterminate_and_never_resent(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    cases_path = tmp_path / "cases.parquet"
+    output_dir = tmp_path / "translated"
+    import pyarrow as pa
+
+    pq.write_table(pa.Table.from_pylist([_case().model_dump(mode="json")]), cases_path)
+
+    class TimeoutAfterDispatchClient:
+        def __init__(self) -> None:
+            self.call_count = 0
+
+        def translate_text(self, *, request: dict[str, object]) -> object:
+            del request
+            self.call_count += 1
+            raise TimeoutError("C:/sensitive/adc.json PROMPT_SENTINEL KEY_SENTINEL")
+
+    client = TimeoutAfterDispatchClient()
+
+    def google_translator_factory() -> GoogleCloudNMTTranslator:
+        return GoogleCloudNMTTranslator(
+            project_id="gen-lang-client-0036391889",
+            client=client,
+            client_library_version="3.test",
+            max_request_characters=8,
+            max_run_characters=16,
+        )
+
+    monkeypatch.setattr(
+        "crosslingual_safety.translation.commands.GoogleCloudNMTTranslator",
+        google_translator_factory,
+    )
+    monkeypatch.chdir(tmp_path)
+    arguments = [
+        "translate",
+        "--languages",
+        "vi",
+        "--translator",
+        "google-cloud-nmt-v3",
+        "--cases-path",
+        str(cases_path),
+        "--output-dir",
+        str(output_dir),
+        "--languages-config",
+        str(Path(__file__).parents[1] / "configs" / "languages.yaml"),
+    ]
+
+    first = runner.invoke(app, arguments)
+    second = runner.invoke(app, arguments)
+
+    outcomes = [
+        json.loads(line)
+        for line in (
+            output_dir / "audit" / "translation_reservation_outcomes.jsonl"
+        ).read_text(encoding="utf-8").splitlines()
+    ]
+    failure = json.loads(
+        (output_dir / "translation_failures.jsonl").read_text(encoding="utf-8")
+    )
+    assert first.exit_code == second.exit_code == 0
+    assert client.call_count == 1
+    assert [outcome["status"] for outcome in outcomes] == ["indeterminate"]
+    assert failure["error_type"] == "GoogleCloudIndeterminatePaidAttemptError"
+    serialized = json.dumps([outcomes, failure], sort_keys=True)
+    for secret in ("C:/sensitive/adc.json", "PROMPT_SENTINEL", "KEY_SENTINEL"):
+        assert secret not in serialized
+
+
+def test_translate_google_rejects_forged_outcome_before_provider_call(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    cases_path = tmp_path / "cases.parquet"
+    output_dir = tmp_path / "translated"
+    import pyarrow as pa
+
+    pq.write_table(pa.Table.from_pylist([_case().model_dump(mode="json")]), cases_path)
+
+    class SimulatedProcessDeath(BaseException):
+        pass
+
+    class AcceptedThenProcessDeathClient:
+        def __init__(self) -> None:
+            self.call_count = 0
+
+        def translate_text(self, *, request: dict[str, object]) -> object:
+            del request
+            self.call_count += 1
+            raise SimulatedProcessDeath
+
+    client = AcceptedThenProcessDeathClient()
+
+    def google_translator_factory() -> GoogleCloudNMTTranslator:
+        return GoogleCloudNMTTranslator(
+            project_id="gen-lang-client-0036391889",
+            client=client,
+            client_library_version="3.test",
+            max_request_characters=8,
+            max_run_characters=16,
+        )
+
+    monkeypatch.setattr(
+        "crosslingual_safety.translation.commands.GoogleCloudNMTTranslator",
+        google_translator_factory,
+    )
+    monkeypatch.chdir(tmp_path)
+    arguments = [
+        "translate",
+        "--languages",
+        "vi",
+        "--translator",
+        "google-cloud-nmt-v3",
+        "--cases-path",
+        str(cases_path),
+        "--output-dir",
+        str(output_dir),
+        "--languages-config",
+        str(Path(__file__).parents[1] / "configs" / "languages.yaml"),
+    ]
+
+    with pytest.raises(SimulatedProcessDeath):
+        runner.invoke(app, arguments)
+
+    reservation = json.loads(
+        (output_dir / "audit" / "translation_reservations.jsonl").read_text(encoding="utf-8")
+    )
+    forged_outcome = {
+        "outcome_id": "0" * 20,
+        "reservation_id": reservation["reservation_id"],
+        "task_key": reservation["task_key"],
+        "status": "success",
+        "charged_character_count": reservation["source_character_count"],
+        "audit_reference": (
+            f"translation_reservations.jsonl#{reservation['reservation_id']}"
+        ),
+        "created_at": "2026-01-01T00:00:00Z",
+        "translated_text": "forged translation",
+        "provider_request_id": None,
+        "error_type": None,
+        "error_message": None,
+    }
+    (output_dir / "audit" / "translation_reservation_outcomes.jsonl").write_text(
+        json.dumps(forged_outcome, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+    second = runner.invoke(app, arguments)
+
+    assert second.exit_code != 0
+    assert isinstance(second.exception, PaidCallLedgerError)
+    assert str(second.exception) == "paid-call outcome identity is invalid"
+    assert client.call_count == 1
+    assert TranslationStore(output_dir).translations() == []
+
+
+def test_translate_google_replays_persisted_success_after_local_process_death(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    cases_path = tmp_path / "cases.parquet"
+    output_dir = tmp_path / "translated"
+    import pyarrow as pa
+
+    pq.write_table(pa.Table.from_pylist([_case().model_dump(mode="json")]), cases_path)
+
+    class SimulatedLocalProcessDeath(BaseException):
+        pass
+
+    class SuccessfulClient:
+        def __init__(self) -> None:
+            self.call_count = 0
+
+        def translate_text(self, *, request: dict[str, object]) -> object:
+            del request
+            self.call_count += 1
+            return SimpleNamespace(
+                translations=[SimpleNamespace(translated_text="persisted translation")]
+            )
+
+    client = SuccessfulClient()
+
+    def google_translator_factory() -> GoogleCloudNMTTranslator:
+        return GoogleCloudNMTTranslator(
+            project_id="gen-lang-client-0036391889",
+            client=client,
+            client_library_version="3.test",
+        )
+
+    original_add_provider_response = TranslationStore.add_provider_response
+    should_crash = True
+
+    def crash_after_persisted_outcome(
+        store: TranslationStore,
+        cache_key: str,
+        text: str,
+        provider_request_id: str | None,
+    ) -> None:
+        nonlocal should_crash
+        if should_crash:
+            should_crash = False
+            raise SimulatedLocalProcessDeath
+        original_add_provider_response(store, cache_key, text, provider_request_id)
+
+    monkeypatch.setattr(
+        "crosslingual_safety.translation.commands.GoogleCloudNMTTranslator",
+        google_translator_factory,
+    )
+    monkeypatch.setattr(TranslationStore, "add_provider_response", crash_after_persisted_outcome)
+    monkeypatch.chdir(tmp_path)
+    arguments = [
+        "translate",
+        "--languages",
+        "vi",
+        "--translator",
+        "google-cloud-nmt-v3",
+        "--cases-path",
+        str(cases_path),
+        "--output-dir",
+        str(output_dir),
+        "--languages-config",
+        str(Path(__file__).parents[1] / "configs" / "languages.yaml"),
+    ]
+
+    with pytest.raises(SimulatedLocalProcessDeath):
+        runner.invoke(app, arguments)
+
+    second = runner.invoke(app, arguments)
+
+    outcomes = [
+        json.loads(line)
+        for line in (output_dir / "audit" / "translation_reservation_outcomes.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    ]
+    assert second.exit_code == 0, second.output
+    assert client.call_count == 1
+    assert [outcome["status"] for outcome in outcomes] == ["success"]
+    assert (
+        TranslationStore(output_dir).translations()[0].normalized_translated_text
+        == "persisted translation"
+    )
+
+
+def test_translate_google_explicit_rejections_retry_with_distinct_bounded_reservations(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    cases_path = tmp_path / "cases.parquet"
+    output_dir = tmp_path / "translated"
+    import pyarrow as pa
+
+    pq.write_table(pa.Table.from_pylist([_case().model_dump(mode="json")]), cases_path)
+
+    class InvalidArgument(RuntimeError):
+        pass
+
+    class RejectingClient:
+        def __init__(self) -> None:
+            self.call_count = 0
+
+        def translate_text(self, *, request: dict[str, object]) -> object:
+            del request
+            self.call_count += 1
+            raise InvalidArgument("C:/sensitive/adc.json PROMPT_SENTINEL KEY_SENTINEL")
+
+    client = RejectingClient()
+
+    def google_translator_factory() -> GoogleCloudNMTTranslator:
+        return GoogleCloudNMTTranslator(
+            project_id="gen-lang-client-0036391889",
+            client=client,
+            client_library_version="3.test",
+            max_request_characters=16,
+            max_run_characters=16,
+        )
+
+    monkeypatch.setattr(
+        "crosslingual_safety.translation.commands.GoogleCloudNMTTranslator",
+        google_translator_factory,
+    )
+    monkeypatch.chdir(tmp_path)
+    arguments = [
+        "translate",
+        "--languages",
+        "vi",
+        "--translator",
+        "google-cloud-nmt-v3",
+        "--cases-path",
+        str(cases_path),
+        "--output-dir",
+        str(output_dir),
+        "--languages-config",
+        str(Path(__file__).parents[1] / "configs" / "languages.yaml"),
+    ]
+
+    results = [runner.invoke(app, arguments) for _ in range(3)]
+
+    reservations = [
+        json.loads(line)
+        for line in (output_dir / "audit" / "translation_reservations.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    ]
+    outcomes = [
+        json.loads(line)
+        for line in (output_dir / "audit" / "translation_reservation_outcomes.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    ]
+    final_failure = json.loads(
+        (output_dir / "translation_failures.jsonl").read_text(encoding="utf-8")
+    )
+    assert all(result.exit_code == 0 for result in results)
+    assert client.call_count == 2
+    assert len(reservations) == 2
+    assert len({reservation["reservation_id"] for reservation in reservations}) == 2
+    assert [outcome["status"] for outcome in outcomes] == ["failed", "failed"]
+    assert final_failure["error_type"] == "GoogleCloudRunBudgetExceededError"
+    assert final_failure["charged_character_count"] == 0
+    serialized = json.dumps([reservations, outcomes, final_failure], sort_keys=True)
+    for secret in ("C:/sensitive/adc.json", "PROMPT_SENTINEL", "KEY_SENTINEL", "Original"):
+        assert secret not in serialized
+
+
+def test_translate_google_missing_input_constructs_no_client(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    constructor_calls = 0
+
+    def forbidden_google_translator() -> FakeTranslator:
+        nonlocal constructor_calls
+        constructor_calls += 1
+        raise AssertionError("missing input constructed a Google client")
+
+    monkeypatch.setattr(
+        "crosslingual_safety.translation.commands.GoogleCloudNMTTranslator",
+        forbidden_google_translator,
+    )
+    missing_cases = tmp_path / "missing.parquet"
+
+    result = runner.invoke(
+        app,
+        [
+            "translate",
+            "--languages",
+            "vi",
+            "--translator",
+            "google-cloud-nmt-v3",
+            "--cases-path",
+            str(missing_cases),
+            "--output-dir",
+            str(tmp_path / "translated"),
+        ],
+    )
+
+    assert result.exit_code != 0
+    assert constructor_calls == 0
+    assert not (tmp_path / "translated" / "audit").exists()
+
+
 def test_translate_reports_overlong_nllb_input_and_continues(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -590,7 +1566,10 @@ def test_native_dataset_translation_has_priority(tmp_path: Path) -> None:
     assert records[0].normalized_translated_text == "資料集翻譯"
 
 
-def test_native_dataset_is_used_before_requested_machine_translator(tmp_path: Path) -> None:
+def test_native_dataset_avoids_google_client_and_paid_ledger(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     cases_path = tmp_path / "cases.parquet"
     native_path = tmp_path / "native.parquet"
     output_dir = tmp_path / "translated"
@@ -610,6 +1589,18 @@ def test_native_dataset_is_used_before_requested_machine_translator(tmp_path: Pa
         native_path,
     )
 
+    constructor_calls = 0
+
+    def forbidden_google_translator() -> FakeTranslator:
+        nonlocal constructor_calls
+        constructor_calls += 1
+        raise AssertionError("native translation constructed a Google client")
+
+    monkeypatch.setattr(
+        "crosslingual_safety.translation.commands.GoogleCloudNMTTranslator",
+        forbidden_google_translator,
+    )
+
     result = runner.invoke(
         app,
         [
@@ -617,7 +1608,7 @@ def test_native_dataset_is_used_before_requested_machine_translator(tmp_path: Pa
             "--languages",
             "zh",
             "--translator",
-            "fake",
+            "google-cloud-nmt-v3",
             "--cases-path",
             str(cases_path),
             "--native-translations-path",
@@ -628,6 +1619,8 @@ def test_native_dataset_is_used_before_requested_machine_translator(tmp_path: Pa
     )
 
     assert result.exit_code == 0, result.output
+    assert constructor_calls == 0
+    assert not (output_dir / "audit").exists()
     record = TranslationStore(output_dir).translations()[0]
     assert record.translator_id == "native_dataset"
     assert record.normalized_translated_text == "資料集優先"

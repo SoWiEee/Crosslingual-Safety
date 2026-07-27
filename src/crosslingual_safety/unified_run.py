@@ -13,11 +13,15 @@ import hashlib
 import inspect
 import json
 import os
+import re
 from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime
+from importlib import import_module
+from importlib.metadata import PackageNotFoundError
+from importlib.metadata import version as package_version
 from pathlib import Path
-from typing import Any, Literal, cast
+from typing import Any, Literal, NoReturn, cast
 
 import pyarrow as pa
 import pyarrow.parquet as pq
@@ -50,11 +54,32 @@ from crosslingual_safety.psa_summary import (
 )
 from crosslingual_safety.schemas import GenerationRequest, GenerationResult, PromptVariant
 from crosslingual_safety.translation.languages import load_languages
+from crosslingual_safety.translation.paid_ledger import (
+    PaidCallLedger,
+    PaidCallLedgerError,
+    PaidTranslationTask,
+    is_proven_preprocessing_rejection,
+)
 from crosslingual_safety.translation.providers import (
     DatasetTranslationProvider,
     FakeTranslator,
+    GoogleCloudAuthenticationError,
+    GoogleCloudConfigurationError,
+    GoogleCloudIndeterminatePaidAttemptError,
+    GoogleCloudInvalidRequestError,
+    GoogleCloudNMTTranslator,
+    GoogleCloudPermissionError,
+    GoogleCloudProviderError,
+    GoogleCloudQuotaError,
+    GoogleCloudRequestTooLargeError,
+    GoogleCloudReservationError,
+    GoogleCloudRunBudgetExceededError,
+    GoogleCloudTransientError,
+    GoogleCloudTranslationClient,
+    GoogleCloudTranslationResponseError,
     NLLBTranslator,
     ProviderTranslation,
+    TranslationInputTooLongError,
     Translator,
 )
 
@@ -69,6 +94,91 @@ WRAPPER_LANGUAGES: dict[str, str] = {
 }
 ATTACK_IDS: dict[str, str] = {"none": "none", "gra": "gra_v1", "psa": "psa_static_v1"}
 SUMMARY_WRAPPER_LANGUAGES: tuple[str, ...] = ("en", "zh", "vi", "my")
+GOOGLE_CLOUD_TRANSLATOR = "google-cloud-nmt-v3"
+GOOGLE_CLOUD_INDETERMINATE_ERROR = "GoogleCloudIndeterminatePaidAttemptError"
+GOOGLE_CLOUD_INDETERMINATE_MESSAGE = (
+    "Google Cloud Translation paid attempt outcome is indeterminate; manual review is required"
+)
+DEFAULT_GOOGLE_CLOUD_SETTINGS: dict[str, object] = {
+    "project_id": "gen-lang-client-0036391889",
+    "location": "global",
+    "model": "general/nmt",
+    "max_request_characters": 5000,
+    "max_run_characters": 100000,
+}
+SANITIZED_ERROR_MESSAGES: dict[str, str] = {
+    "GoogleCloudAuthenticationError": "Google Cloud Translation authentication failed",
+    "GoogleCloudPermissionError": "Google Cloud Translation permission was denied",
+    "GoogleCloudQuotaError": "Google Cloud Translation quota was exceeded",
+    "GoogleCloudInvalidRequestError": "Google Cloud Translation rejected the request",
+    "GoogleCloudTransientError": "Google Cloud Translation is temporarily unavailable",
+    "GoogleCloudTranslationResponseError": (
+        "Google Cloud Translation returned an unusable response"
+    ),
+    "GoogleCloudReservationError": (
+        "Google Cloud Translation paid-call reservation could not be persisted"
+    ),
+    GOOGLE_CLOUD_INDETERMINATE_ERROR: GOOGLE_CLOUD_INDETERMINATE_MESSAGE,
+    "GoogleCloudProviderError": "Google Cloud Translation provider request failed",
+    "GoogleCloudConfigurationError": "Google Cloud Translation configuration is invalid",
+    "GoogleCloudRequestTooLargeError": (
+        "Google Cloud Translation request character limit exceeded"
+    ),
+    "GoogleCloudRunBudgetExceededError": (
+        "Google Cloud Translation run character budget exceeded"
+    ),
+    "TranslationInputTooLongError": "Translation input exceeds the configured token limit",
+    "UnexpectedOperationError": "An unexpected operation failed",
+}
+SANITIZED_ERROR_TYPES: dict[type[BaseException], str] = {
+    GoogleCloudAuthenticationError: "GoogleCloudAuthenticationError",
+    GoogleCloudPermissionError: "GoogleCloudPermissionError",
+    GoogleCloudQuotaError: "GoogleCloudQuotaError",
+    GoogleCloudInvalidRequestError: "GoogleCloudInvalidRequestError",
+    GoogleCloudTransientError: "GoogleCloudTransientError",
+    GoogleCloudTranslationResponseError: "GoogleCloudTranslationResponseError",
+    GoogleCloudReservationError: "GoogleCloudReservationError",
+    GoogleCloudIndeterminatePaidAttemptError: GOOGLE_CLOUD_INDETERMINATE_ERROR,
+    GoogleCloudProviderError: "GoogleCloudProviderError",
+    GoogleCloudConfigurationError: "GoogleCloudConfigurationError",
+    GoogleCloudRequestTooLargeError: "GoogleCloudRequestTooLargeError",
+    GoogleCloudRunBudgetExceededError: "GoogleCloudRunBudgetExceededError",
+    TranslationInputTooLongError: "TranslationInputTooLongError",
+}
+PROVEN_PAID_REJECTION_ERROR_TYPES = frozenset(
+    {
+        "GoogleCloudAuthenticationError",
+        "GoogleCloudPermissionError",
+        "GoogleCloudQuotaError",
+        "GoogleCloudInvalidRequestError",
+    }
+)
+TRANSLATION_ATTEMPT_FIELDS = frozenset(
+    {
+        "attempt_id",
+        "attempt_number",
+        "case_id",
+        "status",
+        "source",
+        "source_language",
+        "target_language",
+        "provider",
+        "source_character_count",
+        "source_text_sha256",
+        "charged_character_count",
+        "provider_reservation_id",
+        "error_type",
+        "error_message",
+        "created_at",
+    }
+)
+PAID_ATTEMPT_LINK_FIELDS = frozenset(
+    {
+        "audit_reference",
+        "task_key",
+        "provider_contract_sha256",
+    }
+)
 
 
 def _utc_now() -> str:
@@ -88,24 +198,10 @@ def _sha256_text(value: str) -> str:
 
 
 def _sanitized_error(error: BaseException) -> tuple[str, str]:
-    """Return an error safe to persist or show in the terminal.
+    """Return only allowlisted project failures or a fixed fail-closed fallback."""
 
-    Provider adapters already redact response bodies.  The facade still uses a conservative
-    message because arbitrary exceptions can contain a prompt, URL query, or credential.
-    """
-
-    error_type = type(error).__name__
-    message = str(error).strip()
-    if not message or len(message) > 240:
-        message = error_type
-    for secret_name in ("ZOOLAB_API_KEY", "OPENAI_API_KEY", "GOOGLE_API_KEY"):
-        secret = os.environ.get(secret_name)
-        if secret:
-            message = message.replace(secret, "[REDACTED]")
-    if "http" in message.lower() and "" in message:
-        # Do not preserve complete provider URLs in an audit failure.
-        message = f"{error_type} provider request failed"
-    return error_type, message
+    error_type = SANITIZED_ERROR_TYPES.get(type(error), "UnexpectedOperationError")
+    return error_type, SANITIZED_ERROR_MESSAGES[error_type]
 
 
 def parse_selection(value: str, allowed: tuple[str, ...], option_name: str) -> tuple[str, ...]:
@@ -139,6 +235,29 @@ class BenchSettings(BaseModel):
     selection_path: Path = Path("data/normalized/variant_case_selection.parquet")
 
 
+@dataclass(frozen=True)
+class GoogleCloudSettings:
+    project_id: str
+    location: str
+    model: str
+    max_request_characters: int
+    max_run_characters: int
+
+    def contract(self, client_library_version: str) -> dict[str, object]:
+        return {
+            "project_id": self.project_id,
+            "location": self.location,
+            "model": self.model,
+            "client_library": "google-cloud-translate",
+            "client_library_version": client_library_version,
+            "language_codes": dict(GoogleCloudNMTTranslator.language_codes),
+            "mime_type": "text/plain",
+            "use_language_detection": False,
+            "max_request_characters": self.max_request_characters,
+            "max_run_characters": self.max_run_characters,
+        }
+
+
 class RunSettings(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -155,6 +274,7 @@ class RunSettings(BaseModel):
         ]
     )
     translator: str = "nllb"
+    google_cloud: object = Field(default_factory=lambda: dict(DEFAULT_GOOGLE_CLOUD_SETTINGS))
     wrapper_language_mode: Literal["same-as-payload", "english"] = "same-as-payload"
     gra_role: str = "joker"
     models_config: Path = Path("configs/models.yaml")
@@ -268,6 +388,9 @@ class RunDependencies:
     translator_factory: Callable[..., Translator] | None = None
     summary_service_factory: Callable[..., Any] | None = None
     provider_factory: Callable[..., ProviderAdapter] | None = None
+    google_translation_client: GoogleCloudTranslationClient | None = None
+    google_adc_preflight: Callable[[str], None] | None = None
+    google_client_library_version: str | None = None
     clock: Callable[[], str] = _utc_now
     emit: Callable[[str], None] = print
     generate: Callable[..., Any] | None = None
@@ -470,6 +593,83 @@ def _raw_models(settings: RunSettings) -> dict[str, dict[str, object]]:
     return {str(name): dict(value) for name, value in models.items() if isinstance(value, dict)}
 
 
+def _google_cloud_settings(settings: RunSettings) -> GoogleCloudSettings:
+    if not isinstance(settings.google_cloud, dict) or not all(
+        isinstance(key, str) for key in settings.google_cloud
+    ):
+        raise GoogleCloudConfigurationError(
+            "Google Cloud Translation configuration must be a mapping"
+        )
+    configured = {
+        str(key): value for key, value in cast(dict[object, object], settings.google_cloud).items()
+    }
+    unknown = set(configured) - set(DEFAULT_GOOGLE_CLOUD_SETTINGS)
+    if unknown:
+        raise GoogleCloudConfigurationError(
+            "Google Cloud Translation configuration contains unsupported settings"
+        )
+    values = {**DEFAULT_GOOGLE_CLOUD_SETTINGS, **configured}
+    project_id = values["project_id"]
+    location = values["location"]
+    model = values["model"]
+    max_request_characters = values["max_request_characters"]
+    max_run_characters = values["max_run_characters"]
+    if not isinstance(project_id, str) or not re.fullmatch(
+        r"[a-z][a-z0-9-]{4,28}[a-z0-9]", project_id
+    ):
+        raise GoogleCloudConfigurationError("Google Cloud project ID is invalid")
+    if location != "global":
+        raise GoogleCloudConfigurationError("Google Cloud Translation location must be global")
+    if model != "general/nmt":
+        raise GoogleCloudConfigurationError("Google Cloud Translation model must be general/nmt")
+    if (
+        isinstance(max_request_characters, bool)
+        or not isinstance(max_request_characters, int)
+        or max_request_characters <= 0
+    ):
+        raise GoogleCloudConfigurationError(
+            "Google Cloud request character limit must be a positive integer"
+        )
+    if (
+        isinstance(max_run_characters, bool)
+        or not isinstance(max_run_characters, int)
+        or max_run_characters <= 0
+    ):
+        raise GoogleCloudConfigurationError(
+            "Google Cloud run character limit must be a positive integer"
+        )
+    if max_request_characters > max_run_characters:
+        raise GoogleCloudConfigurationError(
+            "Google Cloud request character limit must not exceed the run limit"
+        )
+    return GoogleCloudSettings(
+        project_id=project_id,
+        location=location,
+        model=model,
+        max_request_characters=max_request_characters,
+        max_run_characters=max_run_characters,
+    )
+
+
+def _google_client_library_version() -> str:
+    try:
+        return package_version("google-cloud-translate")
+    except PackageNotFoundError:
+        return "not-installed"
+
+
+def _translator_contract(settings: RunSettings) -> dict[str, object]:
+    if settings.translator == GOOGLE_CLOUD_TRANSLATOR:
+        return _google_cloud_settings(settings).contract(_google_client_library_version())
+    if settings.translator == "nllb":
+        return {
+            "provider": "nllb",
+            "checkpoint": settings.nllb_checkpoint,
+            "local_files_only": settings.nllb_local_files_only,
+        }
+    return {"provider": settings.translator}
+
+
 def plan_run(request: RunRequest, settings: RunSettings) -> RunPlan:
     if request.source not in PUBLIC_SOURCES:
         raise ValueError("source must be manual or bench")
@@ -490,6 +690,7 @@ def plan_run(request: RunRequest, settings: RunSettings) -> RunPlan:
     input_snapshot_sha256 = _sha256_text(input_snapshot)
     models = _raw_models(settings)
     selected_models = {name: models.get(name) for name in settings.models}
+    translator_contract = _translator_contract(settings)
     contract: dict[str, object] = {
         "version": settings.version,
         "request": normalized_request.model_dump(mode="json"),
@@ -498,6 +699,7 @@ def plan_run(request: RunRequest, settings: RunSettings) -> RunPlan:
         "models": selected_models,
         "model_names": list(settings.models),
         "translator": settings.translator,
+        "translator_contract": translator_contract,
         "nllb_checkpoint": settings.nllb_checkpoint,
         "nllb_local_files_only": settings.nllb_local_files_only,
         "wrapper_language_mode": settings.wrapper_language_mode,
@@ -665,6 +867,95 @@ def _resolved_nllb_checkpoint(settings: RunSettings) -> str:
     return str(snapshot) if snapshot is not None else settings.nllb_checkpoint
 
 
+def _default_google_adc_preflight(project_id: str) -> None:
+    configured_project = os.environ.get("GOOGLE_CLOUD_PROJECT", "").strip()
+    if not configured_project:
+        raise GoogleCloudAuthenticationError(
+            "GOOGLE_CLOUD_PROJECT is required for Google Cloud Translation"
+        )
+    if configured_project != project_id:
+        raise GoogleCloudAuthenticationError(
+            "GOOGLE_CLOUD_PROJECT must match the configured translation project"
+        )
+    credential_value = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS", "")
+    credential_path = Path(credential_value) if credential_value else None
+    if credential_path is None or not credential_path.is_absolute():
+        raise GoogleCloudAuthenticationError(
+            "GOOGLE_APPLICATION_CREDENTIALS must reference an absolute local file"
+        )
+    if not credential_path.is_file():
+        raise GoogleCloudAuthenticationError(
+            "Google Cloud application default credential file does not exist"
+        )
+    try:
+        google_auth = import_module("google.auth")
+        import_module("google.cloud.translate_v3")
+    except (ImportError, ModuleNotFoundError):
+        raise GoogleCloudConfigurationError(
+            "Google translation support is not installed; run `uv sync --extra translation-google`."
+        ) from None
+    try:
+        credentials, _ = google_auth.default(
+            scopes=("https://www.googleapis.com/auth/cloud-platform",),
+            quota_project_id=project_id,
+        )
+    except Exception:
+        raise GoogleCloudAuthenticationError(
+            "Google Cloud application default credentials are unavailable or invalid"
+        ) from None
+    if credentials is None:
+        raise GoogleCloudAuthenticationError(
+            "Google Cloud application default credentials are unavailable or invalid"
+        )
+
+
+def _preflight_google_cloud(
+    plan: RunPlan,
+    settings: RunSettings,
+    dependencies: RunDependencies,
+) -> None:
+    google = _google_cloud_settings(settings)
+    total_characters = 0
+    for case in plan.cases:
+        for target_language in plan.languages:
+            if case.source_language == target_language:
+                continue
+            source = GoogleCloudNMTTranslator.language_codes.get(case.source_language)
+            target = GoogleCloudNMTTranslator.language_codes.get(target_language)
+            if source is None or target is None or source == target:
+                raise GoogleCloudConfigurationError(
+                    "Google Cloud Translation does not support a selected language pair"
+                )
+            character_count = len(case.source_text)
+            if character_count > google.max_request_characters:
+                raise GoogleCloudRequestTooLargeError(
+                    "Google Cloud Translation request character limit exceeded"
+                )
+            total_characters += character_count
+            if total_characters > google.max_run_characters:
+                raise GoogleCloudRunBudgetExceededError(
+                    "Google Cloud Translation run character budget exceeded"
+                )
+    adc_preflight = dependencies.google_adc_preflight or _default_google_adc_preflight
+    try:
+        adc_preflight(google.project_id)
+    except (GoogleCloudAuthenticationError, GoogleCloudConfigurationError):
+        raise
+    except Exception:
+        raise GoogleCloudAuthenticationError(
+            "Google Cloud application default credentials are unavailable or invalid"
+        ) from None
+    if dependencies.google_translation_client is None:
+        try:
+            dependencies.google_translation_client = GoogleCloudNMTTranslator._default_client()
+        except (GoogleCloudAuthenticationError, GoogleCloudConfigurationError):
+            raise
+        except Exception:
+            raise GoogleCloudAuthenticationError(
+                "Google Cloud application default credentials are unavailable or invalid"
+            ) from None
+
+
 def preflight_run(
     plan: RunPlan,
     settings: RunSettings,
@@ -721,6 +1012,8 @@ def preflight_run(
                 raise ValueError("NLLB support is not installed") from error
             if not torch.cuda.is_available():
                 raise ValueError("CUDA is required for NLLB translation but is unavailable")
+        elif settings.translator == GOOGLE_CLOUD_TRANSLATOR:
+            _preflight_google_cloud(plan, settings, dependencies)
         elif settings.translator not in {"fake", "dataset"}:
             raise ValueError(f"unsupported translator: {settings.translator}")
 
@@ -764,7 +1057,13 @@ def preflight_run(
                 )
 
 
-def _make_translator(settings: RunSettings, dependencies: RunDependencies) -> Translator | None:
+def _make_translator(
+    settings: RunSettings,
+    dependencies: RunDependencies,
+    *,
+    initial_google_characters: int = 0,
+    google_paid_call_reservation: Callable[[int], None] | None = None,
+) -> Translator | None:
     if dependencies.translator is not None:
         return dependencies.translator
     if dependencies.translator_factory is not None:
@@ -776,6 +1075,21 @@ def _make_translator(settings: RunSettings, dependencies: RunDependencies) -> Tr
             load_languages(settings.languages_config),
             checkpoint=_resolved_nllb_checkpoint(settings),
             local_files_only=True,
+        )
+    if settings.translator == GOOGLE_CLOUD_TRANSLATOR:
+        google = _google_cloud_settings(settings)
+        return GoogleCloudNMTTranslator(
+            project_id=google.project_id,
+            location=google.location,
+            model=google.model,
+            client=dependencies.google_translation_client,
+            client_library_version=(
+                dependencies.google_client_library_version or _google_client_library_version()
+            ),
+            max_request_characters=google.max_request_characters,
+            max_run_characters=google.max_run_characters,
+            initial_characters_used=initial_google_characters,
+            paid_call_reservation=google_paid_call_reservation,
         )
     if settings.translator == "dataset":
         path = Path("data/normalized/native_translations.parquet")
@@ -837,11 +1151,24 @@ def _write_text_immutable(path: Path, content: str) -> None:
     temporary.replace(path)
 
 
-def _write_text_replace(path: Path, content: str) -> None:
+def _write_text_replace(path: Path, content: str, *, durable: bool = False) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(f"{path.suffix}.tmp")
-    temporary.write_text(content, encoding="utf-8")
+    if durable:
+        with temporary.open("w", encoding="utf-8", newline="") as stream:
+            stream.write(content)
+            stream.flush()
+            os.fsync(stream.fileno())
+    else:
+        temporary.write_text(content, encoding="utf-8")
     temporary.replace(path)
+    if durable and os.name != "nt":
+        flags = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0)
+        directory = os.open(path.parent, flags)
+        try:
+            os.fsync(directory)
+        finally:
+            os.close(directory)
 
 
 def _write_json(path: Path, value: object) -> None:
@@ -870,7 +1197,13 @@ def _write_jsonl(path: Path, rows: Iterable[Mapping[str, object]]) -> None:
     _write_text_immutable(path, content)
 
 
-def _append_jsonl(path: Path, rows: Iterable[Mapping[str, object]], key: str) -> None:
+def _append_jsonl(
+    path: Path,
+    rows: Iterable[Mapping[str, object]],
+    key: str,
+    *,
+    durable: bool = False,
+) -> None:
     existing = _read_jsonl(path)
     by_key = {str(row.get(key)): row for row in existing if key in row}
     for row in rows:
@@ -882,7 +1215,7 @@ def _append_jsonl(path: Path, rows: Iterable[Mapping[str, object]], key: str) ->
         by_key[row_key] = row_dict
     ordered = sorted(by_key.values(), key=lambda value: str(value.get(key, "")))
     content = "".join(_canonical_json(dict(row)) + "\n" for row in ordered)
-    _write_text_replace(path, content)
+    _write_text_replace(path, content, durable=durable)
 
 
 def _translation_record(
@@ -892,6 +1225,7 @@ def _translation_record(
     translator: Translator | None,
     provider_request_id: str | None,
     clock: Callable[[], str],
+    provider_reservation_id: str | None = None,
 ) -> dict[str, object]:
     translator_id = "source" if translator is None else str(translator.translator_id)
     translator_version = "1" if translator is None else str(translator.version)
@@ -907,7 +1241,7 @@ def _translation_record(
         translator_version,
         _canonical_json(decoding),
     )
-    return {
+    record: dict[str, object] = {
         "translation_id": translation_id,
         "case_id": case.case_id,
         "source": case.source,
@@ -921,14 +1255,294 @@ def _translation_record(
         else str(getattr(translator, "method", "translation")),
         "translator_id": translator_id,
         "translator_version": translator_version,
+        "provider": translator_id,
         "decoding_config": decoding,
+        "source_character_count": len(case.source_text),
         "source_text_sha256": _sha256_text(case.source_text),
         "translated_text_sha256": _sha256_text(normalized),
         "provider_request_id": provider_request_id,
+        "provider_reservation_id": provider_reservation_id,
         "created_at": clock(),
         "frozen": False,
         "review_status": "pending",
     }
+    if translator is not None and translator_id == GOOGLE_CLOUD_TRANSLATOR:
+        provider_contract = getattr(translator, "provider_contract", None)
+        if isinstance(provider_contract, Mapping):
+            record["provider_contract"] = dict(provider_contract)
+        record.update(
+            {
+                "provider_project_id": str(getattr(translator, "project_id")),
+                "provider_location": str(getattr(translator, "location")),
+                "provider_model": str(getattr(translator, "model")),
+                "provider_client_version": str(getattr(translator, "client_library_version")),
+            }
+        )
+    return record
+
+
+def _valid_audit_timestamp(value: object) -> bool:
+    return (
+        isinstance(value, str)
+        and bool(value)
+        and len(value) <= 64
+        and "\r" not in value
+        and "\n" not in value
+    )
+
+
+def _validate_translation_attempt(
+    row: Mapping[str, object],
+    *,
+    job_contexts: Mapping[tuple[str, str], UnifiedCase],
+    reservations: Mapping[str, Mapping[str, object]],
+    reservation_contexts: Mapping[str, tuple[PaidTranslationTask, UnifiedCase]],
+    google_paid_run: bool,
+) -> tuple[tuple[str, str], int, str | None]:
+    def reject() -> NoReturn:
+        message = (
+            "invalid Google Cloud paid-call attempt audit"
+            if google_paid_run or row.get("provider_reservation_id") is not None
+            else "invalid translation attempt audit"
+        )
+        raise ContractConflictError(message)
+
+    provider_reservation_id = row.get("provider_reservation_id")
+    if provider_reservation_id is not None and not isinstance(provider_reservation_id, str):
+        reject()
+    status = row.get("status")
+    expected_fields = TRANSLATION_ATTEMPT_FIELDS
+    if isinstance(provider_reservation_id, str):
+        expected_fields |= PAID_ATTEMPT_LINK_FIELDS
+        if status == "indeterminate":
+            expected_fields |= {"billing_status"}
+    if set(row) != expected_fields:
+        reject()
+
+    case_id = row.get("case_id")
+    target_language = row.get("target_language")
+    attempt_number = row.get("attempt_number")
+    source_character_count = row.get("source_character_count")
+    charged_character_count = row.get("charged_character_count")
+    error_type = row.get("error_type")
+    error_message = row.get("error_message")
+    if (
+        not isinstance(case_id, str)
+        or not isinstance(target_language, str)
+        or isinstance(attempt_number, bool)
+        or not isinstance(attempt_number, int)
+        or attempt_number <= 0
+        or isinstance(source_character_count, bool)
+        or not isinstance(source_character_count, int)
+        or isinstance(charged_character_count, bool)
+        or not isinstance(charged_character_count, int)
+        or charged_character_count < 0
+        or not isinstance(error_type, str)
+        or SANITIZED_ERROR_MESSAGES.get(error_type) != error_message
+        or not _valid_audit_timestamp(row.get("created_at"))
+    ):
+        reject()
+
+    key = (case_id, target_language)
+    case = job_contexts.get(key)
+    if (
+        case is None
+        or row.get("source") != case.source
+        or row.get("source_language") != case.source_language
+        or source_character_count != len(case.source_text)
+        or row.get("source_text_sha256") != _sha256_text(case.source_text)
+        or not isinstance(row.get("provider"), str)
+        or not row.get("provider")
+    ):
+        reject()
+
+    expected_attempt_id = stable_id(
+        "translation-attempt",
+        case_id,
+        target_language,
+        error_type,
+        str(attempt_number),
+        provider_reservation_id or "none",
+    )
+    if row.get("attempt_id") != expected_attempt_id:
+        reject()
+
+    if provider_reservation_id is None:
+        if status != "failed":
+            reject()
+        if google_paid_run and (
+            row.get("provider") != GOOGLE_CLOUD_TRANSLATOR or charged_character_count != 0
+        ):
+            reject()
+        return key, attempt_number, None
+
+    reservation = reservations.get(provider_reservation_id)
+    context = reservation_contexts.get(provider_reservation_id)
+    if reservation is None or context is None:
+        reject()
+    task, paid_case = context
+    reservation_attempt_number = reservation.get("attempt_number")
+    if (
+        paid_case != case
+        or attempt_number != reservation_attempt_number
+        or row.get("task_key") != task.task_key
+        or row.get("provider") != task.provider
+        or row.get("provider_contract_sha256") != task.provider_contract_sha256
+        or row.get("source_text_sha256") != task.source_text_sha256
+        or source_character_count != task.source_character_count
+        or charged_character_count != task.source_character_count
+        or row.get("audit_reference")
+        != f"translation_reservations.jsonl#{provider_reservation_id}"
+    ):
+        reject()
+    if status == "indeterminate":
+        if (
+            error_type != GOOGLE_CLOUD_INDETERMINATE_ERROR
+            or error_message != GOOGLE_CLOUD_INDETERMINATE_MESSAGE
+            or row.get("billing_status") != "charged_as_indeterminate"
+        ):
+            reject()
+    elif status != "failed" or error_type not in PROVEN_PAID_REJECTION_ERROR_TYPES:
+        reject()
+    return key, attempt_number, provider_reservation_id
+
+
+def _validate_translation_audit_row(
+    row: Mapping[str, object],
+    *,
+    job_contexts: Mapping[tuple[str, str], UnifiedCase],
+    reservations: Mapping[str, Mapping[str, object]],
+    reservation_contexts: Mapping[str, tuple[PaidTranslationTask, UnifiedCase]],
+    provider_contract: Mapping[str, object] | None,
+    google_paid_run: bool,
+) -> tuple[tuple[str, str], str | None]:
+    required_fields = {
+        "translation_id",
+        "case_id",
+        "source",
+        "source_language",
+        "target_language",
+        "source_text",
+        "raw_translated_text",
+        "normalized_translated_text",
+        "method",
+        "translator_id",
+        "translator_version",
+        "provider",
+        "decoding_config",
+        "source_character_count",
+        "source_text_sha256",
+        "translated_text_sha256",
+        "provider_request_id",
+        "provider_reservation_id",
+        "created_at",
+        "frozen",
+        "review_status",
+    }
+    if not required_fields.issubset(row):
+        raise ContractConflictError("invalid persisted translation audit")
+    case_id = row.get("case_id")
+    target_language = row.get("target_language")
+    if not isinstance(case_id, str) or not isinstance(target_language, str):
+        raise ContractConflictError("invalid persisted translation audit")
+    key = (case_id, target_language)
+    case = job_contexts.get(key)
+    normalized = row.get("normalized_translated_text")
+    raw = row.get("raw_translated_text")
+    translator_id = row.get("translator_id")
+    translator_version = row.get("translator_version")
+    decoding_config = row.get("decoding_config")
+    provider_request_id = row.get("provider_request_id")
+    if (
+        case is None
+        or row.get("source") != case.source
+        or row.get("source_language") != case.source_language
+        or row.get("source_text") != case.source_text
+        or row.get("source_character_count") != len(case.source_text)
+        or row.get("source_text_sha256") != _sha256_text(case.source_text)
+        or not isinstance(raw, str)
+        or not raw.strip()
+        or not isinstance(normalized, str)
+        or not normalized.strip()
+        or canonicalize_text(raw) != normalized
+        or row.get("translated_text_sha256") != _sha256_text(normalized)
+        or not isinstance(translator_id, str)
+        or not translator_id
+        or not isinstance(translator_version, str)
+        or not translator_version
+        or not isinstance(decoding_config, Mapping)
+        or row.get("provider") != translator_id
+        or (
+            provider_request_id is not None
+            and (
+                not isinstance(provider_request_id, str)
+                or len(provider_request_id) > 256
+                or re.fullmatch(r"[A-Za-z0-9._=-]+", provider_request_id) is None
+            )
+        )
+        or not _valid_audit_timestamp(row.get("created_at"))
+        or row.get("frozen") is not False
+        or row.get("review_status") != "pending"
+    ):
+        raise ContractConflictError("invalid persisted translation audit")
+    expected_translation_id = stable_id(
+        "unified-translation",
+        case.case_id,
+        case.source_language,
+        target_language,
+        normalized,
+        translator_id,
+        translator_version,
+        _canonical_json(dict(decoding_config)),
+    )
+    if row.get("translation_id") != expected_translation_id:
+        raise ContractConflictError("invalid persisted translation audit")
+
+    provider_reservation_id = row.get("provider_reservation_id")
+    if target_language == case.source_language:
+        if (
+            provider_reservation_id is not None
+            or translator_id != "source"
+            or translator_version != "1"
+            or row.get("method") != "identity"
+            or dict(decoding_config)
+            or raw != case.source_text
+        ):
+            raise ContractConflictError("invalid persisted translation audit")
+        return key, None
+
+    if not google_paid_run:
+        if provider_reservation_id is not None:
+            raise ContractConflictError("invalid Google Cloud paid-call outcome identity")
+        return key, None
+
+    if not isinstance(provider_reservation_id, str):
+        raise ContractConflictError("invalid Google Cloud paid-call outcome identity")
+    reservation = reservations.get(provider_reservation_id)
+    context = reservation_contexts.get(provider_reservation_id)
+    if reservation is None or context is None or provider_contract is None:
+        raise ContractConflictError("invalid Google Cloud paid-call outcome identity")
+    task, paid_case = context
+    if (
+        paid_case != case
+        or row.get("task_key") != task.task_key
+        or row.get("provider_contract_sha256") != task.provider_contract_sha256
+        or row.get("source_text_sha256") != task.source_text_sha256
+        or row.get("source_character_count") != task.source_character_count
+        or translator_id != task.provider
+        or row.get("provider") != task.provider
+        or row.get("method") != "google_cloud_nmt_v3"
+        or row.get("provider_contract") != dict(provider_contract)
+        or dict(decoding_config) != dict(provider_contract)
+        or translator_version != provider_contract.get("model")
+        or row.get("provider_project_id") != provider_contract.get("project_id")
+        or row.get("provider_location") != provider_contract.get("location")
+        or row.get("provider_model") != provider_contract.get("model")
+        or row.get("provider_client_version")
+        != provider_contract.get("client_library_version")
+    ):
+        raise ContractConflictError("invalid Google Cloud paid-call outcome identity")
+    return key, provider_reservation_id
 
 
 def _translate_cases(
@@ -940,38 +1554,278 @@ def _translate_cases(
     audit = parent_path / "audit"
     translations_path = audit / "translations.jsonl"
     attempts_path = audit / "translation_attempts.jsonl"
+    paid_ledger = PaidCallLedger(audit)
     existing = _read_jsonl(translations_path)
-    successful: dict[tuple[str, str], dict[str, object]] = {
-        (str(row.get("case_id")), str(row.get("target_language"))): row
-        for row in existing
-        if row.get("case_id")
-        and row.get("target_language")
-        and row.get("normalized_translated_text")
-    }
     failures: dict[tuple[str, str], dict[str, object]] = {}
     attempts = _read_jsonl(attempts_path)
-    attempt_counts: dict[tuple[str, str], int] = {}
-    for row in attempts:
-        key = (str(row.get("case_id")), str(row.get("target_language")))
+    try:
+        reservation_rows = paid_ledger.reservations()
+    except PaidCallLedgerError:
+        raise ContractConflictError("invalid Google Cloud paid-call reservation identity") from None
+    job_contexts: dict[tuple[str, str], UnifiedCase] = {}
+    for case in plan.cases:
+        for target_language in plan.languages:
+            key = (case.case_id, target_language)
+            if key in job_contexts:
+                raise ContractConflictError("duplicate translation job identity")
+            job_contexts[key] = case
+    paid_tasks_by_job: dict[tuple[str, str], PaidTranslationTask] = {}
+    paid_task_contexts: dict[str, tuple[PaidTranslationTask, UnifiedCase]] = {}
+    provider_contract: Mapping[str, object] | None = None
+    if settings.translator == GOOGLE_CLOUD_TRANSLATOR:
+        provider_contract = plan.contract.get("translator_contract")
+        if not isinstance(provider_contract, Mapping):
+            raise ContractConflictError("invalid Google Cloud translator contract")
+        for case in plan.cases:
+            for target_language in plan.languages:
+                if target_language == case.source_language:
+                    continue
+                task = PaidTranslationTask.build(
+                    case_id=case.case_id,
+                    source_text=case.source_text,
+                    source_language=case.source_language,
+                    target_language=target_language,
+                    provider=GOOGLE_CLOUD_TRANSLATOR,
+                    provider_contract=provider_contract,
+                )
+                key = (case.case_id, target_language)
+                if task.task_key in paid_task_contexts or key in paid_tasks_by_job:
+                    raise ContractConflictError("duplicate Google Cloud paid-call task identity")
+                paid_tasks_by_job[key] = task
+                paid_task_contexts[task.task_key] = (task, case)
+    elif reservation_rows:
+        raise ContractConflictError("unexpected Google Cloud paid-call reservation audit")
+
+    reservations: dict[str, dict[str, object]] = {}
+    reservation_contexts: dict[str, tuple[PaidTranslationTask, UnifiedCase]] = {}
+    for row in reservation_rows:
+        task_key = row.get("task_key")
+        context = paid_task_contexts.get(task_key) if isinstance(task_key, str) else None
+        if context is None:
+            raise ContractConflictError("invalid Google Cloud paid-call reservation identity")
+        task, case = context
         try:
-            sequence = int(cast(Any, row.get("attempt_number", 0)))
+            validated_reservation_id, _ = paid_ledger.validate_reservation_for_task(row, task)
+        except PaidCallLedgerError:
+            raise ContractConflictError(
+                "invalid Google Cloud paid-call reservation identity"
+            ) from None
+        prior = reservations.get(validated_reservation_id)
+        if prior is not None and _canonical_json(prior) != _canonical_json(row):
+            raise ContractConflictError("conflicting Google Cloud paid-call reservation audit")
+        reservations[validated_reservation_id] = row
+        reservation_contexts[validated_reservation_id] = (task, case)
+
+    attempt_counts: dict[tuple[str, str], int] = {}
+    completed_reservations: set[str] = set()
+    terminal_indeterminate: set[tuple[str, str]] = set()
+    seen_attempt_ids: set[str] = set()
+    for attempt_row in attempts:
+        key, attempt_number, completed_reservation_id = _validate_translation_attempt(
+            attempt_row,
+            job_contexts=job_contexts,
+            reservations=reservations,
+            reservation_contexts=reservation_contexts,
+            google_paid_run=settings.translator == GOOGLE_CLOUD_TRANSLATOR,
+        )
+        attempt_id = cast(str, attempt_row["attempt_id"])
+        if attempt_id in seen_attempt_ids:
+            raise ContractConflictError("duplicate translation attempt audit")
+        seen_attempt_ids.add(attempt_id)
+        attempt_counts[key] = max(attempt_counts.get(key, 0), attempt_number)
+        if completed_reservation_id is not None:
+            if completed_reservation_id in completed_reservations:
+                raise ContractConflictError("duplicate Google Cloud paid-call outcome audit")
+            completed_reservations.add(completed_reservation_id)
+        if attempt_row.get("status") == "indeterminate":
+            terminal_indeterminate.add(key)
+            failures[key] = attempt_row
+
+    for reservation_id, reservation in reservations.items():
+        context = reservation_contexts[reservation_id]
+        task, _ = context
+        try:
+            _, attempt_number = paid_ledger.validate_reservation_for_task(reservation, task)
+        except PaidCallLedgerError:
+            raise ContractConflictError(
+                "invalid Google Cloud paid-call reservation identity"
+            ) from None
+        key = (task.case_id, task.target_language)
+        attempt_counts[key] = max(attempt_counts.get(key, 0), attempt_number)
+
+    successful: dict[tuple[str, str], dict[str, object]] = {}
+    seen_translation_ids: set[str] = set()
+    for row in existing:
+        key, completed_reservation_id = _validate_translation_audit_row(
+            row,
+            job_contexts=job_contexts,
+            reservations=reservations,
+            reservation_contexts=reservation_contexts,
+            provider_contract=provider_contract,
+            google_paid_run=settings.translator == GOOGLE_CLOUD_TRANSLATOR,
+        )
+        translation_id = cast(str, row["translation_id"])
+        if translation_id in seen_translation_ids or key in successful:
+            raise ContractConflictError("duplicate persisted translation audit")
+        seen_translation_ids.add(translation_id)
+        if completed_reservation_id is not None:
+            if completed_reservation_id in completed_reservations:
+                raise ContractConflictError("duplicate Google Cloud paid-call outcome audit")
+            completed_reservations.add(completed_reservation_id)
+        successful[key] = row
+
+    try:
+        historical_google_characters = paid_ledger.charged_characters()
+    except PaidCallLedgerError:
+        raise ContractConflictError("invalid Google Cloud paid-call reservation identity") from None
+
+    for row in existing:
+        if row.get("provider") != GOOGLE_CLOUD_TRANSLATOR:
+            continue
+        linked_reservation_id = row.get("provider_reservation_id")
+        if isinstance(linked_reservation_id, str) and linked_reservation_id in reservations:
+            continue
+        try:
+            historical_google_characters += max(
+                0, int(cast(Any, row.get("source_character_count") or 0))
+            )
         except (TypeError, ValueError):
-            sequence = 0
-        attempt_counts[key] = max(attempt_counts.get(key, 0), sequence)
-    translator = _make_translator(settings, dependencies) if plan.translation_jobs else None
-    new_records: list[dict[str, object]] = []
-    new_attempts: list[dict[str, object]] = []
+            continue
+    for row in attempts:
+        if row.get("provider") != GOOGLE_CLOUD_TRANSLATOR:
+            continue
+        linked_reservation_id = row.get("provider_reservation_id")
+        if isinstance(linked_reservation_id, str) and linked_reservation_id in reservations:
+            continue
+        try:
+            historical_google_characters += max(
+                0, int(cast(Any, row.get("charged_character_count") or 0))
+            )
+        except (TypeError, ValueError):
+            continue
+
+    for reservation_id, reservation in reservations.items():
+        if reservation_id in completed_reservations:
+            continue
+        task, case = reservation_contexts[reservation_id]
+        try:
+            _, attempt_number = paid_ledger.validate_reservation_for_task(reservation, task)
+        except PaidCallLedgerError:
+            raise ContractConflictError(
+                "invalid Google Cloud paid-call reservation identity"
+            ) from None
+        key = (task.case_id, task.target_language)
+        indeterminate_error = GoogleCloudIndeterminatePaidAttemptError(
+            GOOGLE_CLOUD_INDETERMINATE_MESSAGE
+        )
+        error_type, error_message = _sanitized_error(indeterminate_error)
+        indeterminate_attempt: dict[str, object] = {
+            "attempt_id": stable_id(
+                "translation-attempt",
+                task.case_id,
+                task.target_language,
+                error_type,
+                str(attempt_number),
+                reservation_id,
+            ),
+            "attempt_number": attempt_number,
+            "audit_reference": f"translation_reservations.jsonl#{reservation_id}",
+            "billing_status": "charged_as_indeterminate",
+            "case_id": task.case_id,
+            "status": "indeterminate",
+            "source": case.source,
+            "source_language": task.source_language,
+            "target_language": task.target_language,
+            "provider": GOOGLE_CLOUD_TRANSLATOR,
+            "provider_reservation_id": reservation_id,
+            "task_key": task.task_key,
+            "provider_contract_sha256": task.provider_contract_sha256,
+            "source_character_count": task.source_character_count,
+            "source_text_sha256": task.source_text_sha256,
+            "charged_character_count": task.source_character_count,
+            "error_type": error_type,
+            "error_message": error_message,
+            "created_at": dependencies.clock(),
+        }
+        _append_jsonl(
+            attempts_path,
+            [indeterminate_attempt],
+            "attempt_id",
+            durable=True,
+        )
+        attempts.append(indeterminate_attempt)
+        failures[key] = indeterminate_attempt
+        terminal_indeterminate.add(key)
+
+    pending_paid_task: PaidTranslationTask | None = None
+    persisted_reservation_id: str | None = None
+
+    def persist_paid_call_reservation(character_count: int) -> None:
+        nonlocal persisted_reservation_id
+        task = pending_paid_task
+        if task is None or task.source_character_count != character_count:
+            raise ContractConflictError("Google Cloud paid-call reservation context is invalid")
+        reservation = paid_ledger.make_reservation(
+            task,
+            character_count=character_count,
+            clock=dependencies.clock,
+        )
+        reservation_id = reservation.get("reservation_id")
+        if not isinstance(reservation_id, str):
+            raise ContractConflictError("Google Cloud paid-call reservation context is invalid")
+        persisted_reservation_id = reservation_id
+
+    translator = (
+        _make_translator(
+            settings,
+            dependencies,
+            initial_google_characters=historical_google_characters,
+            google_paid_call_reservation=persist_paid_call_reservation,
+        )
+        if plan.translation_jobs
+        else None
+    )
+    if isinstance(translator, GoogleCloudNMTTranslator):
+        translator.paid_call_reservation = persist_paid_call_reservation
+        for key, task in paid_tasks_by_job.items():
+            case = next(item for item in plan.cases if item.case_id == key[0])
+            observed_task = PaidTranslationTask.build(
+                case_id=case.case_id,
+                source_text=case.source_text,
+                source_language=case.source_language,
+                target_language=key[1],
+                provider=translator.translator_id,
+                provider_contract=translator.provider_contract,
+            )
+            if observed_task != task:
+                raise ContractConflictError(
+                    "Google Cloud translator does not match the immutable run contract"
+                )
+
     for case in plan.cases:
         for language in plan.languages:
             key = (case.case_id, language)
-            if key in successful:
+            if key in successful or key in terminal_indeterminate:
                 continue
             if language == case.source_language:
-                successful[key] = _translation_record(
+                record = _translation_record(
                     case, language, case.source_text, None, None, dependencies.clock
                 )
-                new_records.append(successful[key])
+                _append_jsonl(translations_path, [record], "translation_id", durable=True)
+                successful[key] = record
                 continue
+
+            attempt_number = attempt_counts.get(key, 0) + 1
+            pending_paid_task = None
+            persisted_reservation_id = None
+            if isinstance(translator, GoogleCloudNMTTranslator):
+                pending_paid_task = paid_tasks_by_job.get(key)
+                if pending_paid_task is None:
+                    raise ContractConflictError(
+                        "Google Cloud paid-call task context is unavailable"
+                    )
+
+            characters_before = int(getattr(translator, "characters_used", 0))
             try:
                 if translator is None or not translator.supports(case.source_language, language):
                     raise ValueError(
@@ -990,34 +1844,85 @@ def _translate_cases(
                     translator,
                     output.provider_request_id,
                     dependencies.clock,
+                    provider_reservation_id=persisted_reservation_id,
                 )
-                successful[key] = record
-                new_records.append(record)
+                if pending_paid_task is not None:
+                    record["task_key"] = pending_paid_task.task_key
+                    record["provider_contract_sha256"] = (
+                        pending_paid_task.provider_contract_sha256
+                    )
             except Exception as error:
-                error_type, error_message = _sanitized_error(error)
-                attempt_number = attempt_counts.get(key, 0) + 1
+                paid_task = pending_paid_task
+                is_indeterminate = (
+                    persisted_reservation_id is not None
+                    and paid_task is not None
+                    and not is_proven_preprocessing_rejection(error)
+                )
+                if is_indeterminate:
+                    error_type = GOOGLE_CLOUD_INDETERMINATE_ERROR
+                    error_message = GOOGLE_CLOUD_INDETERMINATE_MESSAGE
+                else:
+                    error_type, error_message = _sanitized_error(error)
+                characters_after = int(getattr(translator, "characters_used", 0))
                 attempt_counts[key] = attempt_number
-                attempt: dict[str, object] = {
+                failure_attempt: dict[str, object] = {
                     "attempt_id": stable_id(
                         "translation-attempt",
                         case.case_id,
                         language,
                         error_type,
                         str(attempt_number),
+                        persisted_reservation_id or "none",
                     ),
                     "attempt_number": attempt_number,
                     "case_id": case.case_id,
+                    "status": "indeterminate" if is_indeterminate else "failed",
                     "source": case.source,
                     "source_language": case.source_language,
                     "target_language": language,
+                    "provider": (
+                        settings.translator if translator is None else str(translator.translator_id)
+                    ),
+                    "source_character_count": len(case.source_text),
+                    "source_text_sha256": _sha256_text(case.source_text),
+                    "charged_character_count": (
+                        paid_task.source_character_count
+                        if persisted_reservation_id is not None and paid_task is not None
+                        else max(0, characters_after - characters_before)
+                    ),
+                    "provider_reservation_id": persisted_reservation_id,
                     "error_type": error_type,
                     "error_message": error_message,
                     "created_at": dependencies.clock(),
                 }
-                new_attempts.append(attempt)
-                failures[key] = attempt
-    _append_jsonl(translations_path, new_records, "translation_id")
-    _append_jsonl(attempts_path, new_attempts, "attempt_id")
+                if persisted_reservation_id is not None:
+                    failure_attempt["audit_reference"] = (
+                        f"translation_reservations.jsonl#{persisted_reservation_id}"
+                    )
+                    if paid_task is None:
+                        raise ContractConflictError(
+                            "Google Cloud paid-call attempt context is invalid"
+                        )
+                    failure_attempt["task_key"] = paid_task.task_key
+                    failure_attempt["provider_contract_sha256"] = (
+                        paid_task.provider_contract_sha256
+                    )
+                if is_indeterminate:
+                    failure_attempt["billing_status"] = "charged_as_indeterminate"
+                _append_jsonl(
+                    attempts_path,
+                    [failure_attempt],
+                    "attempt_id",
+                    durable=True,
+                )
+                failures[key] = failure_attempt
+            else:
+                _append_jsonl(translations_path, [record], "translation_id", durable=True)
+                successful[key] = record
+            finally:
+                pending_paid_task = None
+                persisted_reservation_id = None
+
     return successful, failures
 
 
@@ -1768,13 +2673,41 @@ def _aggregate(
             "models": list(plan.models),
             "languages": list(plan.languages),
             "jailbreaks": list(plan.jailbreaks),
-            "translator": "nllb",
-            "gra_role": "joker",
+            "translator": plan.contract["translator"],
+            "translator_contract": plan.contract["translator_contract"],
+            "gra_role": plan.contract["gra_role"],
         },
         "created_at": _utc_now(),
     }
     _write_json(parent_path / "run_manifest.json", manifest)
     return rows, child_statuses, manifest
+
+
+def _requires_dotenv(
+    plan: RunPlan,
+    settings: RunSettings,
+    dependencies: RunDependencies,
+) -> bool:
+    if (
+        plan.translation_jobs
+        and settings.translator == GOOGLE_CLOUD_TRANSLATOR
+        and dependencies.translator is None
+        and dependencies.translator_factory is None
+        and dependencies.google_adc_preflight is None
+    ):
+        return True
+    model_configs = _load_model_configs(settings)
+    if dependencies.generation is None and dependencies.provider_factory is None:
+        if any(model.provider != "fake" for model in model_configs.values()):
+            return True
+    if (
+        "psa" in plan.jailbreaks
+        and dependencies.summary_service is None
+        and dependencies.summary_service_factory is None
+    ):
+        summary_model = model_configs.get("gemma_4_12b")
+        return summary_model is not None and summary_model.provider != "fake"
+    return False
 
 
 def execute_run(
@@ -1783,13 +2716,11 @@ def execute_run(
     dependencies: RunDependencies | None = None,
 ) -> RunExecution:
     dependencies = dependencies or RunDependencies()
-    # Formal execution may read credentials from the current working directory.  Planning and
-    # dry-run paths never call this function, so they remain side-effect free.
+    # Formal execution reads only the explicitly scoped current-working-directory dotenv file,
+    # and only when a selected non-test provider needs environment-backed credentials.
     dotenv_path = Path.cwd() / ".env"
-    if dotenv_path.is_file():
+    if _requires_dotenv(plan, settings, dependencies) and dotenv_path.is_file():
         load_dotenv(dotenv_path=dotenv_path)
-    else:
-        load_dotenv()
     emit = dependencies.emit
     emit(
         f"[1/5] Plan cases={len(plan.cases)} translations={plan.translation_jobs} "

@@ -1,19 +1,28 @@
 import csv
 import json
 from pathlib import Path
-from typing import Annotated
+from typing import Annotated, cast
 
 import pyarrow.parquet as pq
 import typer
+from dotenv import load_dotenv
 
 from crosslingual_safety.ids import stable_id
 from crosslingual_safety.schemas import PromptCase, TranslationReview
 from crosslingual_safety.translation.languages import load_languages
+from crosslingual_safety.translation.paid_ledger import (
+    LedgeredGoogleCloudTranslator,
+    PaidCallLedger,
+)
 from crosslingual_safety.translation.providers import (
     DatasetTranslationProvider,
     DeepTranslatorGoogleTranslator,
     FakeTranslator,
+    GoogleCloudAuthenticationError,
     GoogleCloudNMTTranslator,
+    GoogleCloudProviderError,
+    GoogleCloudRequestTooLargeError,
+    GoogleCloudRunBudgetExceededError,
     ManualTranslationProvider,
     NLLBTranslator,
     TranslationInputTooLongError,
@@ -77,6 +86,17 @@ def _translator(
     )
 
 
+def _load_google_dotenv() -> None:
+    dotenv_path = Path.cwd() / ".env"
+    if dotenv_path.is_file():
+        try:
+            load_dotenv(dotenv_path=dotenv_path)
+        except Exception:
+            raise GoogleCloudAuthenticationError(
+                "Google Cloud application default credentials are unavailable or invalid"
+            ) from None
+
+
 def register_translation_commands(app: typer.Typer) -> None:
     @app.command("translate")
     def translate_command(
@@ -102,7 +122,6 @@ def register_translation_commands(app: typer.Typer) -> None:
         unknown = sorted(set(target_languages) - configured_languages.keys())
         if unknown:
             raise typer.BadParameter(f"unsupported target languages: {', '.join(unknown)}")
-        provider = _translator(translator, native_translations_path, manual_input, languages_config)
         native_provider = (
             _native_provider(native_translations_path)
             if native_translations_path.is_file()
@@ -111,6 +130,11 @@ def register_translation_commands(app: typer.Typer) -> None:
         cases = [PromptCase.model_validate(row) for row in pq.read_table(cases_path).to_pylist()]
         store = TranslationStore(output_dir)
         service = TranslationService(store)
+        provider = (
+            None
+            if translator == "google-cloud-nmt-v3"
+            else _translator(translator, native_translations_path, manual_input, languages_config)
+        )
         created = 0
         preserved_native = 0
         failures: list[dict[str, object]] = []
@@ -132,7 +156,31 @@ def register_translation_commands(app: typer.Typer) -> None:
                         and (case.canonical_payload, target_language) in native_provider.values
                     ):
                         selected_provider = native_provider
+                    elif provider is None:
+                        _load_google_dotenv()
+                        google_translator = cast(
+                            GoogleCloudNMTTranslator,
+                            _translator(
+                                translator,
+                                native_translations_path,
+                                manual_input,
+                                languages_config,
+                            ),
+                        )
+                        provider = LedgeredGoogleCloudTranslator(
+                            google_translator,
+                            PaidCallLedger(output_dir / "audit"),
+                        )
+                        selected_provider = provider
+                    assert selected_provider is not None
                     try:
+                        if isinstance(selected_provider, LedgeredGoogleCloudTranslator):
+                            selected_provider.begin_task(
+                                case_id=case.case_id,
+                                source_text=case.canonical_payload,
+                                source_language=case.source_language,
+                                target_language=target_language,
+                            )
                         before = len(store.translations())
                         service.translate_case(
                             case,
@@ -156,6 +204,52 @@ def register_translation_commands(app: typer.Typer) -> None:
                                 "translator_id": selected_provider.translator_id,
                             }
                         )
+                        continue
+                    except (
+                        GoogleCloudProviderError,
+                        GoogleCloudRequestTooLargeError,
+                        GoogleCloudRunBudgetExceededError,
+                    ) as error:
+                        outcome = (
+                            selected_provider.current_failure()
+                            if isinstance(selected_provider, LedgeredGoogleCloudTranslator)
+                            else None
+                        )
+                        if outcome is not None:
+                            error_type = outcome["error_type"]
+                            error_message = outcome["error_message"]
+                            charged_character_count = outcome["charged_character_count"]
+                            audit_reference = outcome["audit_reference"]
+                        elif type(error) is GoogleCloudRequestTooLargeError:
+                            error_type = "GoogleCloudRequestTooLargeError"
+                            error_message = (
+                                "Google Cloud Translation request character limit exceeded"
+                            )
+                            charged_character_count = 0
+                            audit_reference = None
+                        elif type(error) is GoogleCloudRunBudgetExceededError:
+                            error_type = "GoogleCloudRunBudgetExceededError"
+                            error_message = "Google Cloud Translation run character budget exceeded"
+                            charged_character_count = 0
+                            audit_reference = None
+                        else:
+                            error_type = "GoogleCloudProviderError"
+                            error_message = "Google Cloud Translation provider request failed"
+                            charged_character_count = 0
+                            audit_reference = None
+                        failure = {
+                            "case_id": case.case_id,
+                            "error_code": "google_translation_failed",
+                            "error_type": error_type,
+                            "error_message": error_message,
+                            "charged_character_count": charged_character_count,
+                            "source_language": case.source_language,
+                            "target_language": target_language,
+                            "translator_id": selected_provider.translator_id,
+                        }
+                        if audit_reference is not None:
+                            failure["audit_reference"] = audit_reference
+                        failures.append(failure)
                         continue
                     except ValueError as error:
                         if (

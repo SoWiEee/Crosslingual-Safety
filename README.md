@@ -4,7 +4,7 @@
 
 **低資源語言對 LLM 的繞過效果**
 
-[開發規格](docs/spec.md) · [共筆連結](https://hackmd.io/cbVTLErNSqqEaPthYLA-oA?both) · [簡報連結](https://docs.google.com/presentation/d/1x9vnJTL8kAYyUjREXigmmUo99D9bzRMVjsp9Ja3rXYs/edit?slide=id.g3f5ba5edabe_1_2083#slide=id.g3f5ba5edabe_1_2083)
+[開發規格](docs/spec.md) · [共筆連結](https://hackmd.io/cbVTLErNSqqEaPthYLA-oA?both) · [簡報連結](https://docs.google.com/presentation/d/1x9vnJTL8kAYyUjREXigmmUo99D9bzRMVjsp9Ja3rXYs/edit?slide=id.g3f5ba5edabe_1_175#slide=id.g3f5ba5edabe_1_175)
 
 </div>
 
@@ -25,6 +25,7 @@
 - [uv](https://docs.astral.sh/uv/)
 - Python 3.11
 - ZooLab remote LLM API key
+- Google Cloud Translation Credentials (Free Tier)
 
 ## 安裝
 
@@ -40,15 +41,17 @@ cd Crosslingual-Safety/
 # install runtime, development, and default local translation dependencies
 uv sync --all-groups --extra translation-nllb
 
-# optional online translation provider
+# optional official Google Cloud Translation Advanced v3 provider
 uv sync --all-groups --extra translation-google
 ```
 
-從範例 `.env.example` 建立 `.env`，API key 需自行替換：
+從範例 `.env.example` 建立 `.env`，只填入實際啟用 provider 所需的值：
 
 ```dotenv
 ZOOLAB_BASE_URL=https://llm-api.zoolab.org/v1
 ZOOLAB_API_KEY=sk-replace-with-your-project-key
+GOOGLE_CLOUD_PROJECT=gen-lang-client-0036391889
+GOOGLE_APPLICATION_CREDENTIALS=C:/absolute/path/to/credentials/google-translate-service-account.json
 ```
 
 模型名稱、context size、concurrency 與 rate limit 位於
@@ -69,8 +72,10 @@ uv run crosslingual-safety run --source manual --language all --jailbreak all --
 `--source` 只能是 `manual` 或 `bench`；`--language` 接受 `en`、`zh-tw`、`vi`、`my`、
 逗號清單或 `all`；`--jailbreak` 接受 `none`、`gra`、`psa`、逗號清單或 `all`。manual
 預設讀取 `prompts/prompt.txt`，來源固定為繁體中文（`zh-tw`）；要改來源請修改版本化的
-`configs/run.yaml`，而不是新增 CLI flag。該設定固定使用本機 NLLB、五個 victim model、
-same-as-payload wrapper 與 GRA `joker` role；PSA 摘要使用 `ais3/gemma-4-12b`。
+`configs/run.yaml`，而不是新增 CLI flag。該設定預設使用本機 NLLB，並固定五個 victim
+model、same-as-payload wrapper 與 GRA `joker` role；PSA 摘要使用
+`ais3/gemma-4-12b`。官方 Google provider 也只能透過此版本化設定切換，CLI 不提供
+translator flag，且 provider 之間不會自動 fallback。
 
 每次正式執行會在 `runs/experiments/<run-id>/` 建立一個可恢復的 parent，並以
 `children/none/`、`children/gra/`、`children/psa/` 隔離 jailbreak。乾淨的
@@ -139,6 +144,80 @@ batch size。超過模型原生 1024-token 上限的 case 不會截斷，會寫�
 若要使用免費線上備援，可明確指定
 `--translator deep-translator-google`；它使用非官方 web endpoint，可能遇到限流
 或上游變更。付費官方 API 則使用 `--translator google-cloud-nmt-v3`。
+
+### Google Cloud Translation Advanced v3（明確選用）
+
+Google provider 使用 Application Default Credentials（ADC），不接受 API key。先啟用
+Cloud Translation API，建立專用 service account，僅授予
+`roles/cloudtranslate.user` 或更窄的自訂角色；不得授予 Owner、Editor、Admin 或
+service-agent role。金鑰必須經受保護管道取得，放在 Git 忽略的 `credentials/`，
+不得提交或傳到 issue/chat。Google 的
+[ADC 說明](https://cloud.google.com/docs/authentication/provide-credentials-adc)與
+[service-account key 最佳實務](https://cloud.google.com/iam/docs/best-practices-for-managing-service-account-keys)
+包含輪替與避免長期金鑰的建議。
+
+`.env` 只保存 billing project 與 credential 的絕對本機路徑：
+
+```dotenv
+GOOGLE_CLOUD_PROJECT=gen-lang-client-0036391889
+GOOGLE_APPLICATION_CREDENTIALS=C:/absolute/path/to/Crosslingual-Safety/credentials/google-translate-service-account.json
+```
+
+程式不讀取 JSON 內容到 experiment record，也不保存、雜湊或輸出 credential path。
+要讓統一 `run` 使用 Google，唯一切換點是 `configs/run.yaml`：
+
+```yaml
+translator: google-cloud-nmt-v3
+google_cloud:
+  project_id: gen-lang-client-0036391889
+  location: global
+  model: general/nmt
+  max_request_characters: 5000
+  max_run_characters: 100000
+```
+
+預設仍是 `translator: nllb`。正式 Google run 會在建立 run artifacts 前驗證套件、
+ADC、project/location/model、語言映射與字元預算；單一 request 上限 5,000 字元，
+單次 run 上限 100,000 字元。這些是本專案的成本護欄，不是 Google billing cap。
+每個付費呼叫會先以可供一般應用程式程序崩潰後恢復、不可變的 reservation 寫入
+`audit/translation_reservations.jsonl`，再呼叫 Google；成功或捕捉到的失敗會逐筆立即
+落盤。獨立 `translate` 指令將 ledger 放在
+`<output-dir>/audit/translation_reservations.jsonl`，並將 outcomes 寫入同層的
+`translation_reservation_outcomes.jsonl`。task key 只使用 case identity、來源文字 hash、
+語言及 non-secret provider contract hash，不包含 prompt 或 credential path。恢復時會先
+重算並驗證 task identity 與 provider contract hash，才使用既有 outcome 或決定不重送。
+若應用程式程序在呼叫後、結果落盤前終止，恢復時會把該 reservation 的完整字元數保守
+計入預算、標記為 `charged_as_indeterminate`，且不會自動重送，必須由人工依 audit
+reference 判斷。沒有付費工作的 missing、cached、source-language 或 native-dataset
+路徑不會建立 Google client 或 paid-call ledger。
+
+此恢復保證針對一般應用程式程序崩潰或被終止。Windows 實作會 fsync 檔案並 atomic
+replace，但因平台未提供此路徑使用的 parent-directory fsync，不保證突然的 OS crash
+或斷電後仍具相同 durability；POSIX 另會 fsync parent directory。
+送出的 prompt 會離開本機並由 Google Cloud 處理，可能產生費用並受 project quota
+限制；執行前請確認資料可外傳、設定 Cloud Billing budget alert，並檢查
+[Cloud Translation quota](https://cloud.google.com/translate/quotas)與價格。
+
+離線測試會 stub 所有 Google 呼叫，不產生成本：
+
+```sh
+uv run pytest tests/test_translation.py tests/test_unified_run.py -q
+```
+
+只有在已確認 ADC、資料外傳與費用後才可明確執行 live smoke test；它會將同一句無害英文
+各翻成 `zh-tw`、`vi`、`my`，結果不得提交：
+
+```sh
+RUN_GOOGLE_TRANSLATION_LIVE=1 \
+  uv run pytest tests/test_translation.py -q -m live_google -k live_google_cloud_nmt
+```
+
+PowerShell 使用
+`$env:RUN_GOOGLE_TRANSLATION_LIVE = "1"` 後執行同一個含
+`-m live_google` 的 pytest 命令。環境變數與 marker 必須同時明確啟用；一般
+pytest 執行一律排除 live Google 測試。與本機 NLLB
+比較時，將回覆、latency 與字元數保留在未追蹤的本機輸出，不得提交 provider 回覆或
+credentials。
 
 若只處理 MultiJail 已有的人工翻譯，可改用：
 

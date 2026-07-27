@@ -12,6 +12,12 @@ models:
   - nemotron_cascade_2_30b
   - llama33_70b
 translator: nllb
+google_cloud:
+  project_id: gen-lang-client-0036391889
+  location: global
+  model: general/nmt
+  max_request_characters: 5000
+  max_run_characters: 100000
 wrapper_language_mode: same-as-payload
 gra_role: joker
 models_config: configs/models.yaml
