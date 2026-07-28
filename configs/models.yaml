@@ -7,7 +7,7 @@ models:
     context_size: 131072
     endpoint_type: chat
     concurrency: 2
-    requests_per_minute: 20
+    requests_per_minute: 30
 
   llama_guard_3_8b:
     provider: zoolab
@@ -27,7 +27,7 @@ models:
     context_size: 262144
     endpoint_type: chat
     concurrency: 2
-    requests_per_minute: 20
+    requests_per_minute: 30
 
   gemma_4_26b:
     provider: zoolab
@@ -37,7 +37,7 @@ models:
     context_size: 262144
     endpoint_type: chat
     concurrency: 2
-    requests_per_minute: 20
+    requests_per_minute: 30
 
   nemotron_cascade_2_30b:
     provider: zoolab
@@ -47,7 +47,7 @@ models:
     context_size: 262144
     endpoint_type: chat
     concurrency: 2
-    requests_per_minute: 20
+    requests_per_minute: 30
 
   llama33_70b:
     provider: zoolab
@@ -57,7 +57,7 @@ models:
     context_size: 131072
     endpoint_type: chat
     concurrency: 2
-    requests_per_minute: 20
+    requests_per_minute: 30
 
   nemotron_3_ultra_550b:
     provider: zoolab

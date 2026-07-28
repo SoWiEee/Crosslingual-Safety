@@ -27,6 +27,31 @@ from crosslingual_safety.schemas import GenerationRequest, GenerationResult, Pro
 runner = CliRunner()
 
 
+def test_repository_zoolab_pilot_rate_limits() -> None:
+    models = yaml.safe_load(Path("configs/models.yaml").read_text(encoding="utf-8"))["models"]
+    victim_models = yaml.safe_load(Path("configs/run.yaml").read_text(encoding="utf-8"))["models"]
+
+    assert victim_models == [
+        "llama31_8b",
+        "gemma_4_12b",
+        "gemma_4_26b",
+        "nemotron_cascade_2_30b",
+        "llama33_70b",
+    ]
+    assert {
+        name: (models[name]["concurrency"], models[name]["requests_per_minute"])
+        for name in victim_models
+    } == {name: (2, 30) for name in victim_models}
+    assert (
+        models["llama_guard_3_8b"]["concurrency"],
+        models["llama_guard_3_8b"]["requests_per_minute"],
+    ) == (2, 20)
+    assert (
+        models["nemotron_3_ultra_550b"]["concurrency"],
+        models["nemotron_3_ultra_550b"]["requests_per_minute"],
+    ) == (1, 10)
+
+
 def _request() -> GenerationRequest:
     return GenerationRequest(
         run_id="run-1",
