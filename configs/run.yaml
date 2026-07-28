@@ -13,6 +13,7 @@ models:
   - gemma_4_26b
   - nemotron_cascade_2_30b
   - llama33_70b
+  - nemotron_3_ultra_550b
 translator: google-cloud-nmt-v3
 google_cloud:
   project_id: gen-lang-client-0036391889

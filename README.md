@@ -77,7 +77,7 @@ uv run crosslingual-safety run --source manual --language all --jailbreak none -
 選用。選擇較少模型只會降低 victim requests，不會減少翻譯或 PSA 摘要工作。manual
 預設讀取 `prompts/prompt.txt`，來源固定為繁體中文（`zh-tw`）；要改來源請修改版本化的
 `configs/run.yaml`，而不是新增 CLI flag。該設定目前使用 Google Cloud Translation
-Advanced v3，並固定五個 victim
+Advanced v3，並固定六個 victim
 model、same-as-payload wrapper 與 GRA `joker` role；PSA 摘要使用
 `ais3/gemma-4-12b`。翻譯 provider 只能透過此版本化設定切換；要改回本機模型，將
 `translator` 設為 `nllb`。CLI 不提供 translator flag，且 provider 之間不會自動
@@ -366,7 +366,8 @@ uv run crosslingual-safety manual-run prompts\prompts.jsonl `
 ```
 
 Ultra 550B 使用相同的 `ZOOLAB_BASE_URL` 與 `ZOOLAB_API_KEY`，不需要另一組
-credential。其設定預設為 concurrency 1、每分鐘 10 requests、timeout 180 秒。
+credential。其設定為 concurrency 2、每分鐘 30 requests、timeout 180 秒。Ultra 已列入
+正式 `run --model` allowlist；`manual-run` 仍使用 `--add-model` 明確加入。
 也可用 `--models` 完全取代預設清單：
 
 ```powershell

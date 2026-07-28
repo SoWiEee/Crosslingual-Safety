@@ -37,6 +37,7 @@ def test_repository_zoolab_pilot_rate_limits() -> None:
         "gemma_4_26b",
         "nemotron_cascade_2_30b",
         "llama33_70b",
+        "nemotron_3_ultra_550b",
     ]
     assert {
         name: (models[name]["concurrency"], models[name]["requests_per_minute"])
@@ -47,15 +48,12 @@ def test_repository_zoolab_pilot_rate_limits() -> None:
         "gemma_4_26b": (2, 30),
         "nemotron_cascade_2_30b": (2, 30),
         "llama33_70b": (4, 60),
+        "nemotron_3_ultra_550b": (2, 30),
     }
     assert (
         models["llama_guard_3_8b"]["concurrency"],
         models["llama_guard_3_8b"]["requests_per_minute"],
     ) == (2, 20)
-    assert (
-        models["nemotron_3_ultra_550b"]["concurrency"],
-        models["nemotron_3_ultra_550b"]["requests_per_minute"],
-    ) == (1, 10)
 
 
 def _request() -> GenerationRequest:
