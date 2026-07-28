@@ -41,7 +41,13 @@ def test_repository_zoolab_pilot_rate_limits() -> None:
     assert {
         name: (models[name]["concurrency"], models[name]["requests_per_minute"])
         for name in victim_models
-    } == {name: (2, 30) for name in victim_models}
+    } == {
+        "llama31_8b": (4, 60),
+        "gemma_4_12b": (2, 30),
+        "gemma_4_26b": (2, 30),
+        "nemotron_cascade_2_30b": (2, 30),
+        "llama33_70b": (4, 60),
+    }
     assert (
         models["llama_guard_3_8b"]["concurrency"],
         models["llama_guard_3_8b"]["requests_per_minute"],

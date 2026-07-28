@@ -5,6 +5,8 @@ manual:
 bench:
   cases_path: data/normalized/cases.parquet
   selection_path: data/normalized/variant_case_selection.parquet
+  datasets:
+    - multijail
 models:
   - llama31_8b
   - gemma_4_12b
@@ -17,7 +19,7 @@ google_cloud:
   location: global
   model: general/nmt
   max_request_characters: 5000
-  max_run_characters: 100000
+  max_run_characters: 1000000
 wrapper_language_mode: same-as-payload
 gra_role: joker
 models_config: configs/models.yaml

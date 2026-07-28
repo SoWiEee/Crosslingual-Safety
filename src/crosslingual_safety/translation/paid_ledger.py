@@ -126,6 +126,7 @@ def _append_immutable_jsonl(
     try:
         existing = _read_jsonl(path)
         by_key: dict[str, dict[str, object]] = {}
+        pending: list[dict[str, object]] = []
         for existing_row in existing:
             row_key = existing_row.get(key)
             if not isinstance(row_key, str) or not row_key:
@@ -142,18 +143,17 @@ def _append_immutable_jsonl(
             prior = by_key.get(row_key)
             if prior is not None and _canonical_json(prior) != _canonical_json(row_dict):
                 raise PaidCallLedgerError("paid-call ledger contains an immutable conflict")
+            if prior is None:
+                pending.append(row_dict)
             by_key[row_key] = row_dict
-        content = "".join(
-            _canonical_json(row) + "\n"
-            for row in sorted(by_key.values(), key=lambda value: cast(str, value[key]))
-        )
+        if not pending:
+            return
         path.parent.mkdir(parents=True, exist_ok=True)
-        temporary = path.with_suffix(f"{path.suffix}.tmp")
-        with temporary.open("w", encoding="utf-8", newline="") as stream:
-            stream.write(content)
+        with path.open("a", encoding="utf-8", newline="") as stream:
+            for row in pending:
+                stream.write(_canonical_json(row) + "\n")
             stream.flush()
             os.fsync(stream.fileno())
-        temporary.replace(path)
         if os.name != "nt":
             flags = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0)
             directory = os.open(path.parent, flags)

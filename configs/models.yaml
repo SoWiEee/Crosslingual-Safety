@@ -6,8 +6,8 @@ models:
     model_id: ais3/llama-3.1-8b
     context_size: 131072
     endpoint_type: chat
-    concurrency: 2
-    requests_per_minute: 30
+    concurrency: 4
+    requests_per_minute: 60
 
   llama_guard_3_8b:
     provider: zoolab
@@ -56,8 +56,8 @@ models:
     model_id: ais3/llama-3.3-70b
     context_size: 131072
     endpoint_type: chat
-    concurrency: 2
-    requests_per_minute: 30
+    concurrency: 4
+    requests_per_minute: 60
 
   nemotron_3_ultra_550b:
     provider: zoolab

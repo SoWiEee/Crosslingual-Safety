@@ -266,6 +266,7 @@ class ManualSettings(BaseModel):
 class BenchSettings(BaseModel):
     cases_path: Path = Path("data/normalized/cases.parquet")
     selection_path: Path = Path("data/normalized/variant_case_selection.parquet")
+    datasets: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -569,6 +570,15 @@ def _load_bench_cases(settings: RunSettings) -> tuple[UnifiedCase, ...]:
     rows = pq.read_table(settings.bench.cases_path).to_pylist()
     by_id = {str(row.get("case_id")): row for row in rows}
     selected_rows = pq.read_table(settings.bench.selection_path).to_pylist()
+    if settings.bench.datasets:
+        available_datasets = {str(row.get("dataset")) for row in selected_rows}
+        unknown_datasets = sorted(set(settings.bench.datasets) - available_datasets)
+        if unknown_datasets:
+            raise ValueError(f"benchmark datasets are unavailable: {', '.join(unknown_datasets)}")
+        selected_datasets = set(settings.bench.datasets)
+        selected_rows = [
+            row for row in selected_rows if str(row.get("dataset")) in selected_datasets
+        ]
     selected_ids = [str(row["selected_case_id"]) for row in selected_rows]
     missing = sorted(set(selected_ids) - by_id.keys())
     if missing:
@@ -1245,13 +1255,33 @@ def _append_jsonl(
 ) -> None:
     existing = _read_jsonl(path)
     by_key = {str(row.get(key)): row for row in existing if key in row}
+    pending: list[dict[str, object]] = []
     for row in rows:
         row_dict = dict(row)
         row_key = str(row_dict.get(key, stable_id(_canonical_json(row_dict))))
         prior = by_key.get(row_key)
         if prior is not None and _canonical_json(prior) != _canonical_json(row_dict):
             raise ContractConflictError(f"immutable JSONL row conflict: {path} ({row_key})")
+        if prior is None:
+            pending.append(row_dict)
         by_key[row_key] = row_dict
+    if durable:
+        if not pending:
+            return
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("a", encoding="utf-8", newline="") as stream:
+            for row in pending:
+                stream.write(_canonical_json(row) + "\n")
+            stream.flush()
+            os.fsync(stream.fileno())
+        if os.name != "nt":
+            flags = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0)
+            directory = os.open(path.parent, flags)
+            try:
+                os.fsync(directory)
+            finally:
+                os.close(directory)
+        return
     ordered = sorted(by_key.values(), key=lambda value: str(value.get(key, "")))
     content = "".join(_canonical_json(dict(row)) + "\n" for row in ordered)
     _write_text_replace(path, content, durable=durable)

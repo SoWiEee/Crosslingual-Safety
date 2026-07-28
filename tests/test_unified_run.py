@@ -18,7 +18,7 @@ from crosslingual_safety.psa_summary import (
     PaperSummaryService,
 )
 from crosslingual_safety.schemas import GenerationRequest, GenerationResult
-from crosslingual_safety.translation.paid_ledger import PaidTranslationTask
+from crosslingual_safety.translation.paid_ledger import PaidCallLedger, PaidTranslationTask
 from crosslingual_safety.translation.providers import (
     FakeTranslator,
     GoogleCloudAuthenticationError,
@@ -33,6 +33,7 @@ from crosslingual_safety.unified_run import (
     RunDependencies,
     RunRequest,
     RunSettings,
+    _append_jsonl,
     _nllb_checkpoint_available,
     _render_variants,
     _resolved_nllb_checkpoint,
@@ -531,8 +532,71 @@ def test_repository_run_config_selects_google_and_keeps_google_contract() -> Non
         "location": "global",
         "model": "general/nmt",
         "max_request_characters": 5000,
-        "max_run_characters": 100000,
+        "max_run_characters": 1000000,
     }
+    assert settings.bench.datasets == ("multijail",)
+
+
+def test_repository_bench_plan_selects_only_multijail() -> None:
+    settings = load_run_settings(Path("configs/run.yaml"))
+    plan = plan_run(
+        RunRequest(
+            source="bench",
+            languages=("eo", "zh-tw", "vi", "my"),
+            jailbreaks=("none", "gra", "psa"),
+            models=("llama31_8b", "llama33_70b"),
+        ),
+        settings,
+    )
+
+    assert len(plan.cases) == 315
+    assert {case.dataset for case in plan.cases} == {"multijail"}
+    assert plan.translation_jobs == 1260
+    assert plan.victim_request_count == 7560
+
+
+def test_durable_jsonl_append_does_not_replace_existing_file(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    path = tmp_path / "journal.jsonl"
+
+    def reject_replace(self: Path, target: Path) -> Path:
+        del self, target
+        raise AssertionError("durable JSONL journals must not replace files")
+
+    monkeypatch.setattr(Path, "replace", reject_replace)
+
+    _append_jsonl(path, [{"id": "a", "value": 1}], "id", durable=True)
+    _append_jsonl(path, [{"id": "b", "value": 2}], "id", durable=True)
+    _append_jsonl(path, [{"id": "a", "value": 1}], "id", durable=True)
+
+    assert [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()] == [
+        {"id": "a", "value": 1},
+        {"id": "b", "value": 2},
+    ]
+
+
+def test_paid_call_ledger_append_does_not_replace_existing_file(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    ledger = PaidCallLedger(tmp_path)
+    task = PaidTranslationTask.build(
+        case_id="case-1",
+        source_text="Prompt",
+        source_language="en",
+        target_language="vi",
+        provider="google-cloud-nmt-v3",
+        provider_contract={"provider": "google-cloud-nmt-v3"},
+    )
+
+    def reject_replace(self: Path, target: Path) -> Path:
+        del self, target
+        raise AssertionError("paid-call journals must not replace files")
+
+    monkeypatch.setattr(Path, "replace", reject_replace)
+
+    reservation = ledger.make_reservation(task, character_count=len("Prompt"))
+    assert ledger.reservations() == [reservation]
 
 
 @pytest.mark.parametrize(
