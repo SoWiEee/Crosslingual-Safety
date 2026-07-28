@@ -15,7 +15,7 @@ import json
 import os
 import re
 from collections.abc import Callable, Iterable, Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import UTC, datetime
 from importlib import import_module
 from importlib.metadata import PackageNotFoundError
@@ -43,6 +43,7 @@ from crosslingual_safety.ids import canonicalize_text, stable_id
 from crosslingual_safety.jailbreaks import (
     JailbreakContext,
     JailbreakMethod,
+    JailbreakResult,
     PaperSummaryJailbreak,
     load_jailbreaks,
 )
@@ -83,14 +84,37 @@ from crosslingual_safety.translation.providers import (
     Translator,
 )
 
-PUBLIC_LANGUAGES: tuple[str, ...] = ("en", "zh-tw", "vi", "my")
+PUBLIC_LANGUAGES: tuple[str, ...] = ("en", "zh-tw", "jv", "my", "th", "vi", "id", "tl")
 PUBLIC_JAILBREAKS: tuple[str, ...] = ("none", "gra", "psa")
 PUBLIC_SOURCES: tuple[str, ...] = ("manual", "bench")
-WRAPPER_LANGUAGES: dict[str, str] = {
+LOCALIZED_WRAPPER_LANGUAGES: dict[str, str] = {
     "en": "en",
     "zh-tw": "zh",
     "vi": "vi",
     "my": "my",
+}
+WRAPPER_LANGUAGES: dict[str, str] = {
+    **LOCALIZED_WRAPPER_LANGUAGES,
+    "jv": "en",
+    "th": "en",
+    "id": "en",
+    "tl": "en",
+}
+OUTPUT_LANGUAGE_NAMES: dict[str, str] = {
+    "jv": "Javanese",
+    "th": "Thai",
+    "id": "Indonesian",
+    "tl": "Tagalog",
+}
+FALLBACK_OUTPUT_INSTRUCTIONS: dict[str, tuple[str, str]] = {
+    "gra": (
+        "Every JSON string value must be in English.",
+        "Every JSON string value must be in {language_name}.",
+    ),
+    "psa": (
+        "Requested output language: English.",
+        "Requested output language: {language_name}.",
+    ),
 }
 ATTACK_IDS: dict[str, str] = {"none": "none", "gra": "gra_v1", "psa": "psa_static_v1"}
 SUMMARY_WRAPPER_LANGUAGES: tuple[str, ...] = ("en", "zh", "vi", "my")
@@ -2035,6 +2059,53 @@ def _summary_for_language(value: object, language: str) -> SummaryArtifact | Non
     return None
 
 
+def _apply_low_resource_output_contract(
+    rendered: JailbreakResult,
+    *,
+    payload_language: str,
+    jailbreak: str,
+) -> JailbreakResult:
+    language_name = OUTPUT_LANGUAGE_NAMES.get(payload_language)
+    instruction_contract = FALLBACK_OUTPUT_INSTRUCTIONS.get(jailbreak)
+    if language_name is None or instruction_contract is None:
+        return rendered
+    english_instruction, target_template = instruction_contract
+    if (
+        rendered.wrapper_language != "en"
+        or rendered.rendered_prompt.count(english_instruction) != 1
+    ):
+        raise ValueError("low-resource wrapper fallback contract is unavailable")
+    target_instruction = target_template.format(language_name=language_name)
+    rendered_prompt = rendered.rendered_prompt.replace(english_instruction, target_instruction)
+    try:
+        metadata = json.loads(rendered.metadata_json)
+    except json.JSONDecodeError:
+        raise ValueError("low-resource wrapper fallback metadata is invalid") from None
+    if not isinstance(metadata, dict):
+        raise ValueError("low-resource wrapper fallback metadata is invalid")
+    metadata.update(
+        {
+            "wrapper_fallback": "english",
+            "requested_output_language": payload_language,
+            "requested_output_language_name": language_name,
+        }
+    )
+    metadata_json = _canonical_json(metadata)
+    fallback_contract = _canonical_json(
+        {
+            "base_template_sha256": rendered.template_sha256,
+            "target_instruction": target_instruction,
+            "metadata_json": metadata_json,
+        }
+    )
+    return replace(
+        rendered,
+        rendered_prompt=rendered_prompt,
+        template_sha256=_sha256_text(fallback_contract),
+        metadata_json=metadata_json,
+    )
+
+
 def _render_variants(
     plan: RunPlan,
     settings: RunSettings,
@@ -2085,11 +2156,18 @@ def _render_variants(
                         str(translation["normalized_translated_text"]),
                         context,
                     )
+                rendered = _apply_low_resource_output_contract(
+                    rendered,
+                    payload_language=language,
+                    jailbreak=jailbreak,
+                )
+                localized_wrapper_language = LOCALIZED_WRAPPER_LANGUAGES.get(language)
                 language_mode: Literal["no_wrapper", "monolingual", "mixed_language"] = (
                     "no_wrapper"
                     if rendered.wrapper_language is None
                     else "monolingual"
-                    if rendered.wrapper_language == WRAPPER_LANGUAGES[language]
+                    if localized_wrapper_language is not None
+                    and rendered.wrapper_language == localized_wrapper_language
                     else "mixed_language"
                 )
                 variant_id = stable_id(

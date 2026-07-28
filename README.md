@@ -69,20 +69,22 @@ uv run crosslingual-safety run --source bench --language zh-tw,vi --jailbreak gr
 uv run crosslingual-safety run --source manual --language all --jailbreak all --dry-run
 ```
 
-`--source` 只能是 `manual` 或 `bench`；`--language` 接受 `en`、`zh-tw`、`vi`、`my`、
-逗號清單或 `all`；`--jailbreak` 接受 `none`、`gra`、`psa`、逗號清單或 `all`。manual
+`--source` 只能是 `manual` 或 `bench`；`--language` 接受 `en`、`zh-tw`、`jv`、`my`、
+`th`、`vi`、`id`、`tl`、逗號清單或 `all`；`--jailbreak` 接受 `none`、`gra`、`psa`、
+逗號清單或 `all`。manual
 預設讀取 `prompts/prompt.txt`，來源固定為繁體中文（`zh-tw`）；要改來源請修改版本化的
 `configs/run.yaml`，而不是新增 CLI flag。該設定預設使用本機 NLLB，並固定五個 victim
 model、same-as-payload wrapper 與 GRA `joker` role；PSA 摘要使用
 `ais3/gemma-4-12b`。官方 Google provider 也只能透過此版本化設定切換，CLI 不提供
 translator flag，且 provider 之間不會自動 fallback。
 
-每次正式執行會在 `runs/experiments/<run-id>/` 建立一個可恢復的 parent，並以
-`children/none/`、`children/gra/`、`children/psa/` 隔離 jailbreak。乾淨的
-`results.jsonl` 每行只含 `case_id, source, language, jailbreak, model, status, response`；
-失敗行另外含 `error_type` 與 `error_message`。完整 prompt、provider metadata、翻譯與
-PSA cache、generation Parquet 和 provenance 僅存於 `audit/` 與 child 目錄。Parent/child
-狀態是 `success`、`partial` 或 `failed`；成功兄弟 child 不會因另一 child 失敗而被刪除。
+`en`、`zh-tw`、`vi`、`my` 使用已鎖定的本地化 GRA/PSA wrapper。低資源語言 `jv`、
+`th`、`id`、`tl` 使用英文研究 wrapper 搭配目標語言 payload，並將英文限定輸出指令
+改成明確的 Javanese、Thai、Indonesian 或 Tagalog 輸出要求；variant metadata 會記錄
+`wrapper_fallback=english`，且 `language_mode` 為 `mixed_language`。PSA 仍只產生既有
+四語摘要，低資源語言 variant 重用英文摘要，不在正式執行時臨時翻譯攻擊模板。
+
+> 每次正式執行會在 `runs/experiments/<run-id>/` 建立一個可恢復的 parent，並以 `children/none/`、`children/gra/`、`children/psa/` 隔離 jailbreak。乾淨的 `results.jsonl` 每行只含 `case_id, source, language, jailbreak, model, status, response`；失敗行另外含 `error_type` 與 `error_message`。完整 prompt、provider metadata、翻譯與 PSA cache、generation Parquet 和 provenance 僅存於 `audit/` 與 child 目錄。Parent/child 狀態是 `success`、`partial` 或 `failed`；成功兄弟 child 不會因另一 child 失敗而被刪除。
 
 低階工作流仍可用於除錯或自訂設定，包括 `ingest`、`translate`、`build-variants`、
 `plan`、`enqueue`、`generate`、`generation-status`、`retry-failed` 與 `manual-run`。

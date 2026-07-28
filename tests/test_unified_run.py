@@ -34,6 +34,7 @@ from crosslingual_safety.unified_run import (
     RunRequest,
     RunSettings,
     _nllb_checkpoint_available,
+    _render_variants,
     _resolved_nllb_checkpoint,
     _translate_cases,
     execute_run,
@@ -63,6 +64,10 @@ def test_parse_selection_normalizes_and_orders(
 def test_parse_selection_rejects_internal_zh() -> None:
     with pytest.raises(ValueError):
         parse_selection("zh", PUBLIC_LANGUAGES, "--language")
+
+
+def test_public_languages_include_low_resource_manual_targets() -> None:
+    assert PUBLIC_LANGUAGES == ("en", "zh-tw", "jv", "my", "th", "vi", "id", "tl")
 
 
 def test_run_help_exposes_only_public_experiment_options() -> None:
@@ -113,6 +118,72 @@ runs_dir: runs/experiments
     shutil.copy(Path("configs/languages.yaml"), configs / "languages.yaml")
     shutil.copy(Path("configs/jailbreaks.yaml"), configs / "jailbreaks.yaml")
     return load_run_settings(configs / "run.yaml")
+
+
+@pytest.mark.parametrize(
+    ("language", "jailbreak", "english_instruction", "target_instruction", "language_name"),
+    [
+        (
+            "jv",
+            "gra",
+            "Every JSON string value must be in English.",
+            "Every JSON string value must be in Javanese.",
+            "Javanese",
+        ),
+        (
+            "tl",
+            "psa",
+            "Requested output language: English.",
+            "Requested output language: Tagalog.",
+            "Tagalog",
+        ),
+    ],
+)
+def test_low_resource_variants_use_english_wrapper_with_target_output_contract(
+    tmp_path: Path,
+    language: str,
+    jailbreak: str,
+    english_instruction: str,
+    target_instruction: str,
+    language_name: str,
+) -> None:
+    settings = _settings(tmp_path)
+    plan = plan_run(
+        RunRequest(source="manual", languages=(language,), jailbreaks=(jailbreak,)),
+        settings,
+    )
+    case = plan.cases[0]
+    translations = {
+        (case.case_id, language): {
+            "translation_id": f"translation-{language}",
+            "normalized_translated_text": f"payload-{language}",
+        }
+    }
+    method = load_jailbreaks(settings.jailbreaks_config)[
+        "gra_v1" if jailbreak == "gra" else "psa_static_v1"
+    ]
+
+    variants, errors = _render_variants(
+        plan,
+        settings,
+        method,
+        jailbreak,
+        translations,
+        {},
+        None,
+    )
+
+    assert errors == {}
+    assert len(variants) == 1
+    variant = variants[0]
+    assert english_instruction not in variant["rendered_prompt"]
+    assert target_instruction in variant["rendered_prompt"]
+    assert variant["wrapper_language"] == "en"
+    assert variant["language_mode"] == "mixed_language"
+    metadata = json.loads(str(variant["attack_metadata_json"]))
+    assert metadata["wrapper_fallback"] == "english"
+    assert metadata["requested_output_language"] == language
+    assert metadata["requested_output_language_name"] == language_name
 
 
 def _google_settings(tmp_path: Path) -> RunSettings:

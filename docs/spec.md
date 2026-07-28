@@ -2252,10 +2252,18 @@ uv run crosslingual-safety run --source bench --language zh-tw,vi --jailbreak gr
 ```
 
 The command exposes exactly `--source`, `--language`, `--jailbreak`, and `--dry-run`. Sources are
-`manual` and `bench`; languages are `en`, `zh-tw`, `vi`, and `my`; jailbreaks are `none`, `gra`,
-and `psa`. Values may be comma-separated or `all`, are deduplicated in canonical order, and
-internal `zh` is rejected at this boundary. `zh-tw` is retained in input, translation, result,
-and audit rows, while existing wrapper templates receive the internal `zh` alias.
+`manual` and `bench`; languages are `en`, `zh-tw`, `jv`, `my`, `th`, `vi`, `id`, and `tl`;
+jailbreaks are `none`, `gra`, and `psa`. Values may be comma-separated or `all`, are deduplicated
+in canonical order, and internal `zh` is rejected at this boundary. `zh-tw` is retained in input,
+translation, result, and audit rows, while existing wrapper templates receive the internal `zh`
+alias.
+
+The reviewed `en`, `zh`, `vi`, and `my` GRA/PSA wrappers remain unchanged. Payload languages `jv`,
+`th`, `id`, and `tl` use the English wrapper and English PSA summary, but the English-only output
+instruction is replaced with an explicit Javanese, Thai, Indonesian, or Tagalog requirement. The
+derived template hash covers this instruction and fallback metadata. Such variants record
+`wrapper_fallback=english`, the requested output language and name, and
+`language_mode=mixed_language`; generation runtime never machine-translates an attack wrapper.
 
 `configs/run.yaml` fixes the manual path (`prompts/prompt.txt`), benchmark cases and selection
 snapshots, five victim models, default local NLLB translation, same-as-payload wrappers, the GRA
