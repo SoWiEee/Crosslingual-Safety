@@ -230,10 +230,7 @@ class PaidCallLedger:
         return rows
 
     def outcomes(self) -> list[dict[str, object]]:
-        reservations = {
-            str(row["reservation_id"]): row
-            for row in self.reservations()
-        }
+        reservations = {str(row["reservation_id"]): row for row in self.reservations()}
         rows = _read_jsonl(self.outcomes_path)
         seen_outcomes: set[str] = set()
         seen_reservations: set[str] = set()
@@ -245,10 +242,11 @@ class PaidCallLedger:
             if reservation is None:
                 raise PaidCallLedgerError("paid-call outcome reservation is invalid")
             outcome_id = self.validate_outcome_for_reservation(row, reservation)
-            if outcome_id in seen_outcomes or reservation_id in seen_reservations:
+            validated_reservation_id = str(reservation["reservation_id"])
+            if outcome_id in seen_outcomes or validated_reservation_id in seen_reservations:
                 raise PaidCallLedgerError("paid-call ledger contains a duplicate outcome")
             seen_outcomes.add(outcome_id)
-            seen_reservations.add(reservation_id)
+            seen_reservations.add(validated_reservation_id)
         return rows
 
     def append_reservation(self, reservation: Mapping[str, object]) -> None:
@@ -264,11 +262,7 @@ class PaidCallLedger:
         existing_outcomes = self.outcomes()
         reservation_id = outcome.get("reservation_id")
         reservation = next(
-            (
-                row
-                for row in self.reservations()
-                if row.get("reservation_id") == reservation_id
-            ),
+            (row for row in self.reservations() if row.get("reservation_id") == reservation_id),
             None,
         )
         if reservation is None:
@@ -385,8 +379,7 @@ class PaidCallLedger:
             or isinstance(charged_character_count, bool)
             or not isinstance(charged_character_count, int)
             or charged_character_count != character_count
-            or outcome.get("audit_reference")
-            != f"translation_reservations.jsonl#{reservation_id}"
+            or outcome.get("audit_reference") != f"translation_reservations.jsonl#{reservation_id}"
             or not isinstance(created_at, str)
             or not created_at
             or len(created_at) > 64

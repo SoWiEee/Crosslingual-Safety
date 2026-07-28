@@ -124,9 +124,7 @@ SANITIZED_ERROR_MESSAGES: dict[str, str] = {
     "GoogleCloudRequestTooLargeError": (
         "Google Cloud Translation request character limit exceeded"
     ),
-    "GoogleCloudRunBudgetExceededError": (
-        "Google Cloud Translation run character budget exceeded"
-    ),
+    "GoogleCloudRunBudgetExceededError": ("Google Cloud Translation run character budget exceeded"),
     "TranslationInputTooLongError": "Translation input exceeds the configured token limit",
     "UnexpectedOperationError": "An unexpected operation failed",
 }
@@ -1391,8 +1389,7 @@ def _validate_translation_attempt(
         or row.get("source_text_sha256") != task.source_text_sha256
         or source_character_count != task.source_character_count
         or charged_character_count != task.source_character_count
-        or row.get("audit_reference")
-        != f"translation_reservations.jsonl#{provider_reservation_id}"
+        or row.get("audit_reference") != f"translation_reservations.jsonl#{provider_reservation_id}"
     ):
         reject()
     if status == "indeterminate":
@@ -1538,8 +1535,7 @@ def _validate_translation_audit_row(
         or row.get("provider_project_id") != provider_contract.get("project_id")
         or row.get("provider_location") != provider_contract.get("location")
         or row.get("provider_model") != provider_contract.get("model")
-        or row.get("provider_client_version")
-        != provider_contract.get("client_library_version")
+        or row.get("provider_client_version") != provider_contract.get("client_library_version")
     ):
         raise ContractConflictError("invalid Google Cloud paid-call outcome identity")
     return key, provider_reservation_id
@@ -1573,9 +1569,10 @@ def _translate_cases(
     paid_task_contexts: dict[str, tuple[PaidTranslationTask, UnifiedCase]] = {}
     provider_contract: Mapping[str, object] | None = None
     if settings.translator == GOOGLE_CLOUD_TRANSLATOR:
-        provider_contract = plan.contract.get("translator_contract")
-        if not isinstance(provider_contract, Mapping):
+        configured_provider_contract = plan.contract.get("translator_contract")
+        if not isinstance(configured_provider_contract, Mapping):
             raise ContractConflictError("invalid Google Cloud translator contract")
+        provider_contract = cast(Mapping[str, object], configured_provider_contract)
         for case in plan.cases:
             for target_language in plan.languages:
                 if target_language == case.source_language:
@@ -1848,9 +1845,7 @@ def _translate_cases(
                 )
                 if pending_paid_task is not None:
                     record["task_key"] = pending_paid_task.task_key
-                    record["provider_contract_sha256"] = (
-                        pending_paid_task.provider_contract_sha256
-                    )
+                    record["provider_contract_sha256"] = pending_paid_task.provider_contract_sha256
             except Exception as error:
                 paid_task = pending_paid_task
                 is_indeterminate = (
@@ -1904,9 +1899,7 @@ def _translate_cases(
                             "Google Cloud paid-call attempt context is invalid"
                         )
                     failure_attempt["task_key"] = paid_task.task_key
-                    failure_attempt["provider_contract_sha256"] = (
-                        paid_task.provider_contract_sha256
-                    )
+                    failure_attempt["provider_contract_sha256"] = paid_task.provider_contract_sha256
                 if is_indeterminate:
                     failure_attempt["billing_status"] = "charged_as_indeterminate"
                 _append_jsonl(

@@ -697,10 +697,7 @@ def test_google_post_dispatch_timeout_is_indeterminate_and_not_resent_on_resume(
     assert attempts[0]["error_type"] == "GoogleCloudIndeterminatePaidAttemptError"
     assert attempts[0]["provider_reservation_id"] == reservations[0]["reservation_id"]
     assert attempts[0]["task_key"] == reservations[0]["task_key"]
-    assert (
-        attempts[0]["provider_contract_sha256"]
-        == reservations[0]["provider_contract_sha256"]
-    )
+    assert attempts[0]["provider_contract_sha256"] == reservations[0]["provider_contract_sha256"]
     serialized = json.dumps(attempts, sort_keys=True)
     for secret in ("C:/sensitive/adc.json", "PROMPT_SENTINEL", "KEY_SENTINEL"):
         assert secret not in serialized

@@ -641,8 +641,7 @@ def test_translate_google_response_failure_is_sanitized_for_terminal(
         )
     )
     assert (
-        "Google Cloud Translation paid attempt outcome is indeterminate; "
-        "manual review is required"
+        "Google Cloud Translation paid attempt outcome is indeterminate; manual review is required"
     ) in persisted
     assert leaked_detail not in persisted
 
@@ -1127,13 +1126,11 @@ def test_translate_google_post_dispatch_timeout_is_indeterminate_and_never_resen
 
     outcomes = [
         json.loads(line)
-        for line in (
-            output_dir / "audit" / "translation_reservation_outcomes.jsonl"
-        ).read_text(encoding="utf-8").splitlines()
+        for line in (output_dir / "audit" / "translation_reservation_outcomes.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
     ]
-    failure = json.loads(
-        (output_dir / "translation_failures.jsonl").read_text(encoding="utf-8")
-    )
+    failure = json.loads((output_dir / "translation_failures.jsonl").read_text(encoding="utf-8"))
     assert first.exit_code == second.exit_code == 0
     assert client.call_count == 1
     assert [outcome["status"] for outcome in outcomes] == ["indeterminate"]
@@ -1207,9 +1204,7 @@ def test_translate_google_rejects_forged_outcome_before_provider_call(
         "task_key": reservation["task_key"],
         "status": "success",
         "charged_character_count": reservation["source_character_count"],
-        "audit_reference": (
-            f"translation_reservations.jsonl#{reservation['reservation_id']}"
-        ),
+        "audit_reference": (f"translation_reservations.jsonl#{reservation['reservation_id']}"),
         "created_at": "2026-01-01T00:00:00Z",
         "translated_text": "forged translation",
         "provider_request_id": None,
