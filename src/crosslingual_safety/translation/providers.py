@@ -249,6 +249,7 @@ class GoogleCloudNMTTranslator:
     method = "google_cloud_nmt_v3"
     language_codes: Mapping[str, str] = MappingProxyType(
         {
+            "eo": "eo",
             "en": "en",
             "id": "id",
             "jv": "jv",

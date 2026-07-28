@@ -25,12 +25,13 @@ from crosslingual_safety.generation.providers import (
 )
 from crosslingual_safety.schemas import GenerationRequest, GenerationResult
 
-SUMMARY_LANGUAGES: tuple[str, ...] = ("en", "zh", "vi", "my")
+SUMMARY_LANGUAGES: tuple[str, ...] = ("en", "zh", "vi", "my", "eo")
 SUMMARY_LANGUAGE_NAMES: dict[str, str] = {
     "en": "English",
     "zh": "Traditional Chinese",
     "vi": "Vietnamese",
     "my": "Burmese",
+    "eo": "Esperanto",
 }
 SUMMARY_KEYS: tuple[str, ...] = (
     "attack_methods",
@@ -211,7 +212,7 @@ def artifact_contract(artifact: SummaryArtifact) -> dict[str, object]:
 
 
 class PaperSummaryService:
-    """Create deterministic summary requests and validate immutable four-row caches."""
+    """Create deterministic summary requests and validate immutable five-row caches."""
 
     def __init__(
         self,
@@ -447,7 +448,7 @@ class PaperSummaryService:
         self, artifacts: Sequence[SummaryArtifact]
     ) -> dict[str, SummaryArtifact]:
         if len(artifacts) != len(SUMMARY_LANGUAGES):
-            raise SummaryError("summary cache must contain exactly four language rows")
+            raise SummaryError("summary cache must contain exactly five language rows")
         by_language: dict[str, SummaryArtifact] = {}
         for artifact in artifacts:
             if artifact.language not in SUMMARY_LANGUAGE_NAMES:
@@ -472,7 +473,7 @@ class PaperSummaryService:
             artifact_sections(artifact)
             by_language[artifact.language] = artifact
         if set(by_language) != set(SUMMARY_LANGUAGES):
-            raise SummaryError("summary cache must contain one row for each en, zh, vi, and my")
+            raise SummaryError("summary cache must contain one row for each en, zh, vi, my, and eo")
         return by_language
 
     def load_cache(self, path: Path) -> dict[str, SummaryArtifact]:
@@ -489,7 +490,7 @@ class PaperSummaryService:
 
     def dump_cache(self, artifacts: Mapping[str, SummaryArtifact]) -> str:
         if set(artifacts) != set(SUMMARY_LANGUAGES):
-            raise SummaryError("summary cache must contain exactly four language rows")
+            raise SummaryError("summary cache must contain exactly five language rows")
         ordered = self.validate_artifacts([artifacts[language] for language in SUMMARY_LANGUAGES])
         return "".join(
             canonical_json(ordered[language].model_dump(mode="json")) + "\n"

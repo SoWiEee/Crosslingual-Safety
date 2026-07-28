@@ -44,3 +44,8 @@ languages:
     nllb_code: tgl_Latn
     family: Austronesian
     script: Latin
+  eo:
+    display_name: Esperanto
+    nllb_code: epo_Latn
+    family: Constructed
+    script: Latin

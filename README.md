@@ -38,11 +38,8 @@ powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | ie
 git clone https://github.com/SoWiEee/Crosslingual-Safety.git
 cd Crosslingual-Safety/
 
-# install runtime, development, and default local translation dependencies
-uv sync --all-groups --extra translation-nllb
-
-# optional official Google Cloud Translation Advanced v3 provider
-uv sync --all-groups --extra translation-google
+# install runtime, development, local NLLB, and Google Cloud translation dependencies
+uv sync --all-groups --extra translation-nllb --extra translation-google
 ```
 
 從範例 `.env.example` 建立 `.env`，只填入實際啟用 provider 所需的值：
@@ -70,19 +67,24 @@ uv run crosslingual-safety run --source manual --language all --jailbreak all --
 ```
 
 `--source` 只能是 `manual` 或 `bench`；`--language` 接受 `en`、`zh-tw`、`jv`、`my`、
-`th`、`vi`、`id`、`tl`、逗號清單或 `all`；`--jailbreak` 接受 `none`、`gra`、`psa`、
+`th`、`vi`、`id`、`tl`、`eo`（Esperanto）、逗號清單或 `all`；`--jailbreak` 接受
+`none`、`gra`、`psa`、
 逗號清單或 `all`。manual
 預設讀取 `prompts/prompt.txt`，來源固定為繁體中文（`zh-tw`）；要改來源請修改版本化的
-`configs/run.yaml`，而不是新增 CLI flag。該設定預設使用本機 NLLB，並固定五個 victim
+`configs/run.yaml`，而不是新增 CLI flag。該設定目前使用 Google Cloud Translation
+Advanced v3，並固定五個 victim
 model、same-as-payload wrapper 與 GRA `joker` role；PSA 摘要使用
-`ais3/gemma-4-12b`。官方 Google provider 也只能透過此版本化設定切換，CLI 不提供
-translator flag，且 provider 之間不會自動 fallback。
+`ais3/gemma-4-12b`。翻譯 provider 只能透過此版本化設定切換；要改回本機模型，將
+`translator` 設為 `nllb`。CLI 不提供 translator flag，且 provider 之間不會自動
+fallback。
 
-`en`、`zh-tw`、`vi`、`my` 使用已鎖定的本地化 GRA/PSA wrapper。低資源語言 `jv`、
+`en`、`zh-tw`、`vi`、`my`、`eo` 使用已鎖定的本地化 GRA/PSA wrapper。Esperanto
+在 Google Cloud Translation 使用 `eo`，在 NLLB 設定使用 `epo_Latn`。低資源語言 `jv`、
 `th`、`id`、`tl` 使用英文研究 wrapper 搭配目標語言 payload，並將英文限定輸出指令
 改成明確的 Javanese、Thai、Indonesian 或 Tagalog 輸出要求；variant metadata 會記錄
-`wrapper_fallback=english`，且 `language_mode` 為 `mixed_language`。PSA 仍只產生既有
-四語摘要，低資源語言 variant 重用英文摘要，不在正式執行時臨時翻譯攻擊模板。
+`wrapper_fallback=english`，且 `language_mode` 為 `mixed_language`。PSA 產生
+English、Traditional Chinese、Vietnamese、Burmese 與 Esperanto 五語摘要；其他低資源
+語言 variant 重用英文摘要，不在正式執行時臨時翻譯攻擊模板。
 
 > 每次正式執行會在 `runs/experiments/<run-id>/` 建立一個可恢復的 parent，並以 `children/none/`、`children/gra/`、`children/psa/` 隔離 jailbreak。乾淨的 `results.jsonl` 每行只含 `case_id, source, language, jailbreak, model, status, response`；失敗行另外含 `error_type` 與 `error_message`。完整 prompt、provider metadata、翻譯與 PSA cache、generation Parquet 和 provenance 僅存於 `audit/` 與 child 目錄。Parent/child 狀態是 `success`、`partial` 或 `failed`；成功兄弟 child 不會因另一 child 失敗而被刪除。
 
@@ -112,7 +114,7 @@ JBB pairs、variant selection 與 raw snapshot inventory。
 
 ## 翻譯與審查
 
-資料集原生翻譯會自動優先於機器翻譯。預設使用本機 GPU 上的
+資料集原生翻譯會自動優先於機器翻譯。低階 `translate` 指令預設使用本機 GPU 上的
 `facebook/nllb-200-distilled-600M` 補齊缺少語言，不需翻譯 API key。
 需要 NVIDIA CUDA；首次執行會從 Hugging Face 下載模型並寫入本機 cache：
 
@@ -121,8 +123,8 @@ JBB pairs、variant selection 與 raw snapshot inventory。
 HF_HUB_DISABLE_XET=1 uv run hf download \
   facebook/nllb-200-distilled-600M pytorch_model.bin
 
-# local NLLB is the default translator
-uv run crosslingual-safety translate --languages zh,vi,my
+# low-level translate defaults to local NLLB
+uv run crosslingual-safety translate --languages zh,vi,my,eo
 
 uv run crosslingual-safety export-translation-review --output runs/pilot_001/translation_review.csv
 
@@ -143,11 +145,20 @@ uv run hf download facebook/nllb-200-distilled-600M pytorch_model.bin
 NLLB 使用 CUDA FP16、單筆 deterministic decoding，4 GB VRAM 可執行但不提高
 batch size。超過模型原生 1024-token 上限的 case 不會截斷，會寫入
 `data/translated/translation_failures.jsonl` 並標記為需要人工翻譯。
+可用以下 live test 驗證本機 checkpoint、CUDA 與 Esperanto `epo_Latn`；一般 pytest
+不會載入模型：
+
+```powershell
+$env:PYTHONUTF8 = "1"
+$env:RUN_NLLB_LIVE = "1"
+uv run pytest -o "addopts=" -m live_nllb tests/test_translation.py -q
+```
+
 若要使用免費線上備援，可明確指定
 `--translator deep-translator-google`；它使用非官方 web endpoint，可能遇到限流
 或上游變更。付費官方 API 則使用 `--translator google-cloud-nmt-v3`。
 
-### Google Cloud Translation Advanced v3（明確選用）
+### Google Cloud Translation Advanced v3
 
 Google provider 使用 Application Default Credentials（ADC），不接受 API key。先啟用
 Cloud Translation API，建立專用 service account，僅授予
@@ -178,7 +189,8 @@ google_cloud:
   max_run_characters: 100000
 ```
 
-預設仍是 `translator: nllb`。正式 Google run 會在建立 run artifacts 前驗證套件、
+目前統一 `run` 的版本化設定是 `translator: google-cloud-nmt-v3`；改成
+`translator: nllb` 即切回本機模型。正式 Google run 會在建立 run artifacts前驗證套件、
 ADC、project/location/model、語言映射與字元預算；單一 request 上限 5,000 字元，
 單次 run 上限 100,000 字元。這些是本專案的成本護欄，不是 Google billing cap。
 每個付費呼叫會先以可供一般應用程式程序崩潰後恢復、不可變的 reservation 寫入

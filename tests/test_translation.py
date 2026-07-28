@@ -340,6 +340,7 @@ def test_deep_translator_google_retries_transient_failure(
         ("zh-tw", "zh-TW", "安全評估研究。"),
         ("vi", "vi", "Nghiên cứu đánh giá an toàn."),
         ("my", "my", "ဘေးကင်းရေး အကဲဖြတ် သုတေသန။"),
+        ("eo", "eo", "Esploro pri sekureca taksado."),
     ],
 )
 def test_google_cloud_nmt_uses_exact_v3_request_and_static_language_map(
@@ -381,7 +382,17 @@ def test_google_cloud_nmt_uses_exact_v3_request_and_static_language_map(
     assert translator.supports("zh", target_language)
     assert translator.decoding_config["language_codes"]["zh"] == "zh-CN"
     assert translator.decoding_config["language_codes"]["zh-tw"] == "zh-TW"
+    assert translator.decoding_config["language_codes"]["eo"] == "eo"
     assert "supported_languages" not in translator.decoding_config
+
+
+def test_esperanto_language_configuration_uses_public_and_nllb_codes() -> None:
+    esperanto = load_languages(Path("configs/languages.yaml"))["eo"]
+
+    assert esperanto.display_name == "Esperanto"
+    assert esperanto.nllb_code == "epo_Latn"
+    assert esperanto.family == "Constructed"
+    assert esperanto.script == "Latin"
 
 
 def test_google_cloud_nmt_validates_source_and_target_before_request() -> None:
@@ -671,6 +682,52 @@ def test_live_google_cloud_nmt_translates_harmless_sentence() -> None:
 
     assert all(result.strip() for result in results.values())
     assert translator.characters_used == len(sentence) * 3
+
+
+@pytest.mark.live_google
+@pytest.mark.skipif(
+    os.environ.get("RUN_GOOGLE_TRANSLATION_LIVE") != "1",
+    reason=(
+        "set RUN_GOOGLE_TRANSLATION_LIVE=1 and select -m live_google "
+        "to incur an explicit Google Cloud request"
+    ),
+)
+def test_live_google_cloud_nmt_translates_esperanto() -> None:
+    translator = GoogleCloudNMTTranslator(
+        project_id="gen-lang-client-0036391889",
+        location="global",
+        model="general/nmt",
+        max_request_characters=5000,
+        max_run_characters=100000,
+    )
+    sentence = "This is a harmless Esperanto translation smoke test."
+
+    result = translator.translate(sentence, "en", "eo").text
+
+    assert result.strip()
+    assert result != sentence
+    assert translator.characters_used == len(sentence)
+
+
+@pytest.mark.live_nllb
+@pytest.mark.skipif(
+    os.environ.get("RUN_NLLB_LIVE") != "1",
+    reason="set RUN_NLLB_LIVE=1 and select -m live_nllb to load the local CUDA model",
+)
+def test_live_nllb_translates_esperanto_on_cuda() -> None:
+    translator = NLLBTranslator(
+        load_languages(Path("configs/languages.yaml")),
+        checkpoint="facebook/nllb-200-distilled-600M",
+        local_files_only=True,
+    )
+    sentence = "This is a harmless Esperanto translation smoke test."
+
+    result = translator.translate(sentence, "en", "eo").text
+
+    assert result.strip()
+    assert result != sentence
+    assert translator.device == "cuda"
+    assert translator.decoding_config["language_codes"]["eo"] == "epo_Latn"
 
 
 def test_nllb_uses_cuda_fp16_and_project_language_codes(

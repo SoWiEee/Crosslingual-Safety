@@ -84,7 +84,17 @@ from crosslingual_safety.translation.providers import (
     Translator,
 )
 
-PUBLIC_LANGUAGES: tuple[str, ...] = ("en", "zh-tw", "jv", "my", "th", "vi", "id", "tl")
+PUBLIC_LANGUAGES: tuple[str, ...] = (
+    "en",
+    "zh-tw",
+    "jv",
+    "my",
+    "th",
+    "vi",
+    "id",
+    "tl",
+    "eo",
+)
 PUBLIC_JAILBREAKS: tuple[str, ...] = ("none", "gra", "psa")
 PUBLIC_SOURCES: tuple[str, ...] = ("manual", "bench")
 LOCALIZED_WRAPPER_LANGUAGES: dict[str, str] = {
@@ -92,6 +102,7 @@ LOCALIZED_WRAPPER_LANGUAGES: dict[str, str] = {
     "zh-tw": "zh",
     "vi": "vi",
     "my": "my",
+    "eo": "eo",
 }
 WRAPPER_LANGUAGES: dict[str, str] = {
     **LOCALIZED_WRAPPER_LANGUAGES,
@@ -117,7 +128,7 @@ FALLBACK_OUTPUT_INSTRUCTIONS: dict[str, tuple[str, str]] = {
     ),
 }
 ATTACK_IDS: dict[str, str] = {"none": "none", "gra": "gra_v1", "psa": "psa_static_v1"}
-SUMMARY_WRAPPER_LANGUAGES: tuple[str, ...] = ("en", "zh", "vi", "my")
+SUMMARY_WRAPPER_LANGUAGES: tuple[str, ...] = ("en", "zh", "vi", "my", "eo")
 GOOGLE_CLOUD_TRANSLATOR = "google-cloud-nmt-v3"
 GOOGLE_CLOUD_INDETERMINATE_ERROR = "GoogleCloudIndeterminatePaidAttemptError"
 GOOGLE_CLOUD_INDETERMINATE_MESSAGE = (

@@ -575,12 +575,12 @@ google_cloud:
   max_run_characters: 100000
 ```
 
-`translator: nllb` 是預設值。統一 `run` 不提供 translator CLI option；只有把版本化
-`configs/run.yaml` 改為 `translator: google-cloud-nmt-v3` 才會選用 Cloud Translation
-Advanced v3，且不得在 NLLB 與 Google 之間自動 fallback。進階
+版本化的 `configs/run.yaml` 目前使用 `translator: google-cloud-nmt-v3`。統一 `run`
+不提供 translator CLI option；要切換本機翻譯，必須明確將設定改為
+`translator: nllb`，且不得在 NLLB 與 Google 之間自動 fallback。進階
 `translate --translator google-cloud-nmt-v3` 介面保留。
 
-預設 NLLB provider 不讀取 credential。若明確啟用 Cloud Translation Advanced v3，
+NLLB provider 不讀取 credential。啟用 Cloud Translation Advanced v3 時，
 則使用 IAM 與 Application Default Credentials（ADC），不接受 API key。正式程式不得
 接受 service account JSON 內容作為 CLI argument，也不得將 credential path、path hash、
 key material 或 raw provider metadata 寫入 experiment record。
@@ -2252,27 +2252,28 @@ uv run crosslingual-safety run --source bench --language zh-tw,vi --jailbreak gr
 ```
 
 The command exposes exactly `--source`, `--language`, `--jailbreak`, and `--dry-run`. Sources are
-`manual` and `bench`; languages are `en`, `zh-tw`, `jv`, `my`, `th`, `vi`, `id`, and `tl`;
+`manual` and `bench`; languages are `en`, `zh-tw`, `jv`, `my`, `th`, `vi`, `id`, `tl`, and `eo`;
 jailbreaks are `none`, `gra`, and `psa`. Values may be comma-separated or `all`, are deduplicated
 in canonical order, and internal `zh` is rejected at this boundary. `zh-tw` is retained in input,
 translation, result, and audit rows, while existing wrapper templates receive the internal `zh`
 alias.
 
-The reviewed `en`, `zh`, `vi`, and `my` GRA/PSA wrappers remain unchanged. Payload languages `jv`,
-`th`, `id`, and `tl` use the English wrapper and English PSA summary, but the English-only output
-instruction is replaced with an explicit Javanese, Thai, Indonesian, or Tagalog requirement. The
-derived template hash covers this instruction and fallback metadata. Such variants record
-`wrapper_fallback=english`, the requested output language and name, and
-`language_mode=mixed_language`; generation runtime never machine-translates an attack wrapper.
+The reviewed `en`, `zh`, `vi`, and `my` GRA/PSA wrappers remain unchanged, and `eo` adds fully
+localized Esperanto GRA/PSA wrappers and PSA summary sections. Esperanto uses public/provider code
+`eo` and NLLB code `epo_Latn`. Payload languages `jv`, `th`, `id`, and `tl` use the English wrapper
+and English PSA summary, but the English-only output instruction is replaced with an explicit
+Javanese, Thai, Indonesian, or Tagalog requirement. The derived template hash covers this
+instruction and fallback metadata. Such variants record `wrapper_fallback=english`, the requested
+output language and name, and `language_mode=mixed_language`; generation runtime never
+machine-translates an attack wrapper.
 
 `configs/run.yaml` fixes the manual path (`prompts/prompt.txt`), benchmark cases and selection
-snapshots, five victim models, default local NLLB translation, same-as-payload wrappers, the GRA
-`joker` role, and the PSA summarizer (`ais3/gemma-4-12b`). Manual input defaults to Traditional
-Chinese. Cloud Translation Advanced v3 is selected only by changing the versioned
-`translator` setting to `google-cloud-nmt-v3`; changing this contract never adds a CLI option and
-never enables automatic provider fallback.
+snapshots, five victim models, Google Cloud Translation Advanced v3, same-as-payload wrappers, the
+GRA `joker` role, and the PSA summarizer (`ais3/gemma-4-12b`). Manual input defaults to Traditional
+Chinese. Local NLLB remains available by changing the versioned `translator` setting to `nllb`;
+changing this contract never adds a CLI option and never enables automatic provider fallback.
 
-Dry-run resolves the selected cases and computes translation jobs, four-language PSA summary jobs,
+Dry-run resolves the selected cases and computes translation jobs, five-language PSA summary jobs,
 victim request count, deterministic run ID, prospective parent path, and the selected translator's
 non-secret contract. It does not load `.env` or ADC, initialize CUDA/NLLB, construct a Google
 client, construct a summary/provider, open a queue, call a provider, or create a run directory.

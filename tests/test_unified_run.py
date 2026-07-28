@@ -67,7 +67,7 @@ def test_parse_selection_rejects_internal_zh() -> None:
 
 
 def test_public_languages_include_low_resource_manual_targets() -> None:
-    assert PUBLIC_LANGUAGES == ("en", "zh-tw", "jv", "my", "th", "vi", "id", "tl")
+    assert PUBLIC_LANGUAGES == ("en", "zh-tw", "jv", "my", "th", "vi", "id", "tl", "eo")
 
 
 def test_run_help_exposes_only_public_experiment_options() -> None:
@@ -184,6 +184,60 @@ def test_low_resource_variants_use_english_wrapper_with_target_output_contract(
     assert metadata["wrapper_fallback"] == "english"
     assert metadata["requested_output_language"] == language
     assert metadata["requested_output_language_name"] == language_name
+
+
+def test_esperanto_gra_variant_uses_localized_monolingual_wrapper(tmp_path: Path) -> None:
+    settings = _settings(tmp_path)
+    plan = plan_run(
+        RunRequest(source="manual", languages=("eo",), jailbreaks=("gra",)),
+        settings,
+    )
+    case = plan.cases[0]
+    translations = {
+        (case.case_id, "eo"): {
+            "translation_id": "translation-eo",
+            "normalized_translated_text": "Esperanta payload",
+        }
+    }
+    method = load_jailbreaks(settings.jailbreaks_config)["gra_v1"]
+
+    variants, errors = _render_variants(plan, settings, method, "gra", translations, {}, None)
+
+    assert errors == {}
+    assert len(variants) == 1
+    variant = variants[0]
+    assert variant["wrapper_language"] == "eo"
+    assert variant["language_mode"] == "monolingual"
+    assert "Ĉiu JSON-ĉena valoro devas esti en Esperanto." in variant["rendered_prompt"]
+    metadata = json.loads(str(variant["attack_metadata_json"]))
+    assert "wrapper_fallback" not in metadata
+
+
+def test_esperanto_psa_variant_uses_localized_monolingual_wrapper(tmp_path: Path) -> None:
+    settings = _settings(tmp_path)
+    plan = plan_run(
+        RunRequest(source="manual", languages=("eo",), jailbreaks=("psa",)),
+        settings,
+    )
+    case = plan.cases[0]
+    translations = {
+        (case.case_id, "eo"): {
+            "translation_id": "translation-eo",
+            "normalized_translated_text": "Esperanta payload",
+        }
+    }
+    method = load_jailbreaks(settings.jailbreaks_config)["psa_static_v1"]
+
+    variants, errors = _render_variants(plan, settings, method, "psa", translations, {}, None)
+
+    assert errors == {}
+    assert len(variants) == 1
+    variant = variants[0]
+    assert variant["wrapper_language"] == "eo"
+    assert variant["language_mode"] == "monolingual"
+    assert "Petita eliga lingvo: Esperanto." in variant["rendered_prompt"]
+    metadata = json.loads(str(variant["attack_metadata_json"]))
+    assert "wrapper_fallback" not in metadata
 
 
 def _google_settings(tmp_path: Path) -> RunSettings:
@@ -330,10 +384,10 @@ def test_manual_plan_uses_configured_source_language(tmp_path: Path) -> None:
     assert plan.translation_jobs == 0
 
 
-def test_repository_run_config_keeps_nllb_default_and_google_contract() -> None:
+def test_repository_run_config_selects_google_and_keeps_google_contract() -> None:
     settings = load_run_settings(Path("configs/run.yaml"))
 
-    assert settings.translator == "nllb"
+    assert settings.translator == "google-cloud-nmt-v3"
     assert settings.google_cloud == {
         "project_id": "gen-lang-client-0036391889",
         "location": "global",
@@ -1118,10 +1172,10 @@ def test_malformed_psa_cache_is_quarantined_and_regenerated(tmp_path: Path) -> N
     quarantine = audit / f"psa_summary_artifacts.quarantine.{digest}.jsonl"
     assert quarantine.read_bytes() == malformed
     assert cache_path.is_file()
-    assert len(provider.languages) == 4
+    assert len(provider.languages) == 5
     assert result.child_statuses == {"none": "success", "psa": "success"}
     assert result.status == "success"
-    assert len(_summary_service(settings, _SummaryProvider()).load_cache(cache_path)) == 4
+    assert len(_summary_service(settings, _SummaryProvider()).load_cache(cache_path)) == 5
 
 
 def test_malformed_psa_cache_stays_quarantined_when_summary_regeneration_fails(

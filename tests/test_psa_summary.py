@@ -29,6 +29,7 @@ def _service(requests: list[dict[str, object]]) -> PaperSummaryService:
             "zh": "Traditional Chinese",
             "vi": "Vietnamese",
             "my": "Burmese",
+            "eo": "Esperanto",
         }
         language = next(
             language
@@ -61,7 +62,7 @@ def _service(requests: list[dict[str, object]]) -> PaperSummaryService:
     )
 
 
-def test_four_language_summary_contract_and_cache_reuse(tmp_path: Path) -> None:
+def test_five_language_summary_contract_and_cache_reuse(tmp_path: Path) -> None:
     requests: list[dict[str, object]] = []
     service = _service(requests)
     artifacts = {
@@ -73,8 +74,8 @@ def test_four_language_summary_contract_and_cache_reuse(tmp_path: Path) -> None:
     assert all(
         artifact.generation_config["timeout_seconds"] == 180.0 for artifact in artifacts.values()
     )
-    assert len(requests) == 4
-    assert [request["model"] for request in requests] == ["ais3/gemma-4-12b"] * 4
+    assert len(requests) == 5
+    assert [request["model"] for request in requests] == ["ais3/gemma-4-12b"] * 5
     assert all(request["temperature"] == 0.0 for request in requests)
     assert all(request["max_tokens"] == 2048 for request in requests)
     assert all("secret-value" not in json.dumps(request) for request in requests)
@@ -84,7 +85,7 @@ def test_four_language_summary_contract_and_cache_reuse(tmp_path: Path) -> None:
     service.write_cache(cache_path, artifacts)
     loaded = service.load_cache(cache_path)
     assert loaded == artifacts
-    assert len(service.validate_artifacts(list(loaded.values()))) == 4
+    assert len(service.validate_artifacts(list(loaded.values()))) == 5
 
 
 @pytest.mark.parametrize(

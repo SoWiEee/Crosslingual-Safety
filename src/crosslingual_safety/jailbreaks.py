@@ -195,7 +195,7 @@ PAPER_SUMMARY_SECTION_ORDER: tuple[str, ...] = (
     "attack_scenario_example",
     "related_work",
 )
-PAPER_SUMMARY_LANGUAGES: frozenset[str] = frozenset({"en", "zh", "vi", "my"})
+PAPER_SUMMARY_LANGUAGES: frozenset[str] = frozenset({"en", "zh", "vi", "my", "eo"})
 PAPER_SUMMARY_PROVENANCE_FIELDS: tuple[str, ...] = (
     "source_ref",
     "source_doi",
@@ -234,7 +234,9 @@ class PaperSummaryJailbreak:
         if not summary_id:
             raise ValueError("Paper Summary Attack summary_id must not be empty")
         if set(templates) != PAPER_SUMMARY_LANGUAGES or set(sections) != PAPER_SUMMARY_LANGUAGES:
-            raise ValueError("Paper Summary Attack requires localized en, zh, vi, and my templates")
+            raise ValueError(
+                "Paper Summary Attack requires localized en, zh, vi, my, and eo templates"
+            )
         for field in PAPER_SUMMARY_PROVENANCE_FIELDS:
             value = provenance.get(field)
             if not isinstance(value, str) or not value:
