@@ -76,8 +76,9 @@ def test_run_help_exposes_only_public_experiment_options() -> None:
     assert "--source" in result.output
     assert "--language" in result.output
     assert "--jailbreak" in result.output
+    assert "--model" in result.output
     assert "--dry-run" in result.output
-    for forbidden in ("--model", "--role", "--translator", "--source-language", "--max-tokens"):
+    for forbidden in ("--role", "--translator", "--source-language", "--max-tokens"):
         assert forbidden not in result.output
 
 
@@ -118,6 +119,30 @@ runs_dir: runs/experiments
     shutil.copy(Path("configs/languages.yaml"), configs / "languages.yaml")
     shutil.copy(Path("configs/jailbreaks.yaml"), configs / "jailbreaks.yaml")
     return load_run_settings(configs / "run.yaml")
+
+
+def _settings_with_two_models(tmp_path: Path) -> RunSettings:
+    settings = _settings(tmp_path)
+    assert settings.config_path is not None
+    settings.config_path.write_text(
+        settings.config_path.read_text(encoding="utf-8").replace(
+            "models: [fake_model]", "models: [fake_model, second_model]"
+        ),
+        encoding="utf-8",
+    )
+    settings.models_config.write_text(
+        settings.models_config.read_text(encoding="utf-8")
+        + """  second_model:
+    provider: fake
+    model_id: second-model
+    endpoint_type: chat
+    concurrency: 1
+    requests_per_minute: 6000
+    test_only: true
+""",
+        encoding="utf-8",
+    )
+    return load_run_settings(settings.config_path)
 
 
 @pytest.mark.parametrize(
@@ -362,6 +387,119 @@ def test_manual_plan_counts_identity_separately(tmp_path: Path) -> None:
             RunRequest(source="manual", languages=("en", "zh-tw"), jailbreaks=("none",)), settings
         ).run_id
     )
+
+
+def test_plan_model_selection_controls_contract_counts_and_identity(tmp_path: Path) -> None:
+    settings = _settings_with_two_models(tmp_path)
+
+    all_models = plan_run(
+        RunRequest(languages=("zh-tw",), jailbreaks=("none",)),
+        settings,
+    )
+    second_only = plan_run(
+        RunRequest(
+            languages=("zh-tw",),
+            jailbreaks=("none",),
+            models=("second_model",),
+        ),
+        settings,
+    )
+    reordered = plan_run(
+        RunRequest(
+            languages=("zh-tw",),
+            jailbreaks=("none",),
+            models=("second_model", "fake_model"),
+        ),
+        settings,
+    )
+
+    assert all_models.models == ("fake_model", "second_model")
+    assert all_models.victim_request_count == 2
+    assert second_only.models == ("second_model",)
+    assert second_only.victim_request_count == 1
+    assert second_only.contract["model_names"] == ["second_model"]
+    assert set(second_only.contract["models"]) == {"second_model"}
+    assert second_only.run_id != all_models.run_id
+    assert reordered.models == ("fake_model", "second_model")
+    assert reordered.run_id == all_models.run_id
+
+
+@pytest.mark.parametrize("models", [("fake_model", "fake_model"), ("unknown_model",)])
+def test_plan_rejects_invalid_model_selection(tmp_path: Path, models: tuple[str, ...]) -> None:
+    settings = _settings_with_two_models(tmp_path)
+
+    with pytest.raises(ValueError, match="--model"):
+        plan_run(
+            RunRequest(languages=("zh-tw",), jailbreaks=("none",), models=models),
+            settings,
+        )
+
+    assert not settings.runs_dir.exists()
+
+
+def test_run_cli_selects_one_configured_model(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _settings_with_two_models(tmp_path)
+    monkeypatch.chdir(tmp_path)
+
+    result = runner.invoke(
+        app,
+        [
+            "run",
+            "--language",
+            "zh-tw",
+            "--jailbreak",
+            "none",
+            "--model",
+            "second_model",
+            "--dry-run",
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert "victim_requests=1" in result.output
+
+
+def test_run_cli_rejects_unconfigured_model_before_side_effects(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    settings = _settings_with_two_models(tmp_path)
+    monkeypatch.chdir(tmp_path)
+
+    result = runner.invoke(
+        app,
+        ["run", "--model", "models_yaml_only", "--dry-run"],
+    )
+
+    assert result.exit_code != 0
+    assert "--model must be one of fake_model, second_model" in result.output
+    assert not settings.runs_dir.exists()
+
+
+def test_selected_model_limits_generation_results(tmp_path: Path) -> None:
+    settings = _settings_with_two_models(tmp_path)
+    plan = plan_run(
+        RunRequest(
+            languages=("zh-tw",),
+            jailbreaks=("none",),
+            models=("second_model",),
+        ),
+        settings,
+    )
+
+    result = execute_run(
+        plan,
+        settings,
+        RunDependencies(
+            translator=FakeTranslator(),
+            generation=_generate_success,
+            emit=lambda _: None,
+        ),
+    )
+
+    assert result.status == "success"
+    assert {row["model"] for row in result.rows} == {"second_model"}
 
 
 def test_manual_plan_uses_configured_source_language(tmp_path: Path) -> None:
@@ -1030,6 +1168,26 @@ def test_fake_execution_writes_sparse_public_results(tmp_path: Path) -> None:
     assert row["language"] == "zh-tw"
     translations = (result.parent_path / "audit" / "translations.jsonl").read_text(encoding="utf-8")
     assert '"target_language":"zh"' not in translations
+
+
+def test_formal_execution_emits_generation_progress(tmp_path: Path) -> None:
+    settings = _settings(tmp_path)
+    plan = plan_run(RunRequest(languages=("zh-tw",), jailbreaks=("none",)), settings)
+    messages: list[str] = []
+
+    result = execute_run(
+        plan,
+        settings,
+        RunDependencies(translator=FakeTranslator(), emit=messages.append),
+    )
+
+    assert result.status == "success"
+    assert (
+        "[4/5] Generate count=1 provider_limits=fake(concurrency=1,rpm=6000,lower_bound=0.0m)"
+    ) in messages
+    assert "[4/5] Generate jailbreak=none pending=1 running=0 completed=0/1" in messages
+    assert "[4/5] Generate jailbreak=none completed=1/1 status=success" in messages
+    assert "[4/5] Generate jailbreak=none pending=0 running=0 completed=1/1" in messages
 
 
 def test_formal_execute_loads_credentials_from_cwd_dotenv(

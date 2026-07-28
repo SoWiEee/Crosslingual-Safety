@@ -10,6 +10,11 @@ import yaml
 from typer.testing import CliRunner
 
 from crosslingual_safety.cli import app
+from crosslingual_safety.generation.commands import generate_pending
+from crosslingual_safety.generation.config import (
+    build_generation_requests,
+    load_experiment_config,
+)
 from crosslingual_safety.generation.providers import (
     FakeProvider,
     OpenAICompatibleChatProvider,
@@ -17,7 +22,7 @@ from crosslingual_safety.generation.providers import (
 )
 from crosslingual_safety.generation.queue import JobQueue
 from crosslingual_safety.generation.runner import execute_with_retry
-from crosslingual_safety.schemas import GenerationRequest, PromptVariant
+from crosslingual_safety.schemas import GenerationRequest, GenerationResult, PromptVariant
 
 runner = CliRunner()
 
@@ -193,25 +198,36 @@ def test_chat_provider_applies_model_timeout() -> None:
     assert captured == {"connect": 180, "read": 180, "write": 180, "pool": 180}
 
 
-def _write_experiment(tmp_path: Path, fake_status: str = "success") -> Path:
+def _write_experiment(
+    tmp_path: Path,
+    fake_status: str = "success",
+    *,
+    variant_count: int = 1,
+) -> Path:
     variants_path = tmp_path / "variants.parquet"
-    variant = PromptVariant(
-        variant_id="variant-1",
-        case_id="case-1",
-        dataset="test",
-        translation_id="source-1",
-        language="en",
-        intent="harmful",
-        payload="Prompt",
-        attack_id="none",
-        attack_family="baseline",
-        wrapper_language=None,
-        language_mode="no_wrapper",
-        rendered_prompt="Prompt",
-        template_version="1",
-        template_sha256="template-hash",
+    variants = [
+        PromptVariant(
+            variant_id=f"variant-{index}",
+            case_id=f"case-{index}",
+            dataset="test",
+            translation_id=f"source-{index}",
+            language="en",
+            intent="harmful",
+            payload="Prompt",
+            attack_id="none",
+            attack_family="baseline",
+            wrapper_language=None,
+            language_mode="no_wrapper",
+            rendered_prompt="Prompt",
+            template_version="1",
+            template_sha256="template-hash",
+        )
+        for index in range(variant_count)
+    ]
+    pq.write_table(
+        pa.Table.from_pylist([variant.model_dump(mode="json") for variant in variants]),
+        variants_path,
     )
-    pq.write_table(pa.Table.from_pylist([variant.model_dump(mode="json")]), variants_path)
     config = {
         "experiment": {
             "id": "pilot",
@@ -280,6 +296,75 @@ def test_plan_enqueue_generate_is_resumable_and_counts_match(tmp_path: Path) -> 
     results = pq.read_table(runs_dir / "pilot" / "generation_results.parquet").to_pylist()
     assert len(results) == 1
     assert results[0]["response_text"] == "offline response"
+
+
+def test_generate_pending_calls_final_result_callback_after_persistence(tmp_path: Path) -> None:
+    config = load_experiment_config(_write_experiment(tmp_path))
+    run_dir = tmp_path / "callback-run"
+    run_dir.mkdir()
+    queue = JobQueue(run_dir / "jobs.sqlite")
+    requests = build_generation_requests(config)
+    queue.enqueue(requests)
+    observations: list[tuple[str, str, bool, dict[str, int]]] = []
+
+    def observe(model_name: str, request: GenerationRequest, result: object) -> None:
+        attempt = run_dir / "generation_attempts" / request.run_id / "attempt-0001.json"
+        observations.append(
+            (
+                model_name,
+                getattr(result, "status"),
+                attempt.is_file(),
+                queue.status_counts(config.experiment.id),
+            )
+        )
+
+    try:
+        __import__("asyncio").run(generate_pending(config, run_dir, queue, on_final_result=observe))
+    finally:
+        queue.close()
+
+    assert observations == [("fake_model", "success", True, {"success": 1})]
+
+
+def test_generate_pending_claims_only_jobs_with_execution_slots(tmp_path: Path) -> None:
+    asyncio = __import__("asyncio")
+    config = load_experiment_config(_write_experiment(tmp_path, variant_count=5))
+    run_dir = tmp_path / "bounded-claims"
+    run_dir.mkdir()
+    queue = JobQueue(run_dir / "jobs.sqlite")
+    queue.enqueue(build_generation_requests(config))
+    release = asyncio.Event()
+    two_started = asyncio.Event()
+
+    class BlockingProvider:
+        provider_id = "fake"
+
+        def __init__(self) -> None:
+            self.started = 0
+
+        async def generate(self, request: GenerationRequest) -> GenerationResult:
+            self.started += 1
+            if self.started == 2:
+                two_started.set()
+            await release.wait()
+            return await FakeProvider().generate(request)
+
+    provider = BlockingProvider()
+
+    async def observe_claims() -> None:
+        task = asyncio.create_task(
+            generate_pending(config, run_dir, queue, provider_factory=lambda _: provider)
+        )
+        await asyncio.wait_for(two_started.wait(), timeout=1)
+        assert queue.status_counts(config.experiment.id) == {"pending": 3, "running": 2}
+        task.cancel()
+        with pytest.raises(asyncio.CancelledError):
+            await task
+
+    try:
+        asyncio.run(observe_claims())
+    finally:
+        queue.close()
 
 
 def test_retry_failed_requeues_only_retryable_jobs(tmp_path: Path) -> None:

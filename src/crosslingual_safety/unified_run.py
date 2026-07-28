@@ -330,9 +330,10 @@ class RunRequest(BaseModel):
     source: Literal["manual", "bench"] = "manual"
     languages: tuple[str, ...] = PUBLIC_LANGUAGES
     jailbreaks: tuple[str, ...] = ("none",)
+    models: tuple[str, ...] = ("all",)
     dry_run: bool = False
 
-    @field_validator("languages", "jailbreaks", mode="before")
+    @field_validator("languages", "jailbreaks", "models", mode="before")
     @classmethod
     def split_public_selection(cls, value: object) -> object:
         if isinstance(value, str):
@@ -708,21 +709,25 @@ def plan_run(request: RunRequest, settings: RunSettings) -> RunPlan:
         raise ValueError("source must be manual or bench")
     languages = parse_selection(",".join(request.languages), PUBLIC_LANGUAGES, "--language")
     jailbreaks = parse_selection(",".join(request.jailbreaks), PUBLIC_JAILBREAKS, "--jailbreak")
+    requested_models = [model.strip() for model in request.models if model.strip()]
+    if len(requested_models) != len(set(requested_models)):
+        raise ValueError("--model must not contain duplicate values")
+    model_names = parse_selection(",".join(requested_models), tuple(settings.models), "--model")
     if "zh" in languages:
         raise ValueError("--language uses zh-tw for Traditional Chinese")
     normalized_request = request.model_copy(
-        update={"languages": languages, "jailbreaks": jailbreaks}
+        update={"languages": languages, "jailbreaks": jailbreaks, "models": model_names}
     )
     cases = _load_cases(normalized_request, settings)
     translation_jobs = sum(
         1 for case in cases for language in languages if language != case.source_language
     )
     psa_summary_count = len(SUMMARY_LANGUAGES) if "psa" in jailbreaks else 0
-    victim_request_count = len(cases) * len(languages) * len(jailbreaks) * len(settings.models)
+    victim_request_count = len(cases) * len(languages) * len(jailbreaks) * len(model_names)
     input_snapshot = "".join(_canonical_json(case.model_dump(mode="json")) + "\n" for case in cases)
     input_snapshot_sha256 = _sha256_text(input_snapshot)
     models = _raw_models(settings)
-    selected_models = {name: models.get(name) for name in settings.models}
+    selected_models = {name: models.get(name) for name in model_names}
     translator_contract = _translator_contract(settings)
     contract: dict[str, object] = {
         "version": settings.version,
@@ -730,7 +735,7 @@ def plan_run(request: RunRequest, settings: RunSettings) -> RunPlan:
         "cases": [case.model_dump(mode="json") for case in cases],
         "input_snapshot_sha256": input_snapshot_sha256,
         "models": selected_models,
-        "model_names": list(settings.models),
+        "model_names": list(model_names),
         "translator": settings.translator,
         "translator_contract": translator_contract,
         "nllb_checkpoint": settings.nllb_checkpoint,
@@ -756,7 +761,7 @@ def plan_run(request: RunRequest, settings: RunSettings) -> RunPlan:
     return RunPlan(
         request=normalized_request,
         cases=cases,
-        models=tuple(settings.models),
+        models=model_names,
         languages=languages,
         jailbreaks=jailbreaks,
         translation_jobs=translation_jobs,
@@ -1052,7 +1057,8 @@ def preflight_run(
 
     # A fake generation seam is sufficient for tests and intentionally bypasses credential checks,
     # but endpoint metadata remains part of the selected configuration contract.
-    for model in model_configs.values():
+    selected_model_configs = [model_configs[name] for name in plan.models]
+    for model in selected_model_configs:
         if model.provider == "fake":
             if not model.test_only:
                 raise ValueError("FakeProvider requires test_only=true")
@@ -1060,7 +1066,7 @@ def preflight_run(
         if not model.base_url_env or not model.api_key_env:
             raise ValueError(f"provider {model.provider} requires endpoint metadata")
     if dependencies.generation is None and dependencies.provider_factory is None:
-        for model in model_configs.values():
+        for model in selected_model_configs:
             if model.provider == "fake":
                 continue
             assert model.base_url_env is not None and model.api_key_env is not None
@@ -2247,6 +2253,7 @@ def _build_requests(
     variants_path: Path,
     settings: RunSettings,
     model_configs: Mapping[str, ModelConfig],
+    model_names: tuple[str, ...],
 ) -> tuple[ExperimentConfig, list[tuple[str, GenerationRequest]]]:
     generation = _generation_config(settings)
     config = ExperimentConfig(
@@ -2255,7 +2262,7 @@ def _build_requests(
             datasets=["unified"],
             languages=list(PUBLIC_LANGUAGES),
             jailbreaks=list(ATTACK_IDS.values()),
-            models=list(settings.models),
+            models=list(model_names),
             generation=generation,
         ),
         models=dict(model_configs),
@@ -2266,14 +2273,14 @@ def _build_requests(
         _canonical_json(
             {
                 "models": {
-                    name: model_configs[name].model_dump(mode="json") for name in settings.models
+                    name: model_configs[name].model_dump(mode="json") for name in model_names
                 },
                 "generation": generation.model_dump(mode="json"),
             }
         )
     )
     requests: list[tuple[str, GenerationRequest]] = []
-    for model_name in settings.models:
+    for model_name in model_names:
         model = model_configs[model_name]
         for variant in rows:
             request_id = stable_id(child_id, variant.variant_id, model_name, config_hash)
@@ -2424,7 +2431,9 @@ def _execute_child(
     requests: list[tuple[str, GenerationRequest]] = []
     config: ExperimentConfig | None = None
     if variants:
-        config, requests = _build_requests(child_id, variants_path, settings, model_configs)
+        config, requests = _build_requests(
+            child_id, variants_path, settings, model_configs, plan.models
+        )
     existing_rows = _read_generation_rows(child_path)
     generated_rows: list[dict[str, object]] = []
     child_error: dict[str, object] | None = None
@@ -2450,6 +2459,13 @@ def _execute_child(
                 pending_requests = [
                     (model_name, request) for _, model_name, _, request in queue.pending(child_id)
                 ]
+                status_counts = queue.status_counts(child_id)
+                running = status_counts.get("running", 0)
+                completed = len(requests) - len(pending_requests) - running
+                dependencies.emit(
+                    f"[4/5] Generate jailbreak={jailbreak} pending={len(pending_requests)} "
+                    f"running={running} completed={completed}/{len(requests)}"
+                )
                 if dependencies.generation is not None:
                     if pending_requests:
                         generated = _call_generation(
@@ -2463,12 +2479,35 @@ def _execute_child(
                         generated_rows = _normalize_generation_output(generated)
                 else:
                     # The existing generation service owns provider construction and retry logic.
+                    emitted_progress = completed
+
+                    def emit_progress(
+                        model_name: str,
+                        request: GenerationRequest,
+                        result: GenerationResult,
+                    ) -> None:
+                        del model_name, request
+                        nonlocal emitted_progress
+                        emitted_progress += 1
+                        newly_completed = emitted_progress - completed
+                        if (
+                            newly_completed == 1
+                            or emitted_progress == len(requests)
+                            or newly_completed % 25 == 0
+                        ):
+                            dependencies.emit(
+                                f"[4/5] Generate jailbreak={jailbreak} "
+                                f"completed={emitted_progress}/{len(requests)} "
+                                f"status={result.status}"
+                            )
+
                     asyncio.run(
                         generate_pending(
                             config,
                             child_path,
                             queue,
                             provider_factory=dependencies.provider_factory,
+                            on_final_result=emit_progress,
                         )
                     )
                 generated_by_id = {
@@ -2486,6 +2525,14 @@ def _execute_child(
                         cast(str | None, generated_row.get("error_type")),
                         cast(str | None, generated_row.get("error_message")),
                     )
+                final_counts = queue.status_counts(child_id)
+                final_pending = final_counts.get("pending", 0)
+                final_running = final_counts.get("running", 0)
+                final_completed = len(requests) - final_pending - final_running
+                dependencies.emit(
+                    f"[4/5] Generate jailbreak={jailbreak} pending={final_pending} "
+                    f"running={final_running} completed={final_completed}/{len(requests)}"
+                )
             finally:
                 queue.close()
         except Exception as error:
@@ -2780,7 +2827,7 @@ def _requires_dotenv(
         return True
     model_configs = _load_model_configs(settings)
     if dependencies.generation is None and dependencies.provider_factory is None:
-        if any(model.provider != "fake" for model in model_configs.values()):
+        if any(model_configs[name].provider != "fake" for name in plan.models):
             return True
     if (
         "psa" in plan.jailbreaks
@@ -2853,7 +2900,30 @@ def execute_run(
     else:
         emit("[3/5] Summarize skipped")
 
-    emit(f"[4/5] Generate count={plan.victim_request_count}")
+    model_configs = _load_model_configs(settings)
+    requests_per_model = len(plan.cases) * len(plan.languages) * len(plan.jailbreaks)
+    provider_limits: dict[str, tuple[int, int, int]] = {}
+    for model_name in plan.models:
+        model = model_configs[model_name]
+        current = provider_limits.get(model.provider)
+        if current is None:
+            provider_limits[model.provider] = (
+                model.concurrency,
+                model.requests_per_minute,
+                requests_per_model,
+            )
+        else:
+            provider_limits[model.provider] = (
+                min(current[0], model.concurrency),
+                min(current[1], model.requests_per_minute),
+                current[2] + requests_per_model,
+            )
+    limit_details = ",".join(
+        f"{provider}(concurrency={concurrency},rpm={rpm},lower_bound="
+        f"{max(0, request_count - 1) / rpm:.1f}m)"
+        for provider, (concurrency, rpm, request_count) in sorted(provider_limits.items())
+    )
+    emit(f"[4/5] Generate count={plan.victim_request_count} provider_limits={limit_details}")
     child_outputs: dict[
         str, tuple[str, list[dict[str, object]], dict[tuple[str, str, str], dict[str, object]], str]
     ] = {}

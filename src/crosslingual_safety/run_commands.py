@@ -1,4 +1,4 @@
-"""Typer registration for the stable four-option ``run`` facade."""
+"""Typer registration for the stable ``run`` facade."""
 
 from pathlib import Path
 from typing import Annotated, Any, cast
@@ -29,6 +29,10 @@ def register_run_commands(app: typer.Typer) -> None:
             str,
             typer.Option("--jailbreak", help="none, gra, psa, comma-separated, or all"),
         ] = "none",
+        model: Annotated[
+            str,
+            typer.Option("--model", help="Configured model name, comma-separated, or all"),
+        ] = "all",
         dry_run: Annotated[
             bool,
             typer.Option("--dry-run", help="Print the deterministic plan without side effects"),
@@ -45,6 +49,7 @@ def register_run_commands(app: typer.Typer) -> None:
                 source=cast(Any, source),
                 languages=languages,
                 jailbreaks=jailbreaks,
+                models=cast(Any, model),
                 dry_run=dry_run,
             )
             settings = load_run_settings(Path("configs/run.yaml"))

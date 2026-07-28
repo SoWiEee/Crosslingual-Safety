@@ -207,6 +207,7 @@ async def generate_pending(
     run_dir: Path,
     queue: JobQueue,
     provider_factory: Callable[[ModelConfig], ProviderAdapter] | None = None,
+    on_final_result: Callable[[str, GenerationRequest, GenerationResult], None] | None = None,
 ) -> int:
     _reconcile_results(run_dir, queue)
     queue.reset_stale()
@@ -245,8 +246,6 @@ async def generate_pending(
         attempts_before: int,
         request: GenerationRequest,
     ) -> bool:
-        if not queue.claim(run_id):
-            return False
         provider = providers[model_name]
         runtime = runtimes[provider.provider_id]
         throttled = ThrottledProvider(provider, runtime.limiter)
@@ -266,6 +265,10 @@ async def generate_pending(
                 )
 
         async with runtime.semaphore:
+            # Keep queued jobs pending until provider capacity is actually available. Otherwise
+            # a cancellation can strand the entire queue in the running state.
+            if not queue.claim(run_id):
+                return False
             result, attempts = await execute_with_retry(
                 throttled,
                 request,
@@ -281,6 +284,12 @@ async def generate_pending(
                 result.error_type,
                 result.error_message,
             )
+            if on_final_result is not None:
+                try:
+                    on_final_result(model_name, request, result)
+                except Exception:
+                    # Reports are derived views; their failure must not retry a provider request.
+                    pass
         return True
 
     try:

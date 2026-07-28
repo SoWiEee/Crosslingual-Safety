@@ -56,20 +56,25 @@ GOOGLE_APPLICATION_CREDENTIALS=C:/absolute/path/to/credentials/google-translate-
 
 ## 統一執行介面（推薦）
 
-初次使用只需要一個穩定的四選項命令。先用 dry-run 檢查固定的 case、翻譯、摘要與
+初次使用只需要一個穩定的五選項命令。先用 dry-run 檢查固定的 case、翻譯、摘要與
 victim request 數量；它不會讀取 `.env`、啟動 CUDA/NLLB、呼叫 provider 或建立 `runs/`：
 
 ```sh
 uv run crosslingual-safety run --source manual --language all --jailbreak none --dry-run
 uv run crosslingual-safety run
-uv run crosslingual-safety run --source bench --language zh-tw,vi --jailbreak gra,psa
-uv run crosslingual-safety run --source manual --language all --jailbreak all --dry-run
+# 先用一個 victim model 快速驗證
+uv run crosslingual-safety run --source bench --language zh-tw,vi --jailbreak gra,psa --model gemma_4_12b
+# 比較兩個 victim models
+uv run crosslingual-safety run --source manual --language all --jailbreak all --model gemma_4_12b,llama31_8b --dry-run
+# 省略 --model 或明確指定 all 都會使用 configs/run.yaml 的完整模型清單
+uv run crosslingual-safety run --source manual --language all --jailbreak none --model all --dry-run
 ```
 
 `--source` 只能是 `manual` 或 `bench`；`--language` 接受 `en`、`zh-tw`、`jv`、`my`、
 `th`、`vi`、`id`、`tl`、`eo`（Esperanto）、逗號清單或 `all`；`--jailbreak` 接受
-`none`、`gra`、`psa`、
-逗號清單或 `all`。manual
+`none`、`gra`、`psa`、逗號清單或 `all`。`--model` 接受 `configs/run.yaml` 已列出的
+設定名稱、逗號清單或 `all`，預設為 `all`；名稱只存在於 `configs/models.yaml` 時仍不可
+選用。選擇較少模型只會降低 victim requests，不會減少翻譯或 PSA 摘要工作。manual
 預設讀取 `prompts/prompt.txt`，來源固定為繁體中文（`zh-tw`）；要改來源請修改版本化的
 `configs/run.yaml`，而不是新增 CLI flag。該設定目前使用 Google Cloud Translation
 Advanced v3，並固定五個 victim
