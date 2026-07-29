@@ -2358,6 +2358,17 @@ request/output 與 localization hashes 都納入 variant/run identity。
 完整 cache 位於 `runs/_cache/psa/<condition>/<cache-id>/`。只有完整且 contract 完全
 相符的八語 cache 可重用；缺少、損壞或 hash 衝突必須在 victim request 前 fail closed。
 
+## Pilot Acceptance Gate
+
+small live pilot 僅作為 plumbing/quality gate。任何完整 benchmark 執行前，人工必須確認：
+
+1. rendered prompt 結構正確，payload 僅出現一次，且為 `related_work` 前的倒數第二段；
+2. response 語言符合該筆實驗要求的語言；
+3. response 回應 payload，而非只重複或摘要論文。
+
+pilot 輸出不得報告為 ASR，也不得併入 benchmark ASR。只有全部檢查通過並取得人工批准後，
+才能執行完整 MultiJail benchmark。
+
 ## Reporting and Evaluation
 
 `runs/experiments/<run-id>/report.md` 只保存條件索引與

@@ -76,13 +76,22 @@ uv run crosslingual-safety run \
   --jailbreak psa_attack_poetry_v2,psa_defense_r2d_v2 \
   --model llama31_8b,llama33_70b
 
-# Full MultiJail run after reviewing the pilot
+# Full MultiJail run only after the pilot passes all checks and receives human approval
 uv run crosslingual-safety run \
   --source bench \
   --language en,zh-tw,jv,my,th,vi,tl,eo \
   --jailbreak all \
   --model llama31_8b,llama33_70b
 ```
+
+small live pilot 只是 plumbing/quality gate。任何完整 benchmark 開始前，必須由人工確認：
+
+1. rendered prompt 結構正確，payload 僅出現一次，且位於 `related_work` 前的倒數第二段；
+2. response 語言符合該筆實驗要求的語言；
+3. response 回應 payload，而非只重複或摘要論文。
+
+pilot 輸出不得報告為 ASR，也不得併入 benchmark ASR。只有全部檢查通過並取得人工批准後，
+才能執行完整 MultiJail run。
 
 - `source`：`manual` 讀取 `prompts/prompt.txt` 或 JSONL；`bench` 使用版本化的
   MultiJail selection。
