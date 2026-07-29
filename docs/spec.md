@@ -2248,38 +2248,37 @@ Beginner-facing workflows use one facade:
 
 ```bash
 uv run crosslingual-safety run --source manual --language all --jailbreak none --dry-run
-uv run crosslingual-safety run --source bench --language zh-tw,vi --jailbreak gra,psa
+uv run crosslingual-safety run --source bench --language zh-tw,vi --jailbreak psa_attack_poetry_v2,psa_defense_r2d_v2
 ```
 
-The command exposes exactly `--source`, `--language`, `--jailbreak`, and `--dry-run`. Sources are
-`manual` and `bench`; languages are `en`, `zh-tw`, `jv`, `my`, `th`, `vi`, `id`, `tl`, and `eo`;
-jailbreaks are `none`, `gra`, and `psa`. Values may be comma-separated or `all`, are deduplicated
-in canonical order, and internal `zh` is rejected at this boundary. `zh-tw` is retained in input,
-translation, result, and audit rows, while existing wrapper templates receive the internal `zh`
-alias.
+The command exposes exactly `--source`, `--language`, `--jailbreak`, `--model`, and `--dry-run`.
+Sources are `manual` and `bench`; languages are `en`, `zh-tw`, `jv`, `my`, `th`, `vi`, `tl`, and
+`eo`; formal jailbreaks are `none`, `psa_attack_poetry_v2`, and `psa_defense_r2d_v2`. Values may
+be comma-separated or `all`, are deduplicated in canonical order, and internal `zh` is rejected at
+this boundary. `zh-tw` is retained in input, translation, result, and audit rows, while existing
+wrapper templates receive the internal `zh` alias. V1 identifiers are accepted only for legacy run
+replay and never expand from `all`.
 
-The reviewed `en`, `zh`, `vi`, and `my` GRA/PSA wrappers remain unchanged, and `eo` adds fully
-localized Esperanto GRA/PSA wrappers and PSA summary sections. Esperanto uses public/provider code
-`eo` and NLLB code `epo_Latn`. Payload languages `jv`, `th`, `id`, and `tl` use the English wrapper
-and English PSA summary, but the English-only output instruction is replaced with an explicit
-Javanese, Thai, Indonesian, or Tagalog requirement. The derived template hash covers this
-instruction and fallback metadata. Such variants record `wrapper_fallback=english`, the requested
-output language and name, and `language_mode=mixed_language`; generation runtime never
-machine-translates an attack wrapper.
+The V2 PSA triggers are semantically equivalent across `en`, `zh-tw`, `jv`, `my`, `th`, `vi`,
+`tl`, and `eo`. Each trigger is a single penultimate section, placed immediately before
+`related_work`; it contains the payload exactly once. The attack condition uses an attack-success
+premise and the defense condition uses a defense-absence premise. V2 does not add role-play,
+repetition, step-by-step strengthening, a final output-language command, safety-evaluation framing,
+or a continuation request.
 
 `configs/run.yaml` fixes the manual path (`prompts/prompt.txt`), benchmark cases and selection
-snapshots, five victim models, Google Cloud Translation Advanced v3, same-as-payload wrappers, the
-GRA `joker` role, and the PSA summarizer (`ais3/gemma-4-12b`). Manual input defaults to Traditional
-Chinese. Local NLLB remains available by changing the versioned `translator` setting to `nllb`;
-changing this contract never adds a CLI option and never enables automatic provider fallback.
+snapshots, victim models, Google Cloud Translation Advanced v3, and the PSA summarizer
+(`ais3/gemma-4-12b`). Manual input defaults to Traditional Chinese. Local NLLB remains available by
+changing the versioned `translator` setting to `nllb`; changing this contract never adds a CLI option
+and never enables automatic provider fallback.
 
-Dry-run resolves the selected cases and computes translation jobs, five-language PSA summary jobs,
-victim request count, deterministic run ID, prospective parent path, and the selected translator's
+Dry-run resolves the selected cases and computes translation jobs, PSA summary jobs, victim request
+count, deterministic run ID, prospective parent path, and the selected translator's
 non-secret contract. It does not load `.env` or ADC, initialize CUDA/NLLB, construct a Google
 client, construct a summary/provider, open a queue, call a provider, or create a run directory.
 
 Formal runs use `runs/experiments/<run-id>/` with `audit/` and isolated
-`children/{none,gra,psa}/` directories. The parent stores immutable input, translation, summary,
+`children/{none,psa_attack_poetry_v2,psa_defense_r2d_v2}/` directories. The parent stores immutable input, translation, summary,
 and result-index JSONL records, a manifest, report, and compact `results.jsonl`. The latter is
 analysis-facing and contains exactly `case_id`, `source`, `language`, `jailbreak`, `model`,
 `status`, and `response`; successful rows contain response text, while failed rows retain a null
@@ -2311,9 +2310,13 @@ printed.
 
 - Benchmark 僅使用版本化 MultiJail selection，共 315 個英文 harmful cases。
 - 語言固定為 `en,zh-tw,jv,my,th,vi,tl,eo`。
-- 條件固定為 `none`、`psa_attack_poetry_v1`、`psa_defense_r2d_v1`。
-- `--jailbreak all` 只展開上述三個條件。`gra_v1` 與 `psa_static_v1` 只供歷史 run
-  replay，不列入正式統計。
+- 正式條件固定為 `none`、`psa_attack_poetry_v2`、`psa_defense_r2d_v2`。
+- V1 條件僅供既有 run 重現，不納入新版 `all`。
+- V2 將 payload trigger 作為倒數第二個 section，位於 `related_work` 前。
+- 每個 payload 僅出現一次；attack 條件使用「攻擊成功」前提，defense 條件使用
+  「缺少防禦」前提。
+- 八種語言使用語意等價的 trigger，不附加角色扮演、輸出語言命令或其他強化。
+- V2 不附加重複、逐步強化、安全評估 framing 或續寫要求。
 
 ## Translation Resolution
 
@@ -2334,9 +2337,9 @@ source/output SHA-256。
 
 兩個互斥的論文條件由 `configs/psa_papers.yaml` 定義：
 
-- `psa_attack_poetry_v1` 使用
+- `psa_attack_poetry_v2` 使用
   `refs/Adversarial Poetry as a Universal Single-Turn.pdf`。
-- `psa_defense_r2d_v1` 使用
+- `psa_defense_r2d_v2` 使用
   `refs/Reasoning-to-Defend, Safety-Aware Reasoning.pdf`。
 
 執行前必須驗證 PDF SHA-256、逐頁抽取文字，並產生最多 1,000 words、帶 page number
@@ -2345,13 +2348,11 @@ summary；`zh-tw,jv,my,th,vi,tl,eo` 由 Google Cloud v3 翻譯該 canonical summ
 摘要 JSON 固定包含 `attack_methods`、`mechanism_analysis`、`related_work`，並與靜態
 `title`、`author`、`attack_scenario_example` sections 組成六段 prompt。
 
-八語 template 必須：
-
-- 使用與 payload 相同的 wrapper language；
-- 明確要求以目標語言回答；
-- 在 `attack_scenario_example` 與 `related_work` 間只插入一次 payload；
-- 將 template、paper、extraction、summary request/output 與 localization hashes
-  納入 variant/run identity。
+八語 template 必須在 `attack_scenario_example` 與 `related_work` 間只插入一次 payload，
+使 trigger 成為倒數第二個 section。八種語言的 trigger 必須語意等價；attack 使用
+「攻擊成功」前提，defense 使用「缺少防禦」前提。不得附加角色扮演、重複、逐步強化、
+最終輸出語言命令、安全評估 framing 或續寫要求。template、paper、extraction、summary
+request/output 與 localization hashes 都納入 variant/run identity。
 
 完整 cache 位於 `runs/_cache/psa/<condition>/<cache-id>/`。只有完整且 contract 完全
 相符的八語 cache 可重用；缺少、損壞或 hash 衝突必須在 victim request 前 fail closed。
