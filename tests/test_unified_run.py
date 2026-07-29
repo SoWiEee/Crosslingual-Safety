@@ -35,9 +35,11 @@ from crosslingual_safety.unified_run import (
     RunSettings,
     _append_jsonl,
     _nllb_checkpoint_available,
+    _read_generation_rows,
     _render_variants,
     _resolved_nllb_checkpoint,
     _translate_cases,
+    _write_generation_rows,
     execute_run,
     load_run_settings,
     parse_jailbreak_selection,
@@ -1564,6 +1566,33 @@ def test_resume_new_result_replaces_prior_generation_row(tmp_path: Path) -> None
         second.parent_path / "children" / "none" / "generation_results.parquet"
     ).to_pylist()
     assert [row["status"] for row in parquet_rows] == ["success"]
+
+
+def test_generation_parquet_retries_transient_windows_replace_lock(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    child_path = tmp_path / "child"
+    child_path.mkdir()
+    original_replace = Path.replace
+    attempts = 0
+
+    def transient_lock(path: Path, target: Path) -> Path:
+        nonlocal attempts
+        attempts += 1
+        if attempts == 1:
+            raise PermissionError("simulated transient Windows file lock")
+        return original_replace(path, target)
+
+    monkeypatch.setattr(Path, "replace", transient_lock)
+
+    _write_generation_rows(
+        child_path,
+        [{"run_id": "run-1", "status": "success", "response_text": "response"}],
+    )
+
+    assert attempts == 2
+    assert _read_generation_rows(child_path)[0]["status"] == "success"
 
 
 @pytest.mark.parametrize(

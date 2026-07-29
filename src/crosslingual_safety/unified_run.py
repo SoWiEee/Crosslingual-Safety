@@ -21,6 +21,7 @@ from importlib import import_module
 from importlib.metadata import PackageNotFoundError
 from importlib.metadata import version as package_version
 from pathlib import Path
+from time import sleep
 from types import SimpleNamespace
 from typing import Any, Literal, NoReturn, cast
 
@@ -2837,7 +2838,14 @@ def _write_generation_rows(child_path: Path, rows: Sequence[Mapping[str, object]
     path = child_path / "generation_results.parquet"
     temporary = path.with_suffix(".parquet.tmp")
     pq.write_table(pa.Table.from_pylist(values), temporary)
-    temporary.replace(path)
+    for attempt in range(10):
+        try:
+            temporary.replace(path)
+            break
+        except PermissionError:
+            if attempt == 9:
+                raise
+            sleep(0.1 * (attempt + 1))
 
 
 def _call_generation(
