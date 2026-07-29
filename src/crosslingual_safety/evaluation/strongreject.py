@@ -125,12 +125,22 @@ class TransformersStrongRejectBackend:
         base_model = AutoModelForCausalLM.from_pretrained(
             self.config.base_model_id,
             device_map="auto",
-            torch_dtype=torch.bfloat16,
+            dtype=torch.bfloat16,
+        )
+        base_device_map = getattr(base_model, "hf_device_map", None)
+        peft_device_map = (
+            {
+                f"base_model.model.{name}" if name else "": device
+                for name, device in base_device_map.items()
+            }
+            if isinstance(base_device_map, dict)
+            else None
         )
         model = PeftModel.from_pretrained(
             base_model,
             self.config.adapter_id,
             revision=self.config.adapter_revision,
+            device_map=peft_device_map,
         )
         model.eval()
         self._model = model
