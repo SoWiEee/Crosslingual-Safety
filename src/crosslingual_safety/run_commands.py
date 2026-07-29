@@ -29,7 +29,7 @@ def register_run_commands(app: typer.Typer) -> None:
             str,
             typer.Option(
                 "--jailbreak",
-                help=("none, psa_attack_poetry_v1, psa_defense_r2d_v1, comma-separated, or all"),
+                help=("none, psa_attack_poetry_v2, psa_defense_r2d_v2, comma-separated, or all"),
             ),
         ] = "none",
         model: Annotated[

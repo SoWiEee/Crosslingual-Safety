@@ -55,9 +55,9 @@ runner = CliRunner()
         ("all", PUBLIC_LANGUAGES, PUBLIC_LANGUAGES),
         (" my, en, my ", PUBLIC_LANGUAGES, ("en", "my")),
         (
-            "psa_defense_r2d_v1,none",
+            "psa_defense_r2d_v2,none",
             PUBLIC_JAILBREAKS,
-            ("none", "psa_defense_r2d_v1"),
+            ("none", "psa_defense_r2d_v2"),
         ),
     ],
 )
@@ -75,10 +75,14 @@ def test_parse_selection_rejects_internal_zh() -> None:
 def test_jailbreak_all_uses_only_formal_conditions() -> None:
     assert parse_jailbreak_selection("all") == (
         "none",
+        "psa_attack_poetry_v2",
+        "psa_defense_r2d_v2",
+    )
+    assert parse_jailbreak_selection("gra,psa") == ("gra", "psa")
+    assert parse_jailbreak_selection("psa_attack_poetry_v1,psa_defense_r2d_v1") == (
         "psa_attack_poetry_v1",
         "psa_defense_r2d_v1",
     )
-    assert parse_jailbreak_selection("gra,psa") == ("gra", "psa")
 
 
 def test_public_languages_include_low_resource_manual_targets() -> None:
@@ -91,6 +95,8 @@ def test_run_help_exposes_only_public_experiment_options() -> None:
     assert "--source" in result.output
     assert "--language" in result.output
     assert "--jailbreak" in result.output
+    assert "psa_attack_poetry_v2" in result.output
+    assert "psa_defense_r2d_v2" in result.output
     assert "--model" in result.output
     assert "--dry-run" in result.output
     for forbidden in ("--role", "--translator", "--source-language", "--max-tokens"):
@@ -389,7 +395,7 @@ def test_formal_psa_summarizes_each_pdf_once_and_localizes_from_english(
         RunRequest(
             source="manual",
             languages=("en", "zh-tw"),
-            jailbreaks=("psa_attack_poetry_v1", "psa_defense_r2d_v1"),
+            jailbreaks=("psa_attack_poetry_v2", "psa_defense_r2d_v2"),
             models=("fake_model",),
         ),
         settings,

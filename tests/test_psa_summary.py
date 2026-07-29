@@ -24,7 +24,14 @@ def _method():
 def test_formal_psa_papers_have_locked_hashes_and_bounded_chunks() -> None:
     specs = load_psa_papers(Path("configs/psa_papers.yaml"))
 
-    assert set(specs) == {"psa_attack_poetry_v1", "psa_defense_r2d_v1"}
+    assert set(specs) == {
+        "psa_attack_poetry_v1",
+        "psa_defense_r2d_v1",
+        "psa_attack_poetry_v2",
+        "psa_defense_r2d_v2",
+    }
+    assert specs["psa_attack_poetry_v2"].source_path == specs["psa_attack_poetry_v1"].source_path
+    assert specs["psa_defense_r2d_v2"].source_path == specs["psa_defense_r2d_v1"].source_path
     extracted = {condition: extract_paper(spec) for condition, spec in specs.items()}
     assert extracted["psa_attack_poetry_v1"].page_count == 16
     assert extracted["psa_defense_r2d_v1"].page_count == 19

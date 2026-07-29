@@ -104,13 +104,18 @@ PUBLIC_LANGUAGES: tuple[str, ...] = (
 )
 PUBLIC_JAILBREAKS: tuple[str, ...] = (
     "none",
+    "psa_attack_poetry_v2",
+    "psa_defense_r2d_v2",
+)
+LEGACY_JAILBREAKS: tuple[str, ...] = (
+    "gra",
+    "psa",
     "psa_attack_poetry_v1",
     "psa_defense_r2d_v1",
 )
-LEGACY_JAILBREAKS: tuple[str, ...] = ("gra", "psa")
 FORMAL_PSA_CONDITIONS: tuple[str, ...] = (
-    "psa_attack_poetry_v1",
-    "psa_defense_r2d_v1",
+    "psa_attack_poetry_v2",
+    "psa_defense_r2d_v2",
 )
 PUBLIC_SOURCES: tuple[str, ...] = ("manual", "bench")
 LOCALIZED_WRAPPER_LANGUAGES: dict[str, str] = {
@@ -147,6 +152,8 @@ ATTACK_IDS: dict[str, str] = {
     "psa": "psa_static_v1",
     "psa_attack_poetry_v1": "psa_attack_poetry_v1",
     "psa_defense_r2d_v1": "psa_defense_r2d_v1",
+    "psa_attack_poetry_v2": "psa_attack_poetry_v2",
+    "psa_defense_r2d_v2": "psa_defense_r2d_v2",
 }
 SUMMARY_WRAPPER_LANGUAGES: tuple[str, ...] = ("en", "zh", "vi", "my", "eo")
 GOOGLE_CLOUD_TRANSLATOR = "google-cloud-nmt-v3"
