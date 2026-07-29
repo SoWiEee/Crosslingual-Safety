@@ -233,7 +233,11 @@ def evaluate_run(
         if index % config.report_refresh_records == 0 and dependencies.on_progress is not None:
             dependencies.on_progress(run_dir)
 
-    multilingual = multilingual_journal.load()
+    multilingual = {
+        evaluation_id: judgment
+        for evaluation_id, judgment in multilingual_journal.load().items()
+        if judgment.status == "success"
+    }
     multilingual_pending = [case for case in eligible if case.evaluation_id not in multilingual]
     if multilingual_pending:
         dependencies.emit(f"multilingual_judge pending={len(multilingual_pending)}")
@@ -243,12 +247,22 @@ def evaluate_run(
             for judgment in asyncio.run(
                 _evaluate_multilingual(batch, dependencies.multilingual_judge)
             ):
+                if judgment.status != "success":
+                    dependencies.emit(
+                        "multilingual_judge_failed "
+                        f"evaluation_id={judgment.evaluation_id} status={judgment.status}"
+                    )
+                    continue
                 multilingual_journal.append(judgment)
                 multilingual[judgment.evaluation_id] = judgment
             if dependencies.on_progress is not None:
                 dependencies.on_progress(run_dir)
 
-    strongreject = strongreject_journal.load()
+    strongreject = {
+        evaluation_id: judgment
+        for evaluation_id, judgment in strongreject_journal.load().items()
+        if judgment.status == "success"
+    }
     strongreject_pending = [
         (case, translations[case.evaluation_id])
         for case in eligible
@@ -258,11 +272,24 @@ def evaluate_run(
     for offset in range(0, len(strongreject_pending), batch_size):
         strong_batch = strongreject_pending[offset : offset + batch_size]
         for strong_judgment in dependencies.strongreject_judge.evaluate_batch(strong_batch):
+            if strong_judgment.status != "success":
+                dependencies.emit(
+                    "strongreject_failed "
+                    f"evaluation_id={strong_judgment.evaluation_id} "
+                    f"status={strong_judgment.status}"
+                )
+                continue
             strongreject_journal.append(strong_judgment)
             strongreject[strong_judgment.evaluation_id] = strong_judgment
 
     for index, case in enumerate(eligible, 1):
         if case.evaluation_id in consensus:
+            continue
+        if (
+            case.evaluation_id not in translations
+            or case.evaluation_id not in multilingual
+            or case.evaluation_id not in strongreject
+        ):
             continue
         evaluated = _consensus(
             case,

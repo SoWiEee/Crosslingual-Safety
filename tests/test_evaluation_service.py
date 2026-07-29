@@ -130,6 +130,52 @@ class _FakeStrongRejectJudge:
         ]
 
 
+class _FailOnceTranslator(FakeTranslator):
+    def translate(self, text: str, source_language: str, target_language: str):
+        if self.call_count == 0:
+            self.call_count += 1
+            raise RuntimeError("temporary translation failure")
+        return super().translate(text, source_language, target_language)
+
+
+class _FailOnceMultilingualJudge(_FakeMultilingualJudge):
+    async def evaluate(self, case: EvaluationCase) -> MultilingualJudgment:
+        if self.call_count == 0:
+            self.call_count += 1
+            return MultilingualJudgment(
+                evaluation_id=case.evaluation_id,
+                status="rate_limited",
+                judge_id="multilingual_rubric_v1",
+                judge_model="ais3/gemma-4-12b",
+                rubric_sha256="a" * 64,
+                error_type="http_429",
+                error_message="temporary Judge rate limit",
+            )
+        return await super().evaluate(case)
+
+
+class _FailOnceStrongRejectJudge(_FakeStrongRejectJudge):
+    def evaluate_batch(
+        self,
+        cases: list[tuple[EvaluationCase, object]],
+    ) -> list[StrongRejectJudgment]:
+        if self.call_count == 0:
+            self.call_count += len(cases)
+            return [
+                StrongRejectJudgment(
+                    evaluation_id=case.evaluation_id,
+                    status="model_error",
+                    adapter_id="qylu4156/strongreject-15k-v1",
+                    adapter_revision="revision",
+                    base_model_id="google/gemma-2b",
+                    error_type="strongreject_model_error",
+                    error_message="temporary local model failure",
+                )
+                for case, _ in cases
+            ]
+        return super().evaluate_batch(cases)
+
+
 def test_evaluate_run_resumes_without_repeating_paid_work(tmp_path: Path) -> None:
     run_dir = _write_run(tmp_path)
     translator = FakeTranslator()
@@ -197,3 +243,62 @@ def test_threshold_change_reuses_raw_judges_and_recomputes_consensus(tmp_path: P
     assert multilingual.call_count == 1
     assert strongreject.call_count == 1
     assert len(second.evaluations_path.read_text(encoding="utf-8").splitlines()) == 2
+
+
+def test_translation_failure_is_retried_before_consensus(tmp_path: Path) -> None:
+    run_dir = _write_run(tmp_path, statuses=("success",))
+    translator = _FailOnceTranslator()
+    dependencies = EvaluationDependencies(
+        translator=translator,
+        multilingual_judge=_FakeMultilingualJudge(),
+        strongreject_judge=_FakeStrongRejectJudge(),
+        emit=lambda _: None,
+    )
+
+    first = evaluate_run(run_dir, _config(), dependencies)
+    second = evaluate_run(run_dir, _config(), dependencies)
+
+    assert first.status == "partial"
+    assert first.completed == 0
+    assert second.status == "success"
+    assert second.verdict_counts == {"bypass": 1}
+
+
+def test_multilingual_failure_is_retried_before_consensus(tmp_path: Path) -> None:
+    run_dir = _write_run(tmp_path, statuses=("success",))
+    multilingual = _FailOnceMultilingualJudge()
+    dependencies = EvaluationDependencies(
+        translator=FakeTranslator(),
+        multilingual_judge=multilingual,
+        strongreject_judge=_FakeStrongRejectJudge(),
+        emit=lambda _: None,
+    )
+
+    first = evaluate_run(run_dir, _config(), dependencies)
+    second = evaluate_run(run_dir, _config(), dependencies)
+
+    assert first.status == "partial"
+    assert first.completed == 0
+    assert second.status == "success"
+    assert second.verdict_counts == {"bypass": 1}
+    assert multilingual.call_count == 2
+
+
+def test_strongreject_failure_is_retried_before_consensus(tmp_path: Path) -> None:
+    run_dir = _write_run(tmp_path, statuses=("success",))
+    strongreject = _FailOnceStrongRejectJudge()
+    dependencies = EvaluationDependencies(
+        translator=FakeTranslator(),
+        multilingual_judge=_FakeMultilingualJudge(),
+        strongreject_judge=strongreject,
+        emit=lambda _: None,
+    )
+
+    first = evaluate_run(run_dir, _config(), dependencies)
+    second = evaluate_run(run_dir, _config(), dependencies)
+
+    assert first.status == "partial"
+    assert first.completed == 0
+    assert second.status == "success"
+    assert second.verdict_counts == {"bypass": 1}
+    assert strongreject.call_count == 2

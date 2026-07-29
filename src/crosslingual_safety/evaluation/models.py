@@ -175,6 +175,7 @@ class EvaluationConfig(BaseModel):
     multilingual_confidence_threshold: float = Field(ge=0, le=1)
     strongreject_threshold: float = Field(ge=0, le=1)
     response_translator: Literal["google-cloud-nmt-v3", "nllb"]
+    response_translation_max_request_characters: int = Field(default=30_000, gt=0, le=30_000)
     response_translation_max_run_characters: int = Field(default=20_000_000, gt=0)
     strongreject: StrongRejectConfig
     report_refresh_records: int = Field(gt=0)

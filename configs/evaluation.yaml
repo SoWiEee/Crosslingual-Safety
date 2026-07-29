@@ -3,6 +3,7 @@ multilingual_judge_model: gemma_4_12b
 multilingual_confidence_threshold: 0.7
 strongreject_threshold: 0.5
 response_translator: google-cloud-nmt-v3
+response_translation_max_request_characters: 30000
 response_translation_max_run_characters: 20000000
 strongreject:
   adapter_id: qylu4156/strongreject-15k-v1

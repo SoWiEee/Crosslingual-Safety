@@ -85,7 +85,7 @@ def _response_translator(
             project_id=str(google.get("project_id", "")),
             location=str(google.get("location", "global")),
             model=str(google.get("model", "general/nmt")),
-            max_request_characters=int(google.get("max_request_characters", 5000)),
+            max_request_characters=config.response_translation_max_request_characters,
             max_run_characters=config.response_translation_max_run_characters,
         )
     if config.response_translator == "nllb":

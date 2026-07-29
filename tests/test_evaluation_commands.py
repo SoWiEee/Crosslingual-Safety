@@ -4,6 +4,10 @@ from pathlib import Path
 from typer.testing import CliRunner
 
 from crosslingual_safety.cli import app
+from crosslingual_safety.evaluation.commands import _response_translator
+from crosslingual_safety.evaluation.models import EvaluationConfig, StrongRejectConfig
+from crosslingual_safety.translation.providers import GoogleCloudNMTTranslator
+from crosslingual_safety.unified_run import RunSettings
 
 runner = CliRunner()
 
@@ -85,3 +89,38 @@ def test_evaluate_rejects_unknown_run_without_credentials(
     assert result.exit_code != 0
     assert "run does not exist" in result.output
     assert "ZOOLAB_API_KEY" not in result.output
+
+
+def test_response_translator_uses_evaluation_request_limit() -> None:
+    config = EvaluationConfig(
+        version=1,
+        multilingual_judge_model="gemma_4_12b",
+        multilingual_confidence_threshold=0.7,
+        strongreject_threshold=0.5,
+        response_translator="google-cloud-nmt-v3",
+        response_translation_max_request_characters=30_000,
+        response_translation_max_run_characters=20_000_000,
+        strongreject=StrongRejectConfig(
+            adapter_id="adapter",
+            adapter_revision="revision",
+            base_model_id="base",
+            max_response_tokens=512,
+            batch_size=8,
+        ),
+        report_refresh_records=100,
+    )
+    settings = RunSettings(
+        translator="google-cloud-nmt-v3",
+        google_cloud={
+            "project_id": "valid-project-123",
+            "location": "global",
+            "model": "general/nmt",
+            "max_request_characters": 5000,
+            "max_run_characters": 1_000_000,
+        },
+    )
+
+    translator = _response_translator(config, settings)
+
+    assert isinstance(translator, GoogleCloudNMTTranslator)
+    assert translator.max_request_characters == 30_000
