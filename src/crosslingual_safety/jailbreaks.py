@@ -443,6 +443,8 @@ JAILBREAK_REGISTRY: dict[
     "psa_static_v1": PaperSummaryJailbreak,
     "psa_attack_poetry_v1": PaperSummaryJailbreak,
     "psa_defense_r2d_v1": PaperSummaryJailbreak,
+    "psa_attack_poetry_v2": PaperSummaryJailbreak,
+    "psa_defense_r2d_v2": PaperSummaryJailbreak,
 }
 
 
