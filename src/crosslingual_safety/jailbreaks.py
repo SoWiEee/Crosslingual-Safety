@@ -205,8 +205,8 @@ class PaperSummaryJailbreak:
     """Render the PSA skeleton with static sections or a validated dynamic summary override.
 
     The localized sections remain in configuration as an auditable fallback/reference corpus. The
-    official PSA skeleton treats the attack-scenario chapter as one insertion boundary while
-    referring to the payload twice; both references therefore remain explicit in each template.
+    official PSA skeleton treats the attack-scenario chapter as one insertion boundary. Templates
+    may refer to the payload once or twice, with every reference kept within that boundary.
     """
 
     def __init__(
