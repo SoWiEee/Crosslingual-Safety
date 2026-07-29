@@ -111,10 +111,12 @@ MultiJail 翻譯採固定優先順序：`en` 使用原文；`jv`、`th`、`vi` �
 - `refs/Reasoning-to-Defend, Safety-Aware Reasoning.pdf`
 
 每篇論文由 `ais3/gemma-4-12b` 產生一次 canonical English summary，再由 GCP 翻成其餘
-七種語言。完整 cache 位於 `runs/_cache/psa/<condition>/<cache-id>/`；PDF、抽取文字、
-摘要 request/output、翻譯 provider 與 template hash 都參與 run identity。cache 完整相符
-時會直接重用；缺檔、hash 不符或部分損壞會在 victim request 前停止。V1 PSA 條件、
-`gra_v1` 與 `psa_static_v1` 僅供舊 run replay，不屬於目前正式矩陣。
+七種語言。完整 cache 位於 `runs/_cache/psa/<cache-id>/`；provenance 相同的 V1/V2 條件
+共用 cache，而兩篇論文的 provenance 納入 cache identity，因此仍各自隔離。每個 cache
+檔案都以 atomic write 寫入；只有 `summary_artifacts.jsonl`、`cache_contract.json` 與
+`extraction_manifest.json` 完整且相符時才能重用。缺檔、部分寫入或 contract/hash 不符會
+在 victim request 前 fail closed。V1 PSA 條件、`gra_v1` 與 `psa_static_v1` 僅供舊 run
+replay，不屬於目前正式矩陣。
 
 只有非 dry-run 執行會建立 `runs/experiments/<run-id>/`，並在 `children/<condition>/` 隔離
 三個條件。dry-run 只計算計畫，不建立 run directory 或其他 artifacts；重跑完全相同的

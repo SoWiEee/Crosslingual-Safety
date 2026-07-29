@@ -2289,10 +2289,11 @@ Translations are shared across children. Identity translations are recorded but 
 machine-translation jobs. A translation failure is isolated to its `(case_id, language)` tuple and
 is projected to all affected child/model rows through a persisted translation-attempt record. PSA
 prepares two canonical English source summaries, one per V2 condition, and seven localized summaries
-(`zh-tw,jv,my,th,vi,tl,eo`) for each condition. It writes each condition's eight-language cache
-atomically only after its source summary and all seven localizations succeed; a partial sequence
-creates no victim variant. Re-running the same contract resets stale leases and retries only
-`retryable_error` generation jobs; success, provider-blocked, and permanent failures are preserved.
+(`zh-tw,jv,my,th,vi,tl,eo`) for each condition. Each cache file is written atomically, but reuse
+requires a complete, matching `summary_artifacts.jsonl`, `cache_contract.json`, and
+`extraction_manifest.json` set; a partial, missing, or mismatched set fails closed and creates no
+victim variant. Re-running the same contract resets stale leases and retries only `retryable_error`
+generation jobs; success, provider-blocked, and permanent failures are preserved.
 
 Each child is `success` only when every expected generation row has status `success`, `partial`
 when at least one expected row succeeds and at least one is non-success (including synthesized
@@ -2355,8 +2356,11 @@ summary；`zh-tw,jv,my,th,vi,tl,eo` 由 Google Cloud v3 翻譯該 canonical summ
 最終輸出語言命令、安全評估 framing 或續寫要求。template、paper、extraction、summary
 request/output 與 localization hashes 都納入 variant/run identity。
 
-完整 cache 位於 `runs/_cache/psa/<condition>/<cache-id>/`。只有完整且 contract 完全
-相符的八語 cache 可重用；缺少、損壞或 hash 衝突必須在 victim request 前 fail closed。
+完整 cache 位於 `runs/_cache/psa/<cache-id>/`。provenance 完全相同的 V1/V2 條件共用
+cache；paper 與 extraction provenance 屬於 cache identity，因此兩篇論文仍使用不同的
+cache ID。每個檔案分別以 atomic write 寫入，但只有 `summary_artifacts.jsonl`、
+`cache_contract.json` 與 `extraction_manifest.json` 完整且 contract 完全相符時才能重用；
+部分寫入、缺檔、損壞或 mismatch 必須在 victim request 前 fail closed。
 
 ## Pilot Acceptance Gate
 
