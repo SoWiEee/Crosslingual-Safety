@@ -107,8 +107,9 @@ MultiJail 翻譯採固定優先順序：`en` 使用原文；`jv`、`th`、`vi` �
 時會直接重用；缺檔、hash 不符或部分損壞會在 victim request 前停止。V1 PSA 條件、
 `gra_v1` 與 `psa_static_v1` 僅供舊 run replay，不屬於目前正式矩陣。
 
-每次執行建立 `runs/experiments/<run-id>/`，並在 `children/<condition>/` 隔離三個條件。
-重跑完全相同的命令會沿用已完成的翻譯、摘要與 generation journal。
+只有非 dry-run 執行會建立 `runs/experiments/<run-id>/`，並在 `children/<condition>/` 隔離
+三個條件。dry-run 只計算計畫，不建立 run directory 或其他 artifacts；重跑完全相同的
+非 dry-run 命令會沿用已完成的翻譯、摘要與 generation journal。
 
 低階工作流仍可用於除錯或自訂設定，包括 `ingest`、`translate`、`build-variants`、
 `plan`、`enqueue`、`generate`、`generation-status`、`retry-failed` 與 `manual-run`。

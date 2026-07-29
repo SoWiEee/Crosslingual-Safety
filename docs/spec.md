@@ -2288,11 +2288,11 @@ response and add only non-null `error_type` and `error_message`. The canonical l
 Translations are shared across children. Identity translations are recorded but do not count as
 machine-translation jobs. A translation failure is isolated to its `(case_id, language)` tuple and
 is projected to all affected child/model rows through a persisted translation-attempt record. PSA
-always prepares
-all four `en`, `zh`, `vi`, and `my` summaries in memory and writes the cache atomically only after
-all succeed; a partial sequence creates no victim variant. Re-running the same contract resets
-stale leases and retries only `retryable_error` generation jobs; success, provider-blocked, and
-permanent failures are preserved.
+prepares two canonical English source summaries, one per V2 condition, and seven localized summaries
+(`zh-tw,jv,my,th,vi,tl,eo`) for each condition. It writes each condition's eight-language cache
+atomically only after its source summary and all seven localizations succeed; a partial sequence
+creates no victim variant. Re-running the same contract resets stale leases and retries only
+`retryable_error` generation jobs; success, provider-blocked, and permanent failures are preserved.
 
 Each child is `success` only when every expected generation row has status `success`, `partial`
 when at least one expected row succeeds and at least one is non-success (including synthesized
@@ -2345,8 +2345,9 @@ source/output SHA-256。
 執行前必須驗證 PDF SHA-256、逐頁抽取文字，並產生最多 1,000 words、帶 page number
 與 SHA-256 的 chunks。每篇只使用 `ais3/gemma-4-12b` 產生一次 canonical English
 summary；`zh-tw,jv,my,th,vi,tl,eo` 由 Google Cloud v3 翻譯該 canonical summary。
-摘要 JSON 固定包含 `attack_methods`、`mechanism_analysis`、`related_work`，並與靜態
-`title`、`author`、`attack_scenario_example` sections 組成六段 prompt。
+摘要 JSON 固定包含 `attack_methods`、`mechanism_analysis`、`related_work`；其三段與靜態
+`title`、`author`、`attack_scenario_example` sections，以及獨立的倒數第二個 payload trigger
+組成七段 rendered prompt。
 
 八語 template 必須在 `attack_scenario_example` 與 `related_work` 間只插入一次 payload，
 使 trigger 成為倒數第二個 section。八種語言的 trigger 必須語意等價；attack 使用
