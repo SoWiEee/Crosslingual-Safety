@@ -114,6 +114,8 @@ LEGACY_JAILBREAKS: tuple[str, ...] = (
     "psa_defense_r2d_v1",
 )
 FORMAL_PSA_CONDITIONS: tuple[str, ...] = (
+    "psa_attack_poetry_v1",
+    "psa_defense_r2d_v1",
     "psa_attack_poetry_v2",
     "psa_defense_r2d_v2",
 )
@@ -2247,6 +2249,8 @@ def _load_formal_summary_cache(
     *,
     summary_id: str,
     source_sha256: str,
+    summary_request_contract: Mapping[str, object],
+    translator: Translator,
 ) -> dict[str, SummaryArtifact]:
     artifacts: dict[str, SummaryArtifact] = {}
     for row in _read_jsonl(path):
@@ -2259,7 +2263,69 @@ def _load_formal_summary_cache(
         artifacts[artifact.language] = artifact
     if set(artifacts) != set(PUBLIC_LANGUAGES):
         raise ContractConflictError("formal PSA summary cache is incomplete")
+    _validate_formal_summary_artifact_provenance(
+        artifacts,
+        summary_id=summary_id,
+        source_sha256=source_sha256,
+        summary_request_contract=summary_request_contract,
+        translator=translator,
+    )
     return artifacts
+
+
+def _validate_formal_summary_artifact_provenance(
+    artifacts: Mapping[str, SummaryArtifact],
+    *,
+    summary_id: str,
+    source_sha256: str,
+    summary_request_contract: Mapping[str, object],
+    translator: Translator,
+) -> None:
+    if set(artifacts) != set(PUBLIC_LANGUAGES):
+        raise ContractConflictError("formal PSA summary cache is incomplete")
+    if any(
+        artifact.summary_id != summary_id or artifact.source_sha256 != source_sha256
+        for artifact in artifacts.values()
+    ):
+        raise ContractConflictError("formal PSA summary cache contract mismatch")
+    english = artifacts["en"]
+    expected_english = {
+        "request_sha256": summary_request_contract.get("request_sha256"),
+        "provider_id": summary_request_contract.get("provider_id"),
+        "model_id": summary_request_contract.get("model_id"),
+        "endpoint_type": summary_request_contract.get("endpoint_type"),
+        "generation_config": summary_request_contract.get("generation_config"),
+    }
+    actual_english = {
+        "request_sha256": english.request_sha256,
+        "provider_id": english.provider_id,
+        "model_id": english.model_id,
+        "endpoint_type": english.endpoint_type,
+        "generation_config": english.generation_config,
+    }
+    if actual_english != expected_english:
+        raise ContractConflictError("formal PSA cache summary request provenance mismatch")
+    for language in PUBLIC_LANGUAGES:
+        if language == "en":
+            continue
+        artifact = artifacts[language]
+        request_contract = _formal_localization_request_contract(english, language, translator)
+        expected_localization = {
+            "request_sha256": _sha256_text(_canonical_json(request_contract)),
+            "provider_id": translator.translator_id,
+            "model_id": translator.version,
+            "endpoint_type": "translation",
+            "generation_config": _formal_localization_generation_config(english, translator),
+        }
+        actual_localization = {
+            "request_sha256": artifact.request_sha256,
+            "provider_id": artifact.provider_id,
+            "model_id": artifact.model_id,
+            "endpoint_type": artifact.endpoint_type,
+            "generation_config": artifact.generation_config,
+        }
+        if actual_localization != expected_localization:
+            raise ContractConflictError("formal PSA cache localization provenance mismatch")
 
 
 def _summarize_english(service: object, summary_id: str) -> SummaryArtifact:
@@ -2287,6 +2353,31 @@ def _summarize_english(service: object, summary_id: str) -> SummaryArtifact:
     return value
 
 
+def _formal_localization_request_contract(
+    english: SummaryArtifact,
+    target_language: str,
+    translator: Translator,
+) -> dict[str, object]:
+    return {
+        "canonical_summary_sha256": english.response_sha256,
+        "source_language": "en",
+        "target_language": target_language,
+        "translator_id": translator.translator_id,
+        "translator_version": translator.version,
+        "decoding_config": translator.decoding_config,
+    }
+
+
+def _formal_localization_generation_config(
+    english: SummaryArtifact,
+    translator: Translator,
+) -> dict[str, object]:
+    return {
+        "canonical_summary_sha256": english.response_sha256,
+        "decoding_config": dict(translator.decoding_config),
+    }
+
+
 def _localized_summary_artifact(
     english: SummaryArtifact,
     target_language: str,
@@ -2304,14 +2395,7 @@ def _localized_summary_artifact(
         if not localized[key]:
             raise ValueError(f"formal PSA summary localization is empty: {target_language}/{key}")
     response_text = _canonical_json(localized)
-    request_contract = {
-        "canonical_summary_sha256": english.response_sha256,
-        "source_language": "en",
-        "target_language": target_language,
-        "translator_id": translator.translator_id,
-        "translator_version": translator.version,
-        "decoding_config": translator.decoding_config,
-    }
+    request_contract = _formal_localization_request_contract(english, target_language, translator)
     return SummaryArtifact(
         summary_id=english.summary_id,
         language=target_language,
@@ -2320,15 +2404,62 @@ def _localized_summary_artifact(
         provider_id=translator.translator_id,
         model_id=translator.version,
         endpoint_type="translation",
-        generation_config={
-            "canonical_summary_sha256": english.response_sha256,
-            "decoding_config": dict(translator.decoding_config),
-        },
+        generation_config=_formal_localization_generation_config(english, translator),
         response_text=response_text,
         response_sha256=_sha256_text(response_text),
         provider_request_id=None,
         created_at=clock(),
     )
+
+
+def _formal_summary_request_contract(service: object) -> dict[str, object]:
+    raw_contract = getattr(service, "contract", None)
+    if not isinstance(raw_contract, Mapping):
+        raise ValueError("formal PSA summary service has no request contract")
+    request_hashes = raw_contract.get("request_sha256s")
+    if not isinstance(request_hashes, Mapping) or not isinstance(request_hashes.get("en"), str):
+        raise ValueError("formal PSA summary service has no English request identity")
+    required = (
+        "summary_id",
+        "source_sha256",
+        "prompt_sha256",
+        "provider_id",
+        "model_id",
+        "endpoint_type",
+        "generation_config",
+    )
+    if any(key not in raw_contract for key in required):
+        raise ValueError("formal PSA summary service request contract is incomplete")
+    return {
+        "summary_id": raw_contract["summary_id"],
+        "source_sha256": raw_contract["source_sha256"],
+        "prompt_sha256": raw_contract["prompt_sha256"],
+        "request_sha256": request_hashes["en"],
+        "provider_id": raw_contract["provider_id"],
+        "model_id": raw_contract["model_id"],
+        "endpoint_type": raw_contract["endpoint_type"],
+        "generation_config": raw_contract["generation_config"],
+    }
+
+
+def _formal_translator_artifact_contract(translator: Translator) -> dict[str, object]:
+    return {
+        "translator_id": translator.translator_id,
+        "translator_version": translator.version,
+        "decoding_config": dict(translator.decoding_config),
+    }
+
+
+def _read_formal_cache_sidecar(path: Path) -> dict[str, object]:
+    if not path.is_file():
+        raise ContractConflictError("formal PSA cache is incomplete")
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        raise ContractConflictError("formal PSA cache sidecar is invalid") from None
+    if not isinstance(value, dict):
+        raise ContractConflictError("formal PSA cache sidecar is invalid")
+    return cast(dict[str, object], value)
 
 
 def _formal_summary_cache(
@@ -2364,35 +2495,54 @@ def _formal_summary_cache(
     source_sha256 = str(getattr(service, "source_sha256", ""))
     if not source_sha256:
         raise ValueError("formal PSA summary service has no source contract")
+    summary_request_contract = _formal_summary_request_contract(service)
+    summary_settings = settings.model_copy(update={"translator": GOOGLE_CLOUD_TRANSLATOR})
+    translator = _make_translator(summary_settings, dependencies)
+    if translator is None:
+        raise ValueError("formal PSA summary translator is unavailable")
     configured_papers = plan.contract.get("psa_papers")
     paper_contract = (
         configured_papers.get(condition) if isinstance(configured_papers, Mapping) else None
     )
+    if not isinstance(paper_contract, Mapping):
+        raise ValueError(f"PSA paper contract is missing: {condition}")
+    if (
+        summary_request_contract.get("summary_id") != method.summary_id
+        or summary_request_contract.get("source_sha256") != source_sha256
+    ):
+        raise ValueError("formal PSA summary request identity is inconsistent")
     cache_contract = {
-        "condition": condition,
-        "paper": paper_contract,
+        "paper": dict(paper_contract),
         "summary_source_sha256": source_sha256,
         "summary_prompt": method.summary_prompt,
-        "translator_contract": _translator_contract(
-            settings.model_copy(update={"translator": GOOGLE_CLOUD_TRANSLATOR})
-        ),
+        "summary_request_contract": summary_request_contract,
+        "translator_contract": _translator_contract(summary_settings),
+        "translator_artifact_contract": _formal_translator_artifact_contract(translator),
         "languages": list(PUBLIC_LANGUAGES),
     }
     cache_id = stable_id("formal-psa-cache", _canonical_json(cache_contract))
-    cache_dir = settings.runs_dir.parent / "_cache" / "psa" / condition / cache_id
+    cache_dir = settings.runs_dir.parent / "_cache" / "psa" / cache_id
     cache_path = cache_dir / "summary_artifacts.jsonl"
-    if cache_path.is_file():
+    contract_path = cache_dir / "cache_contract.json"
+    extraction_path = cache_dir / "extraction_manifest.json"
+    expected_extraction = paper.model_dump(mode="json", exclude={"condition_id"})
+    cache_files = (cache_path, contract_path, extraction_path)
+    if any(path.exists() for path in cache_files):
+        if not all(path.is_file() for path in cache_files):
+            raise ContractConflictError("formal PSA cache is incomplete")
+        if _read_formal_cache_sidecar(contract_path) != cache_contract:
+            raise ContractConflictError("formal PSA cache contract mismatch")
+        if _read_formal_cache_sidecar(extraction_path) != expected_extraction:
+            raise ContractConflictError("formal PSA cache extraction provenance mismatch")
         artifacts = _load_formal_summary_cache(
             cache_path,
             summary_id=method.summary_id,
             source_sha256=source_sha256,
+            summary_request_contract=summary_request_contract,
+            translator=translator,
         )
     else:
         english = _summarize_english(service, method.summary_id)
-        summary_settings = settings.model_copy(update={"translator": GOOGLE_CLOUD_TRANSLATOR})
-        translator = _make_translator(summary_settings, dependencies)
-        if translator is None:
-            raise ValueError("formal PSA summary translator is unavailable")
         artifacts = {"en": english}
         for language in PUBLIC_LANGUAGES:
             if language != "en":
@@ -2402,13 +2552,20 @@ def _formal_summary_cache(
                     translator,
                     dependencies.clock,
                 )
+        _validate_formal_summary_artifact_provenance(
+            artifacts,
+            summary_id=method.summary_id,
+            source_sha256=source_sha256,
+            summary_request_contract=summary_request_contract,
+            translator=translator,
+        )
         content = "".join(
             _canonical_json(artifacts[language].model_dump(mode="json")) + "\n"
             for language in PUBLIC_LANGUAGES
         )
+        _write_json(extraction_path, expected_extraction)
+        _write_json(contract_path, cache_contract)
         _write_text_immutable(cache_path, content)
-        _write_json(cache_dir / "extraction_manifest.json", paper.model_dump(mode="json"))
-        _write_json(cache_dir / "cache_contract.json", cache_contract)
     _write_json(
         parent_path / "audit" / f"{condition}_summary_cache.json",
         {

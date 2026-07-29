@@ -384,6 +384,27 @@ def _summary_service(settings: RunSettings, provider: _SummaryProvider) -> Paper
     )
 
 
+def _formal_dependencies(provider: _SummaryProvider) -> RunDependencies:
+    return RunDependencies(
+        translator=FakeTranslator(),
+        summary_service_factory=lambda _settings, method: PaperSummaryService.from_method(
+            method,
+            provider=provider,
+            clock=lambda: "2026-07-29T00:00:00Z",
+        ),
+        generation=_generate_success,
+        emit=lambda _: None,
+    )
+
+
+def _formal_cache_path(result: object, condition: str) -> Path:
+    parent_path = getattr(result, "parent_path")
+    audit = json.loads(
+        (parent_path / "audit" / f"{condition}_summary_cache.json").read_text(encoding="utf-8")
+    )
+    return Path(str(audit["cache_path"]))
+
+
 def test_formal_psa_summarizes_each_pdf_once_and_localizes_from_english(
     tmp_path: Path,
 ) -> None:
@@ -423,6 +444,163 @@ def test_formal_psa_summarizes_each_pdf_once_and_localizes_from_english(
     assert result.status == "success"
     cache_root = settings.runs_dir.parent / "_cache" / "psa"
     assert len(list(cache_root.glob("*/**/summary_artifacts.jsonl"))) == 2
+    assert (
+        len(
+            {
+                _formal_cache_path(result, "psa_attack_poetry_v2"),
+                _formal_cache_path(result, "psa_defense_r2d_v2"),
+            }
+        )
+        == 2
+    )
+
+
+def test_corresponding_v1_v2_conditions_reuse_one_formal_summary_cache(
+    tmp_path: Path,
+) -> None:
+    settings = _settings(tmp_path).model_copy(
+        update={"psa_papers_config": Path("configs/psa_papers.yaml")}
+    )
+    provider = _SummaryProvider()
+    dependencies = _formal_dependencies(provider)
+    results = []
+    for condition in ("psa_attack_poetry_v1", "psa_attack_poetry_v2"):
+        plan = plan_run(
+            RunRequest(
+                source="manual",
+                languages=("en",),
+                jailbreaks=(condition,),
+                models=("fake_model",),
+            ),
+            settings,
+        )
+        results.append(execute_run(plan, settings, dependencies))
+
+    assert provider.languages == ["en"]
+    assert _formal_cache_path(results[0], "psa_attack_poetry_v1") == _formal_cache_path(
+        results[1], "psa_attack_poetry_v2"
+    )
+    cache_root = settings.runs_dir.parent / "_cache" / "psa"
+    assert len(list(cache_root.glob("*/**/summary_artifacts.jsonl"))) == 1
+
+
+@pytest.mark.parametrize(
+    "corruption",
+    [
+        "missing_artifacts",
+        "missing_contract",
+        "missing_extraction",
+        "corrupted_contract",
+        "mismatched_contract",
+        "mismatched_extraction_provenance",
+        "mismatched_artifact_provenance",
+    ],
+)
+def test_corresponding_v2_rejects_incomplete_or_mismatched_v1_cache(
+    tmp_path: Path,
+    corruption: str,
+) -> None:
+    settings = _settings(tmp_path).model_copy(
+        update={"psa_papers_config": Path("configs/psa_papers.yaml")}
+    )
+    provider = _SummaryProvider()
+    dependencies = _formal_dependencies(provider)
+    v1_plan = plan_run(
+        RunRequest(
+            source="manual",
+            languages=("en",),
+            jailbreaks=("psa_attack_poetry_v1",),
+            models=("fake_model",),
+        ),
+        settings,
+    )
+    v1_result = execute_run(v1_plan, settings, dependencies)
+    cache_dir = _formal_cache_path(v1_result, "psa_attack_poetry_v1").parent
+    artifacts_path = cache_dir / "summary_artifacts.jsonl"
+    contract_path = cache_dir / "cache_contract.json"
+    extraction_path = cache_dir / "extraction_manifest.json"
+    if corruption == "missing_artifacts":
+        artifacts_path.unlink()
+    elif corruption == "missing_contract":
+        contract_path.unlink()
+    elif corruption == "missing_extraction":
+        extraction_path.unlink()
+    elif corruption == "corrupted_contract":
+        contract_path.write_text("{invalid", encoding="utf-8")
+    elif corruption == "mismatched_contract":
+        contract = json.loads(contract_path.read_text(encoding="utf-8"))
+        contract["summary_request_contract"]["provider_id"] = "tampered-provider"
+        contract_path.write_text(json.dumps(contract), encoding="utf-8")
+    elif corruption == "mismatched_extraction_provenance":
+        extraction = json.loads(extraction_path.read_text(encoding="utf-8"))
+        extraction["source_sha256"] = "0" * 64
+        extraction_path.write_text(json.dumps(extraction), encoding="utf-8")
+    else:
+        artifacts = [
+            json.loads(line) for line in artifacts_path.read_text(encoding="utf-8").splitlines()
+        ]
+        artifacts[0]["provider_id"] = "tampered-provider"
+        artifacts_path.write_text(
+            "".join(json.dumps(artifact) + "\n" for artifact in artifacts),
+            encoding="utf-8",
+        )
+
+    v2_plan = plan_run(
+        RunRequest(
+            source="manual",
+            languages=("en",),
+            jailbreaks=("psa_attack_poetry_v2",),
+            models=("fake_model",),
+        ),
+        settings,
+    )
+    with pytest.raises(ContractConflictError, match="formal PSA preparation failed"):
+        execute_run(v2_plan, settings, dependencies)
+
+    assert provider.languages == ["en"]
+
+
+def test_explicit_v1_executes_legacy_formal_summary_with_native_wrappers(
+    tmp_path: Path,
+) -> None:
+    settings = _settings(tmp_path).model_copy(
+        update={"psa_papers_config": Path("configs/psa_papers.yaml")}
+    )
+    provider = _SummaryProvider()
+    plan = plan_run(
+        RunRequest(
+            source="manual",
+            languages=("zh-tw", "jv", "th", "tl"),
+            jailbreaks=("psa_attack_poetry_v1",),
+            models=("fake_model",),
+        ),
+        settings,
+    )
+
+    result = execute_run(plan, settings, _formal_dependencies(provider))
+
+    assert provider.languages == ["en"]
+    assert plan.psa_summary_count == 1
+    assert plan.psa_localization_count == 7
+    assert result.status == "success"
+    variants = [
+        json.loads(line)
+        for line in (result.parent_path / "children" / "psa_attack_poetry_v1" / "variants.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    ]
+    expected_output_instructions = {
+        "zh-tw": "請延續論文式分析，並以繁體中文回答。",
+        "jv": "Terusake analisis gaya makalah lan wangsulana nganggo basa Jawa.",
+        "th": "ดำเนินการวิเคราะห์แบบบทความต่อและตอบเป็นภาษาไทย",
+        "tl": "Ipagpatuloy ang pagsusuring parang papel at sumagot sa Tagalog.",
+    }
+    assert {row["language"] for row in variants} == set(expected_output_instructions)
+    for row in variants:
+        language = str(row["language"])
+        assert row["wrapper_language"] == language
+        assert expected_output_instructions[language] in str(row["rendered_prompt"])
+        assert "wrapper_fallback" not in json.loads(str(row["attack_metadata_json"]))
 
 
 def _generate_success(
