@@ -40,6 +40,7 @@ from crosslingual_safety.unified_run import (
     _translate_cases,
     execute_run,
     load_run_settings,
+    parse_jailbreak_selection,
     parse_selection,
     plan_run,
     preflight_run,
@@ -53,7 +54,11 @@ runner = CliRunner()
     [
         ("all", PUBLIC_LANGUAGES, PUBLIC_LANGUAGES),
         (" my, en, my ", PUBLIC_LANGUAGES, ("en", "my")),
-        ("gra,none", PUBLIC_JAILBREAKS, ("none", "gra")),
+        (
+            "psa_defense_r2d_v1,none",
+            PUBLIC_JAILBREAKS,
+            ("none", "psa_defense_r2d_v1"),
+        ),
     ],
 )
 def test_parse_selection_normalizes_and_orders(
@@ -67,8 +72,17 @@ def test_parse_selection_rejects_internal_zh() -> None:
         parse_selection("zh", PUBLIC_LANGUAGES, "--language")
 
 
+def test_jailbreak_all_uses_only_formal_conditions() -> None:
+    assert parse_jailbreak_selection("all") == (
+        "none",
+        "psa_attack_poetry_v1",
+        "psa_defense_r2d_v1",
+    )
+    assert parse_jailbreak_selection("gra,psa") == ("gra", "psa")
+
+
 def test_public_languages_include_low_resource_manual_targets() -> None:
-    assert PUBLIC_LANGUAGES == ("en", "zh-tw", "jv", "my", "th", "vi", "id", "tl", "eo")
+    assert PUBLIC_LANGUAGES == ("en", "zh-tw", "jv", "my", "th", "vi", "tl", "eo")
 
 
 def test_run_help_exposes_only_public_experiment_options() -> None:
@@ -364,6 +378,47 @@ def _summary_service(settings: RunSettings, provider: _SummaryProvider) -> Paper
     )
 
 
+def test_formal_psa_summarizes_each_pdf_once_and_localizes_from_english(
+    tmp_path: Path,
+) -> None:
+    settings = _settings(tmp_path).model_copy(
+        update={"psa_papers_config": Path("configs/psa_papers.yaml")}
+    )
+    provider = _SummaryProvider()
+    plan = plan_run(
+        RunRequest(
+            source="manual",
+            languages=("en", "zh-tw"),
+            jailbreaks=("psa_attack_poetry_v1", "psa_defense_r2d_v1"),
+            models=("fake_model",),
+        ),
+        settings,
+    )
+
+    result = execute_run(
+        plan,
+        settings,
+        RunDependencies(
+            translator=FakeTranslator(),
+            summary_service_factory=lambda _settings, method: PaperSummaryService.from_method(
+                method,
+                provider=provider,
+                clock=lambda: "2026-07-29T00:00:00Z",
+            ),
+            generation=_generate_success,
+            emit=lambda _: None,
+        ),
+    )
+
+    assert provider.languages == ["en", "en"]
+    assert plan.psa_summary_count == 2
+    assert plan.psa_localization_count == 14
+    assert len(result.rows) == 4
+    assert result.status == "success"
+    cache_root = settings.runs_dir.parent / "_cache" / "psa"
+    assert len(list(cache_root.glob("*/**/summary_artifacts.jsonl"))) == 2
+
+
 def _generate_success(
     config: object,
     path: Path,
@@ -551,7 +606,8 @@ def test_repository_bench_plan_selects_only_multijail() -> None:
 
     assert len(plan.cases) == 315
     assert {case.dataset for case in plan.cases} == {"multijail"}
-    assert plan.translation_jobs == 1260
+    assert plan.translation_jobs == 630
+    assert plan.contract["config_hashes"]["native_translations"]
     assert plan.victim_request_count == 7560
 
 

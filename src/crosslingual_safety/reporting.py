@@ -172,6 +172,8 @@ def _child_report(
     consensus: Mapping[str, ConsensusEvaluation],
     multilingual: Mapping[str, MultilingualJudgment],
     strongreject: Mapping[str, StrongRejectJudgment],
+    paper: Mapping[str, object] | None = None,
+    translation_provenance: Mapping[tuple[str, str], int] | None = None,
 ) -> str:
     ordered = sorted(
         rows,
@@ -203,6 +205,28 @@ def _child_report(
         f"({conditional_bypass}/{conditional_denominator})**",
         "",
     ]
+    if paper is not None:
+        lines.extend(
+            [
+                "## Paper Source",
+                "",
+                f"Title: {paper.get('title', 'unknown')}  ",
+                f"SHA-256: `{paper.get('source_sha256', 'unknown')}`",
+                "",
+            ]
+        )
+    if translation_provenance:
+        lines.extend(
+            [
+                "## Translation Provenance",
+                "",
+                "| Language | Method | Records |",
+                "| --- | --- | ---: |",
+            ]
+        )
+        for (language, method), count in sorted(translation_provenance.items()):
+            lines.append(f"| {language} | {method} | {count} |")
+        lines.append("")
     current_language: str | None = None
     current_model: tuple[str, str] | None = None
     for row in ordered:
@@ -271,6 +295,19 @@ def write_hierarchical_reports(run_dir: Path) -> ReportSummary:
         for case in cases
     ]
     run_id = cases[0].run_id
+    paper_contracts: Mapping[str, object] = {}
+    contract_path = run_dir / "run_contract.json"
+    if contract_path.is_file():
+        contract = json.loads(contract_path.read_text(encoding="utf-8"))
+        configured_papers = contract.get("psa_papers") if isinstance(contract, dict) else None
+        if isinstance(configured_papers, dict):
+            paper_contracts = configured_papers
+    translation_provenance: Counter[tuple[str, str]] = Counter()
+    for row in read_jsonl(run_dir / "audit" / "translations.jsonl", required=False):
+        language = row.get("target_language")
+        method = row.get("method")
+        if isinstance(language, str) and isinstance(method, str):
+            translation_provenance[(language, method)] += 1
     _write_atomic(
         run_dir / "report.md",
         _parent_report(run_id, rows, consensus, multilingual),
@@ -278,6 +315,8 @@ def write_hierarchical_reports(run_dir: Path) -> ReportSummary:
     jailbreaks = sorted({case.jailbreak for case in cases})
     for jailbreak in jailbreaks:
         selected = [row for row in rows if row["jailbreak"] == jailbreak]
+        configured_paper = paper_contracts.get(jailbreak)
+        paper = configured_paper if isinstance(configured_paper, Mapping) else None
         _write_atomic(
             run_dir / "children" / jailbreak / "report.md",
             _child_report(
@@ -287,6 +326,8 @@ def write_hierarchical_reports(run_dir: Path) -> ReportSummary:
                 consensus,
                 multilingual,
                 strongreject,
+                paper=paper,
+                translation_provenance=translation_provenance,
             ),
         )
     return ReportSummary(

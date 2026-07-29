@@ -6,12 +6,12 @@ from typing import Annotated, Any, cast
 import typer
 
 from crosslingual_safety.unified_run import (
-    PUBLIC_JAILBREAKS,
     PUBLIC_LANGUAGES,
     PUBLIC_SOURCES,
     RunRequest,
     execute_run,
     load_run_settings,
+    parse_jailbreak_selection,
     parse_selection,
     plan_run,
 )
@@ -27,7 +27,10 @@ def register_run_commands(app: typer.Typer) -> None:
         ] = "all",
         jailbreak: Annotated[
             str,
-            typer.Option("--jailbreak", help="none, gra, psa, comma-separated, or all"),
+            typer.Option(
+                "--jailbreak",
+                help=("none, psa_attack_poetry_v1, psa_defense_r2d_v1, comma-separated, or all"),
+            ),
         ] = "none",
         model: Annotated[
             str,
@@ -44,7 +47,7 @@ def register_run_commands(app: typer.Typer) -> None:
             )
         try:
             languages = parse_selection(language, PUBLIC_LANGUAGES, "--language")
-            jailbreaks = parse_selection(jailbreak, PUBLIC_JAILBREAKS, "--jailbreak")
+            jailbreaks = parse_jailbreak_selection(jailbreak)
             request = RunRequest(
                 source=cast(Any, source),
                 languages=languages,
@@ -61,6 +64,7 @@ def register_run_commands(app: typer.Typer) -> None:
             typer.echo(
                 f"cases={len(plan.cases)} translations={plan.translation_jobs} "
                 f"psa_summaries={plan.psa_summary_count} "
+                f"psa_localizations={plan.psa_localization_count} "
                 f"victim_requests={plan.victim_request_count} "
                 f"run_id={plan.run_id} path={plan.parent_path}"
             )

@@ -7,7 +7,9 @@ requires-python = "==3.11.*"
 dependencies = [
     "deep-translator>=1.11.4",
     "httpx>=0.28.1",
+    "opencc-python-reimplemented>=0.1.7",
     "pyarrow>=18.0.0",
+    "pypdf>=5.0.0",
     "pydantic>=2.10.0",
     "python-dotenv>=1.1.0",
     "pyyaml>=6.0.2",
@@ -83,6 +85,8 @@ module = [
     "deep_translator",
     "google.cloud",
     "google.cloud.*",
+    "opencc",
+    "pypdf",
     "peft",
     "peft.*",
     "pyarrow",

@@ -21,6 +21,7 @@ from importlib import import_module
 from importlib.metadata import PackageNotFoundError
 from importlib.metadata import version as package_version
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any, Literal, NoReturn, cast
 
 import pyarrow as pa
@@ -47,6 +48,7 @@ from crosslingual_safety.jailbreaks import (
     PaperSummaryJailbreak,
     load_jailbreaks,
 )
+from crosslingual_safety.psa_papers import extract_paper, load_psa_papers
 from crosslingual_safety.psa_summary import (
     SUMMARY_LANGUAGES,
     PaperSummaryService,
@@ -55,6 +57,11 @@ from crosslingual_safety.psa_summary import (
 )
 from crosslingual_safety.reporting import write_hierarchical_reports
 from crosslingual_safety.schemas import GenerationRequest, GenerationResult, PromptVariant
+from crosslingual_safety.translation.bench import (
+    BenchTranslation,
+    BenchTranslationCatalog,
+    NativeBenchTranslator,
+)
 from crosslingual_safety.translation.languages import load_languages
 from crosslingual_safety.translation.paid_ledger import (
     PaidCallLedger,
@@ -92,11 +99,19 @@ PUBLIC_LANGUAGES: tuple[str, ...] = (
     "my",
     "th",
     "vi",
-    "id",
     "tl",
     "eo",
 )
-PUBLIC_JAILBREAKS: tuple[str, ...] = ("none", "gra", "psa")
+PUBLIC_JAILBREAKS: tuple[str, ...] = (
+    "none",
+    "psa_attack_poetry_v1",
+    "psa_defense_r2d_v1",
+)
+LEGACY_JAILBREAKS: tuple[str, ...] = ("gra", "psa")
+FORMAL_PSA_CONDITIONS: tuple[str, ...] = (
+    "psa_attack_poetry_v1",
+    "psa_defense_r2d_v1",
+)
 PUBLIC_SOURCES: tuple[str, ...] = ("manual", "bench")
 LOCALIZED_WRAPPER_LANGUAGES: dict[str, str] = {
     "en": "en",
@@ -109,13 +124,11 @@ WRAPPER_LANGUAGES: dict[str, str] = {
     **LOCALIZED_WRAPPER_LANGUAGES,
     "jv": "en",
     "th": "en",
-    "id": "en",
     "tl": "en",
 }
 OUTPUT_LANGUAGE_NAMES: dict[str, str] = {
     "jv": "Javanese",
     "th": "Thai",
-    "id": "Indonesian",
     "tl": "Tagalog",
 }
 FALLBACK_OUTPUT_INSTRUCTIONS: dict[str, tuple[str, str]] = {
@@ -128,7 +141,13 @@ FALLBACK_OUTPUT_INSTRUCTIONS: dict[str, tuple[str, str]] = {
         "Requested output language: {language_name}.",
     ),
 }
-ATTACK_IDS: dict[str, str] = {"none": "none", "gra": "gra_v1", "psa": "psa_static_v1"}
+ATTACK_IDS: dict[str, str] = {
+    "none": "none",
+    "gra": "gra_v1",
+    "psa": "psa_static_v1",
+    "psa_attack_poetry_v1": "psa_attack_poetry_v1",
+    "psa_defense_r2d_v1": "psa_defense_r2d_v1",
+}
 SUMMARY_WRAPPER_LANGUAGES: tuple[str, ...] = ("en", "zh", "vi", "my", "eo")
 GOOGLE_CLOUD_TRANSLATOR = "google-cloud-nmt-v3"
 GOOGLE_CLOUD_INDETERMINATE_ERROR = "GoogleCloudIndeterminatePaidAttemptError"
@@ -259,6 +278,18 @@ def parse_selection(value: str, allowed: tuple[str, ...], option_name: str) -> t
     return tuple(item for item in allowed if item in selected)
 
 
+def parse_jailbreak_selection(value: str) -> tuple[str, ...]:
+    values = tuple(part.strip() for part in value.split(",") if part.strip())
+    if values == ("all",):
+        return PUBLIC_JAILBREAKS
+    allowed = PUBLIC_JAILBREAKS + LEGACY_JAILBREAKS
+    return parse_selection(value, allowed, "--jailbreak")
+
+
+def _wrapper_language(language: str, jailbreak: str) -> str:
+    return language if jailbreak in FORMAL_PSA_CONDITIONS else WRAPPER_LANGUAGES[language]
+
+
 class ManualSettings(BaseModel):
     input_path: Path = Path("prompts/prompt.txt")
     source_language: str = "zh-tw"
@@ -267,6 +298,7 @@ class ManualSettings(BaseModel):
 class BenchSettings(BaseModel):
     cases_path: Path = Path("data/normalized/cases.parquet")
     selection_path: Path = Path("data/normalized/variant_case_selection.parquet")
+    native_translations_path: Path = Path("data/normalized/native_translations.parquet")
     datasets: tuple[str, ...] = ()
 
 
@@ -315,6 +347,7 @@ class RunSettings(BaseModel):
     models_config: Path = Path("configs/models.yaml")
     languages_config: Path = Path("configs/languages.yaml")
     jailbreaks_config: Path = Path("configs/jailbreaks.yaml")
+    psa_papers_config: Path = Path("configs/psa_papers.yaml")
     runs_dir: Path = Path("runs/experiments")
     temperature: float = 1.0
     top_p: float | None = None
@@ -370,6 +403,7 @@ class RunPlan(BaseModel):
     jailbreaks: tuple[str, ...]
     translation_jobs: int
     psa_summary_count: int
+    psa_localization_count: int = 0
     victim_request_count: int
     run_id: str
     parent_path: Path
@@ -475,12 +509,20 @@ def load_run_settings(path: Path = Path("configs/run.yaml")) -> RunSettings:
     bench["selection_path"] = _resolve_config_path(
         bench.get("selection_path", "data/normalized/variant_case_selection.parquet"), path
     )
+    bench["native_translations_path"] = _resolve_config_path(
+        bench.get(
+            "native_translations_path",
+            "data/normalized/native_translations.parquet",
+        ),
+        path,
+    )
     value["manual"] = manual
     value["bench"] = bench
     for key, default in (
         ("models_config", "configs/models.yaml"),
         ("languages_config", "configs/languages.yaml"),
         ("jailbreaks_config", "configs/jailbreaks.yaml"),
+        ("psa_papers_config", "configs/psa_papers.yaml"),
         ("runs_dir", "runs/experiments"),
     ):
         value[key] = _resolve_config_path(value.get(key, default), path)
@@ -623,6 +665,28 @@ def _load_cases(request: RunRequest, settings: RunSettings) -> tuple[UnifiedCase
     )
 
 
+def _bench_translation_catalog(
+    request: RunRequest, settings: RunSettings
+) -> BenchTranslationCatalog | None:
+    if request.source != "bench":
+        return None
+    return BenchTranslationCatalog.from_parquet(settings.bench.native_translations_path)
+
+
+def _native_bench_translation(
+    catalog: BenchTranslationCatalog | None,
+    case: UnifiedCase,
+    language: str,
+) -> BenchTranslation | None:
+    if catalog is None or case.source != "bench":
+        return None
+    return catalog.resolve(
+        case_id=case.case_id,
+        source_text=case.source_text,
+        target_language=language,
+    )
+
+
 def _file_sha256(path: Path) -> str | None:
     try:
         return _sha256_bytes(path.read_bytes())
@@ -719,7 +783,7 @@ def plan_run(request: RunRequest, settings: RunSettings) -> RunPlan:
     if request.source not in PUBLIC_SOURCES:
         raise ValueError("source must be manual or bench")
     languages = parse_selection(",".join(request.languages), PUBLIC_LANGUAGES, "--language")
-    jailbreaks = parse_selection(",".join(request.jailbreaks), PUBLIC_JAILBREAKS, "--jailbreak")
+    jailbreaks = parse_jailbreak_selection(",".join(request.jailbreaks))
     requested_models = [model.strip() for model in request.models if model.strip()]
     if len(requested_models) != len(set(requested_models)):
         raise ValueError("--model must not contain duplicate values")
@@ -730,16 +794,41 @@ def plan_run(request: RunRequest, settings: RunSettings) -> RunPlan:
         update={"languages": languages, "jailbreaks": jailbreaks, "models": model_names}
     )
     cases = _load_cases(normalized_request, settings)
+    native_catalog = _bench_translation_catalog(normalized_request, settings)
     translation_jobs = sum(
-        1 for case in cases for language in languages if language != case.source_language
+        1
+        for case in cases
+        for language in languages
+        if language != case.source_language
+        and _native_bench_translation(native_catalog, case, language) is None
     )
-    psa_summary_count = len(SUMMARY_LANGUAGES) if "psa" in jailbreaks else 0
+    formal_psa = tuple(item for item in jailbreaks if item in FORMAL_PSA_CONDITIONS)
+    psa_summary_count = len(formal_psa) + (len(SUMMARY_LANGUAGES) if "psa" in jailbreaks else 0)
+    psa_localization_count = len(formal_psa) * (len(PUBLIC_LANGUAGES) - 1)
     victim_request_count = len(cases) * len(languages) * len(jailbreaks) * len(model_names)
     input_snapshot = "".join(_canonical_json(case.model_dump(mode="json")) + "\n" for case in cases)
     input_snapshot_sha256 = _sha256_text(input_snapshot)
     models = _raw_models(settings)
     selected_models = {name: models.get(name) for name in model_names}
     translator_contract = _translator_contract(settings)
+    paper_contracts: dict[str, object] = {}
+    if formal_psa:
+        paper_specs = load_psa_papers(settings.psa_papers_config)
+        for condition in formal_psa:
+            spec = paper_specs.get(condition)
+            if spec is None:
+                raise ValueError(f"PSA paper condition is missing: {condition}")
+            extracted = extract_paper(spec)
+            paper_contracts[condition] = {
+                "summary_id": spec.summary_id,
+                "title": spec.title,
+                "source_path": spec.source_path.as_posix(),
+                "source_sha256": extracted.source_sha256,
+                "text_sha256": extracted.text_sha256,
+                "page_count": extracted.page_count,
+                "chunk_sha256s": [chunk.text_sha256 for chunk in extracted.chunks],
+                "summarizer_model": spec.summarizer_model,
+            }
     contract: dict[str, object] = {
         "version": settings.version,
         "request": normalized_request.model_dump(mode="json"),
@@ -765,8 +854,15 @@ def plan_run(request: RunRequest, settings: RunSettings) -> RunPlan:
             "models": _file_sha256(settings.models_config),
             "languages": _file_sha256(settings.languages_config),
             "jailbreaks": _file_sha256(settings.jailbreaks_config),
+            "psa_papers": _file_sha256(settings.psa_papers_config),
+            "native_translations": (
+                _file_sha256(settings.bench.native_translations_path)
+                if normalized_request.source == "bench"
+                else None
+            ),
         },
         "attack_ids": {name: ATTACK_IDS[name] for name in jailbreaks},
+        "psa_papers": paper_contracts,
     }
     run_id = stable_id("experiment-run", _canonical_json(contract))
     return RunPlan(
@@ -777,6 +873,7 @@ def plan_run(request: RunRequest, settings: RunSettings) -> RunPlan:
         jailbreaks=jailbreaks,
         translation_jobs=translation_jobs,
         psa_summary_count=psa_summary_count,
+        psa_localization_count=psa_localization_count,
         victim_request_count=victim_request_count,
         run_id=run_id,
         parent_path=settings.runs_dir / run_id,
@@ -1019,8 +1116,14 @@ def preflight_run(
         if not settings.manual.input_path.is_file():
             raise ValueError(f"manual input does not exist: {settings.manual.input_path}")
     else:
-        if not settings.bench.cases_path.is_file() or not settings.bench.selection_path.is_file():
-            raise ValueError("benchmark cases and selection snapshots are required")
+        if (
+            not settings.bench.cases_path.is_file()
+            or not settings.bench.selection_path.is_file()
+            or not settings.bench.native_translations_path.is_file()
+        ):
+            raise ValueError(
+                "benchmark cases, selection, and native translation snapshots are required"
+            )
     model_configs = _load_model_configs(settings)
     languages = load_languages(settings.languages_config)
     for language in plan.languages:
@@ -1034,15 +1137,18 @@ def preflight_run(
         if method is None:
             raise ValueError(f"jailbreak is missing from config: {ATTACK_IDS[jailbreak]}")
         for language in plan.languages:
-            if not method.supports_language(WRAPPER_LANGUAGES[language]):
+            wrapper_language = _wrapper_language(language, jailbreak)
+            if not method.supports_language(wrapper_language):
                 raise ValueError(
-                    f"{jailbreak} does not support wrapper language {WRAPPER_LANGUAGES[language]}"
+                    f"{jailbreak} does not support wrapper language {wrapper_language}"
                 )
         if jailbreak == "gra":
             personas = getattr(method, "personas", {})
             if settings.gra_role not in personas:
                 raise ValueError(f"unknown GRA role: {settings.gra_role}")
-        if jailbreak == "psa" and not isinstance(method, PaperSummaryJailbreak):
+        if (jailbreak == "psa" or jailbreak in FORMAL_PSA_CONDITIONS) and not isinstance(
+            method, PaperSummaryJailbreak
+        ):
             raise ValueError("psa configuration must use PaperSummaryJailbreak")
 
     if (
@@ -1087,7 +1193,7 @@ def preflight_run(
                     f"{model.api_key_env}"
                 )
     if (
-        "psa" in plan.jailbreaks
+        any(item == "psa" or item in FORMAL_PSA_CONDITIONS for item in plan.jailbreaks)
         and dependencies.summary_service is None
         and dependencies.summary_service_factory is None
     ):
@@ -1580,6 +1686,20 @@ def _validate_translation_audit_row(
             raise ContractConflictError("invalid persisted translation audit")
         return key, None
 
+    if translator_id == "native_dataset":
+        if (
+            provider_reservation_id is not None
+            or translator_version != "multijail-native-v1"
+            or row.get("method") != "native_dataset"
+            or provider_request_id is not None
+            or decoding_config.get("source_record_id") in {None, ""}
+            or decoding_config.get("dataset_language") not in {"zh", "jv", "th", "vi"}
+            or (target_language == "zh-tw" and decoding_config.get("conversion") != "s2twp")
+            or (target_language != "zh-tw" and "conversion" in decoding_config)
+        ):
+            raise ContractConflictError("invalid persisted native translation audit")
+        return key, None
+
     if not google_paid_run:
         if provider_reservation_id is not None:
             raise ContractConflictError("invalid Google Cloud paid-call outcome identity")
@@ -1631,12 +1751,17 @@ def _translate_cases(
     except PaidCallLedgerError:
         raise ContractConflictError("invalid Google Cloud paid-call reservation identity") from None
     job_contexts: dict[tuple[str, str], UnifiedCase] = {}
+    native_catalog = _bench_translation_catalog(plan.request, settings)
+    native_jobs: dict[tuple[str, str], BenchTranslation] = {}
     for case in plan.cases:
         for target_language in plan.languages:
             key = (case.case_id, target_language)
             if key in job_contexts:
                 raise ContractConflictError("duplicate translation job identity")
             job_contexts[key] = case
+            native = _native_bench_translation(native_catalog, case, target_language)
+            if native is not None:
+                native_jobs[key] = native
     paid_tasks_by_job: dict[tuple[str, str], PaidTranslationTask] = {}
     paid_task_contexts: dict[str, tuple[PaidTranslationTask, UnifiedCase]] = {}
     provider_contract: Mapping[str, object] | None = None
@@ -1648,6 +1773,8 @@ def _translate_cases(
         for case in plan.cases:
             for target_language in plan.languages:
                 if target_language == case.source_language:
+                    continue
+                if (case.case_id, target_language) in native_jobs:
                     continue
                 task = PaidTranslationTask.build(
                     case_id=case.case_id,
@@ -1883,6 +2010,20 @@ def _translate_cases(
                 _append_jsonl(translations_path, [record], "translation_id", durable=True)
                 successful[key] = record
                 continue
+            native = native_jobs.get(key)
+            if native is not None:
+                native_translator = NativeBenchTranslator(native)
+                record = _translation_record(
+                    case,
+                    language,
+                    native.text,
+                    native_translator,
+                    None,
+                    dependencies.clock,
+                )
+                _append_jsonl(translations_path, [record], "translation_id", durable=True)
+                successful[key] = record
+                continue
 
             attempt_number = attempt_counts.get(key, 0) + 1
             pending_paid_task = None
@@ -2094,6 +2235,185 @@ def _summary_cache(
     return artifacts
 
 
+def _load_formal_summary_cache(
+    path: Path,
+    *,
+    summary_id: str,
+    source_sha256: str,
+) -> dict[str, SummaryArtifact]:
+    artifacts: dict[str, SummaryArtifact] = {}
+    for row in _read_jsonl(path):
+        artifact = SummaryArtifact.model_validate(row)
+        if artifact.language in artifacts:
+            raise ContractConflictError("duplicate formal PSA summary language")
+        if artifact.summary_id != summary_id or artifact.source_sha256 != source_sha256:
+            raise ContractConflictError("formal PSA summary cache contract mismatch")
+        artifact_sections(artifact)
+        artifacts[artifact.language] = artifact
+    if set(artifacts) != set(PUBLIC_LANGUAGES):
+        raise ContractConflictError("formal PSA summary cache is incomplete")
+    return artifacts
+
+
+def _summarize_english(service: object, summary_id: str) -> SummaryArtifact:
+    if hasattr(service, "summarize_async"):
+        value = service.summarize_async("en")
+        if inspect.isawaitable(value):
+            value = asyncio.run(cast(Any, value))
+    elif hasattr(service, "summarize"):
+        summarize = service.summarize
+        try:
+            parameter_count = len(inspect.signature(summarize).parameters)
+        except (TypeError, ValueError):
+            parameter_count = 2
+        value = summarize(summary_id, "en") if parameter_count >= 2 else summarize("en")
+    else:
+        raise ValueError("formal PSA summary service has no summarize method")
+    if not isinstance(value, SummaryArtifact):
+        try:
+            value = SummaryArtifact.model_validate(value)
+        except Exception:
+            raise ValueError("formal PSA summary service returned an invalid artifact") from None
+    if value.summary_id != summary_id or value.language != "en":
+        raise ValueError("formal PSA English summary identity mismatch")
+    artifact_sections(value)
+    return value
+
+
+def _localized_summary_artifact(
+    english: SummaryArtifact,
+    target_language: str,
+    translator: Translator,
+    clock: Callable[[], str],
+) -> SummaryArtifact:
+    if not translator.supports("en", target_language):
+        raise ValueError(f"summary translator does not support en->{target_language}")
+    localized: dict[str, str] = {}
+    for key, value in artifact_sections(english).items():
+        translated = translator.translate(value, "en", target_language)
+        if not isinstance(translated, ProviderTranslation):
+            translated = ProviderTranslation(str(getattr(translated, "text", translated)))
+        localized[key] = canonicalize_text(translated.text)
+        if not localized[key]:
+            raise ValueError(f"formal PSA summary localization is empty: {target_language}/{key}")
+    response_text = _canonical_json(localized)
+    request_contract = {
+        "canonical_summary_sha256": english.response_sha256,
+        "source_language": "en",
+        "target_language": target_language,
+        "translator_id": translator.translator_id,
+        "translator_version": translator.version,
+        "decoding_config": translator.decoding_config,
+    }
+    return SummaryArtifact(
+        summary_id=english.summary_id,
+        language=target_language,
+        source_sha256=english.source_sha256,
+        request_sha256=_sha256_text(_canonical_json(request_contract)),
+        provider_id=translator.translator_id,
+        model_id=translator.version,
+        endpoint_type="translation",
+        generation_config={
+            "canonical_summary_sha256": english.response_sha256,
+            "decoding_config": dict(translator.decoding_config),
+        },
+        response_text=response_text,
+        response_sha256=_sha256_text(response_text),
+        provider_request_id=None,
+        created_at=clock(),
+    )
+
+
+def _formal_summary_cache(
+    condition: str,
+    method: PaperSummaryJailbreak,
+    plan: RunPlan,
+    settings: RunSettings,
+    dependencies: RunDependencies,
+    parent_path: Path,
+) -> dict[str, SummaryArtifact]:
+    specs = load_psa_papers(settings.psa_papers_config)
+    spec = specs.get(condition)
+    if spec is None:
+        raise ValueError(f"PSA paper condition is missing: {condition}")
+    paper = extract_paper(spec)
+    paper_method = SimpleNamespace(
+        summary_id=method.summary_id,
+        sections={"en": {"paper_text": paper.text}},
+        provenance={
+            "source_ref": spec.source_path.as_posix(),
+            "source_language": "en",
+            "source_sha256": paper.source_sha256,
+            "text_sha256": paper.text_sha256,
+            "chunk_sha256s": [chunk.text_sha256 for chunk in paper.chunks],
+        },
+        summary_prompt=method.summary_prompt,
+    )
+    service = _make_summary_service(
+        settings,
+        dependencies,
+        cast(PaperSummaryJailbreak, paper_method),
+    )
+    source_sha256 = str(getattr(service, "source_sha256", ""))
+    if not source_sha256:
+        raise ValueError("formal PSA summary service has no source contract")
+    configured_papers = plan.contract.get("psa_papers")
+    paper_contract = (
+        configured_papers.get(condition) if isinstance(configured_papers, Mapping) else None
+    )
+    cache_contract = {
+        "condition": condition,
+        "paper": paper_contract,
+        "summary_source_sha256": source_sha256,
+        "summary_prompt": method.summary_prompt,
+        "translator_contract": _translator_contract(
+            settings.model_copy(update={"translator": GOOGLE_CLOUD_TRANSLATOR})
+        ),
+        "languages": list(PUBLIC_LANGUAGES),
+    }
+    cache_id = stable_id("formal-psa-cache", _canonical_json(cache_contract))
+    cache_dir = settings.runs_dir.parent / "_cache" / "psa" / condition / cache_id
+    cache_path = cache_dir / "summary_artifacts.jsonl"
+    if cache_path.is_file():
+        artifacts = _load_formal_summary_cache(
+            cache_path,
+            summary_id=method.summary_id,
+            source_sha256=source_sha256,
+        )
+    else:
+        english = _summarize_english(service, method.summary_id)
+        summary_settings = settings.model_copy(update={"translator": GOOGLE_CLOUD_TRANSLATOR})
+        translator = _make_translator(summary_settings, dependencies)
+        if translator is None:
+            raise ValueError("formal PSA summary translator is unavailable")
+        artifacts = {"en": english}
+        for language in PUBLIC_LANGUAGES:
+            if language != "en":
+                artifacts[language] = _localized_summary_artifact(
+                    english,
+                    language,
+                    translator,
+                    dependencies.clock,
+                )
+        content = "".join(
+            _canonical_json(artifacts[language].model_dump(mode="json")) + "\n"
+            for language in PUBLIC_LANGUAGES
+        )
+        _write_text_immutable(cache_path, content)
+        _write_json(cache_dir / "extraction_manifest.json", paper.model_dump(mode="json"))
+        _write_json(cache_dir / "cache_contract.json", cache_contract)
+    _write_json(
+        parent_path / "audit" / f"{condition}_summary_cache.json",
+        {
+            "cache_id": cache_id,
+            "cache_path": cache_path.as_posix(),
+            "condition": condition,
+            "source_sha256": source_sha256,
+        },
+    )
+    return artifacts
+
+
 def _summary_for_language(value: object, language: str) -> SummaryArtifact | None:
     if isinstance(value, SummaryArtifact):
         return value
@@ -2177,7 +2497,7 @@ def _render_variants(
                     "error_message": "translation record is unavailable",
                 }
                 continue
-            wrapper_language = WRAPPER_LANGUAGES[language]
+            wrapper_language = _wrapper_language(language, jailbreak)
             role = settings.gra_role if jailbreak == "gra" else None
             context = JailbreakContext(
                 language=language,
@@ -2445,7 +2765,7 @@ def _execute_child(
         raise ContractConflictError(f"child contract conflict: {child_path}")
     _write_text_immutable(contract_path, contract_text)
     method = methods[ATTACK_IDS[jailbreak]]
-    if summary_failure is not None and jailbreak == "psa":
+    if summary_failure is not None and (jailbreak == "psa" or jailbreak in FORMAL_PSA_CONDITIONS):
         variants: list[dict[str, object]] = []
         preparation_errors: dict[tuple[str, str], dict[str, object]] = {
             (case.case_id, language): dict(summary_failure)
@@ -2851,7 +3171,7 @@ def _requires_dotenv(
         if any(model_configs[name].provider != "fake" for name in plan.models):
             return True
     if (
-        "psa" in plan.jailbreaks
+        any(item == "psa" or item in FORMAL_PSA_CONDITIONS for item in plan.jailbreaks)
         and dependencies.summary_service is None
         and dependencies.summary_service_factory is None
     ):
@@ -2896,28 +3216,49 @@ def execute_run(
     translations, translation_failures = _translate_cases(plan, settings, dependencies, parent_path)
 
     methods = load_jailbreaks(settings.jailbreaks_config)
-    summaries: Mapping[str, object] | None = None
-    summary_failure: dict[str, object] | None = None
-    if "psa" in plan.jailbreaks:
-        emit(f"[3/5] Summarize count={plan.psa_summary_count}")
-        psa_method = methods[ATTACK_IDS["psa"]]
-        if not isinstance(psa_method, PaperSummaryJailbreak):
-            raise ValueError("psa configuration must use PaperSummaryJailbreak")
-        try:
-            summaries = cast(
-                Mapping[str, object],
-                _summary_cache(psa_method, settings, dependencies, parent_path),
-            )
-        except Exception as error:
-            error_type, error_message = _sanitized_error(error)
-            summary_failure = {
-                "error_type": error_type,
-                "error_message": error_message,
-            }
-            _write_json(
-                parent_path / "audit" / "psa_summary_error.json",
-                summary_failure,
-            )
+    psa_conditions = tuple(
+        item for item in plan.jailbreaks if item == "psa" or item in FORMAL_PSA_CONDITIONS
+    )
+    summaries_by_condition: dict[str, Mapping[str, object]] = {}
+    summary_failures: dict[str, dict[str, object]] = {}
+    if psa_conditions:
+        emit(
+            f"[3/5] Summarize count={plan.psa_summary_count} "
+            f"localizations={plan.psa_localization_count}"
+        )
+        for condition in psa_conditions:
+            method = methods[ATTACK_IDS[condition]]
+            if not isinstance(method, PaperSummaryJailbreak):
+                raise ValueError("psa configuration must use PaperSummaryJailbreak")
+            try:
+                if condition in FORMAL_PSA_CONDITIONS:
+                    summaries_by_condition[condition] = _formal_summary_cache(
+                        condition,
+                        method,
+                        plan,
+                        settings,
+                        dependencies,
+                        parent_path,
+                    )
+                else:
+                    summaries_by_condition[condition] = cast(
+                        Mapping[str, object],
+                        _summary_cache(method, settings, dependencies, parent_path),
+                    )
+            except Exception as error:
+                error_type, error_message = _sanitized_error(error)
+                if condition in FORMAL_PSA_CONDITIONS:
+                    raise ContractConflictError(
+                        f"formal PSA preparation failed: {condition}: {error_message}"
+                    ) from error
+                summary_failures[condition] = {
+                    "error_type": error_type,
+                    "error_message": error_message,
+                }
+                _write_json(
+                    parent_path / "audit" / f"{condition}_summary_error.json",
+                    summary_failures[condition],
+                )
     else:
         emit("[3/5] Summarize skipped")
 
@@ -2958,8 +3299,8 @@ def execute_run(
             methods,
             translations,
             translation_failures,
-            summaries,
-            summary_failure,
+            summaries_by_condition.get(jailbreak),
+            summary_failures.get(jailbreak),
         )
 
     emit("[5/5] Aggregate")
@@ -2997,6 +3338,7 @@ __all__ = [
     "execute_run",
     "load_run_settings",
     "parse_selection",
+    "parse_jailbreak_selection",
     "plan_run",
     "preflight_run",
 ]

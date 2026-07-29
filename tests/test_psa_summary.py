@@ -5,6 +5,7 @@ import httpx
 import pytest
 
 from crosslingual_safety.jailbreaks import JailbreakContext, load_jailbreaks
+from crosslingual_safety.psa_papers import extract_paper, load_psa_papers
 from crosslingual_safety.psa_summary import (
     SUMMARY_KEYS,
     SUMMARY_LANGUAGES,
@@ -18,6 +19,23 @@ from crosslingual_safety.psa_summary import (
 
 def _method():
     return load_jailbreaks(Path("configs/jailbreaks.yaml"))["psa_static_v1"]
+
+
+def test_formal_psa_papers_have_locked_hashes_and_bounded_chunks() -> None:
+    specs = load_psa_papers(Path("configs/psa_papers.yaml"))
+
+    assert set(specs) == {"psa_attack_poetry_v1", "psa_defense_r2d_v1"}
+    extracted = {condition: extract_paper(spec) for condition, spec in specs.items()}
+    assert extracted["psa_attack_poetry_v1"].page_count == 16
+    assert extracted["psa_defense_r2d_v1"].page_count == 19
+    assert all(chunk.word_count <= 1000 for paper in extracted.values() for chunk in paper.chunks)
+    assert all(paper.text for paper in extracted.values())
+
+
+def test_formal_psa_paper_hash_mismatch_fails_closed() -> None:
+    spec = load_psa_papers(Path("configs/psa_papers.yaml"))["psa_attack_poetry_v1"]
+    with pytest.raises(ValueError, match="hash mismatch"):
+        extract_paper(spec.model_copy(update={"expected_sha256": "0" * 64}))
 
 
 def _service(requests: list[dict[str, object]]) -> PaperSummaryService:

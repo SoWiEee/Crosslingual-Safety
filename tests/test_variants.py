@@ -14,6 +14,33 @@ from crosslingual_safety.schemas import PromptCase, TranslationRecord
 runner = CliRunner()
 
 
+@pytest.mark.parametrize(
+    "attack_id",
+    ["psa_attack_poetry_v1", "psa_defense_r2d_v1"],
+)
+@pytest.mark.parametrize("language", ["en", "zh-tw", "jv", "my", "th", "vi", "tl", "eo"])
+def test_formal_psa_templates_are_monolingual_and_insert_payload_once(
+    attack_id: str,
+    language: str,
+) -> None:
+    method = load_jailbreaks(Path("configs/jailbreaks.yaml"))[attack_id]
+    payload = f"UNIQUE-PAYLOAD-{language}"
+
+    rendered = method.render(
+        payload,
+        JailbreakContext(
+            language=language,
+            wrapper_language=language,
+            intent="harmful",
+            category=None,
+        ),
+    )
+
+    assert rendered.rendered_prompt.count(payload) == 1
+    assert rendered.wrapper_language == language
+    assert json.loads(rendered.metadata_json)["payload_occurrences"] == 1
+
+
 def _case() -> PromptCase:
     return PromptCase(
         case_id="case-1",

@@ -5,6 +5,7 @@ manual:
 bench:
   cases_path: data/normalized/cases.parquet
   selection_path: data/normalized/variant_case_selection.parquet
+  native_translations_path: data/normalized/native_translations.parquet
   datasets:
     - multijail
 models:
@@ -26,4 +27,5 @@ gra_role: joker
 models_config: configs/models.yaml
 languages_config: configs/languages.yaml
 jailbreaks_config: configs/jailbreaks.yaml
+psa_papers_config: configs/psa_papers.yaml
 runs_dir: runs/experiments

@@ -6,12 +6,14 @@ from contextlib import nullcontext
 from pathlib import Path
 from types import SimpleNamespace
 
+import pyarrow as pa
 import pyarrow.parquet as pq
 import pytest
 from typer.testing import CliRunner
 
 from crosslingual_safety.cli import app
 from crosslingual_safety.schemas import PromptCase, TranslationReview
+from crosslingual_safety.translation.bench import BenchTranslationCatalog
 from crosslingual_safety.translation.commands import REVIEW_FIELDS
 from crosslingual_safety.translation.languages import load_languages
 from crosslingual_safety.translation.paid_ledger import PaidCallLedgerError
@@ -36,6 +38,75 @@ from crosslingual_safety.translation.service import TranslationService
 from crosslingual_safety.translation.storage import TranslationStore
 
 runner = CliRunner()
+
+
+def _write_native_rows(path: Path, rows: list[dict[str, str]]) -> None:
+    pq.write_table(pa.Table.from_pylist(rows), path)
+
+
+def test_bench_translation_catalog_resolves_native_and_traditional_chinese(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "native.parquet"
+    _write_native_rows(
+        path,
+        [
+            {
+                "translation_id": "native-zh",
+                "case_id": "case-1",
+                "language": "zh",
+                "source_text": "Original",
+                "translated_text": "软件与网络",
+                "method": "native_dataset",
+                "source_record_id": "source-zh",
+            },
+            {
+                "translation_id": "native-jv",
+                "case_id": "case-1",
+                "language": "jv",
+                "source_text": "Original",
+                "translated_text": "Asli",
+                "method": "native_dataset",
+                "source_record_id": "source-jv",
+            },
+        ],
+    )
+
+    catalog = BenchTranslationCatalog.from_parquet(path)
+
+    traditional = catalog.resolve(case_id="case-1", source_text="Original", target_language="zh-tw")
+    assert traditional is not None
+    assert traditional.text == "軟體與網路"
+    assert traditional.decoding_config == {
+        "conversion": "s2twp",
+        "dataset_language": "zh",
+        "source_record_id": "source-zh",
+    }
+    javanese = catalog.resolve(case_id="case-1", source_text="Original", target_language="jv")
+    assert javanese is not None
+    assert javanese.text == "Asli"
+    assert catalog.resolve(case_id="case-1", source_text="Original", target_language="eo") is None
+
+
+def test_bench_translation_catalog_rejects_duplicate_and_source_mismatch(tmp_path: Path) -> None:
+    path = tmp_path / "native.parquet"
+    row = {
+        "translation_id": "native-jv",
+        "case_id": "case-1",
+        "language": "jv",
+        "source_text": "Original",
+        "translated_text": "Asli",
+        "method": "native_dataset",
+        "source_record_id": "source-jv",
+    }
+    _write_native_rows(path, [row, {**row, "translation_id": "duplicate"}])
+    with pytest.raises(ValueError, match="duplicate native translation"):
+        BenchTranslationCatalog.from_parquet(path)
+
+    _write_native_rows(path, [row])
+    catalog = BenchTranslationCatalog.from_parquet(path)
+    with pytest.raises(ValueError, match="source mismatch"):
+        catalog.resolve(case_id="case-1", source_text="Changed", target_language="jv")
 
 
 def _case(case_id: str = "case-1") -> PromptCase:

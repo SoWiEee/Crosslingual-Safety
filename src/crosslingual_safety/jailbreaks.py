@@ -195,11 +195,8 @@ PAPER_SUMMARY_SECTION_ORDER: tuple[str, ...] = (
     "attack_scenario_example",
     "related_work",
 )
-PAPER_SUMMARY_LANGUAGES: frozenset[str] = frozenset({"en", "zh", "vi", "my", "eo"})
 PAPER_SUMMARY_PROVENANCE_FIELDS: tuple[str, ...] = (
     "source_ref",
-    "source_doi",
-    "psa_reference",
     "source_language",
 )
 
@@ -224,6 +221,7 @@ class PaperSummaryJailbreak:
         summary_prompt: dict[str, str] | None = None,
         section_order: tuple[str, ...] = PAPER_SUMMARY_SECTION_ORDER,
         insertion_index: str = "attack_scenario_example",
+        payload_occurrences: int = 2,
     ) -> None:
         if tuple(section_order) != PAPER_SUMMARY_SECTION_ORDER:
             raise ValueError(
@@ -233,16 +231,18 @@ class PaperSummaryJailbreak:
             raise ValueError("Paper Summary Attack insertion index must be attack_scenario_example")
         if not summary_id:
             raise ValueError("Paper Summary Attack summary_id must not be empty")
-        if set(templates) != PAPER_SUMMARY_LANGUAGES or set(sections) != PAPER_SUMMARY_LANGUAGES:
+        if not templates or set(templates) != set(sections):
             raise ValueError(
-                "Paper Summary Attack requires localized en, zh, vi, my, and eo templates"
+                "Paper Summary Attack templates and sections must use the same languages"
             )
+        if payload_occurrences not in {1, 2}:
+            raise ValueError("Paper Summary Attack payload_occurrences must be one or two")
         for field in PAPER_SUMMARY_PROVENANCE_FIELDS:
             value = provenance.get(field)
             if not isinstance(value, str) or not value:
                 raise ValueError(f"Paper Summary Attack provenance field {field} must be non-empty")
 
-        for language in sorted(PAPER_SUMMARY_LANGUAGES):
+        for language in sorted(templates):
             localized_sections = sections[language]
             if set(localized_sections) != set(PAPER_SUMMARY_SECTION_ORDER):
                 raise ValueError(
@@ -265,10 +265,10 @@ class PaperSummaryJailbreak:
                     f"Paper Summary Attack template for {language} must reference localized "
                     f"sections and payload exactly once per field"
                 )
-            if template.count("${payload}") != 2:
+            if template.count("${payload}") != payload_occurrences:
                 raise ValueError(
-                    f"Paper Summary Attack template for {language} must contain two payload "
-                    "references"
+                    f"Paper Summary Attack template for {language} must contain "
+                    f"{payload_occurrences} payload references"
                 )
             scenario_start = template.find("${attack_scenario_example}")
             related_start = template.find("${related_work}")
@@ -277,7 +277,9 @@ class PaperSummaryJailbreak:
                 for position in range(len(template))
                 if template.startswith("${payload}", position)
             ]
-            if not scenario_start < payload_positions[0] < payload_positions[1] < related_start:
+            if not (
+                scenario_start < payload_positions[0] and payload_positions[-1] < related_start
+            ):
                 raise ValueError(
                     f"Paper Summary Attack payload references for {language} must be within "
                     "the attack_scenario_example boundary"
@@ -312,7 +314,7 @@ class PaperSummaryJailbreak:
         self.summary_prompt = {str(key): str(value) for key, value in summary_prompt.items()}
         self.section_order = PAPER_SUMMARY_SECTION_ORDER
         self.insertion_index = insertion_index
-        self.payload_occurrences = 2
+        self.payload_occurrences = payload_occurrences
 
     def supports_language(self, language: str) -> bool:
         return language in self.templates
@@ -439,6 +441,8 @@ JAILBREAK_REGISTRY: dict[
     "roleplay_v1": TemplateJailbreak,
     "gra_v1": GraphRoleplayJailbreak,
     "psa_static_v1": PaperSummaryJailbreak,
+    "psa_attack_poetry_v1": PaperSummaryJailbreak,
+    "psa_defense_r2d_v1": PaperSummaryJailbreak,
 }
 
 
@@ -516,6 +520,7 @@ def load_jailbreaks(path: Path) -> dict[str, JailbreakMethod]:
                 summary_prompt=summary_prompt,
                 section_order=tuple(str(value) for value in section_order_config),
                 insertion_index=insertion_index_config,
+                payload_occurrences=int(config.get("payload_occurrences", 2)),
             )
             continue
         wrapper_name = str(config["wrapper"])

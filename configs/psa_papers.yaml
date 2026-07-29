@@ -1,0 +1,14 @@
+version: 1
+papers:
+  psa_attack_poetry_v1:
+    summary_id: adversarial_poetry_summary_v1
+    title: Adversarial Poetry as a Universal Single-Turn Jailbreak Mechanism
+    source_path: refs/Adversarial Poetry as a Universal Single-Turn.pdf
+    expected_sha256: 839e747454298a25f191d8be3e2c85f9c2b29cbac54741d59089299d8d5bec3c
+    summarizer_model: ais3/gemma-4-12b
+  psa_defense_r2d_v1:
+    summary_id: reasoning_to_defend_summary_v1
+    title: "Reasoning-to-Defend: Safety-Aware Reasoning Can Defend Large Language Models from Jailbreaking"
+    source_path: refs/Reasoning-to-Defend, Safety-Aware Reasoning.pdf
+    expected_sha256: 57ca8f953cc5b1430357106c99703c36ea7ddf0bed74367fbfe8695f252d7f2f
+    summarizer_model: ais3/gemma-4-12b
