@@ -53,6 +53,7 @@ from crosslingual_safety.psa_summary import (
     SummaryArtifact,
     artifact_sections,
 )
+from crosslingual_safety.reporting import write_hierarchical_reports
 from crosslingual_safety.schemas import GenerationRequest, GenerationResult, PromptVariant
 from crosslingual_safety.translation.languages import load_languages
 from crosslingual_safety.translation.paid_ledger import (
@@ -2796,17 +2797,6 @@ def _aggregate(
     _write_text_replace(results_path, results_content)
     index_content = "".join(_canonical_json(row) + "\n" for row in index_rows)
     _write_text_replace(parent_path / "audit" / "result_index.jsonl", index_content)
-    report_lines = [f"# Unified Run {plan.run_id}", ""]
-    current: tuple[str, str, str] | None = None
-    for row in rows:
-        group = (str(row["case_id"]), str(row["language"]), str(row["jailbreak"]))
-        if group != current:
-            report_lines.extend([f"## {group[0]} / {group[1]} / {group[2]}", ""])
-            current = group
-        report_lines.extend([f"### {row['model']}", "", f"Status: `{row['status']}`", ""])
-        response = row.get("response", row.get("error_message", ""))
-        report_lines.extend(["```text", str(response or ""), "```", ""])
-    _write_text_replace(parent_path / "report.md", "\n".join(report_lines).rstrip() + "\n")
     parent_status = (
         "success"
         if child_statuses and all(status == "success" for status in child_statuses.values())
@@ -2839,6 +2829,7 @@ def _aggregate(
         "created_at": _utc_now(),
     }
     _write_json(parent_path / "run_manifest.json", manifest)
+    write_hierarchical_reports(parent_path)
     return rows, child_statuses, manifest
 
 

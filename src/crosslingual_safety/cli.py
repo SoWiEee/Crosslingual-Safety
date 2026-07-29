@@ -6,6 +6,7 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 import typer
 
+from crosslingual_safety.evaluation.commands import register_evaluation_commands
 from crosslingual_safety.generation.commands import register_generation_commands
 from crosslingual_safety.ingest import (
     HarmBenchAdapter,
@@ -30,6 +31,7 @@ register_jailbreak_commands(app)
 register_generation_commands(app)
 register_manual_commands(app)
 register_run_commands(app)
+register_evaluation_commands(app)
 
 
 def _validate_or_fail(repo_root: Path, contract_name: str, input_path: Path | None = None) -> Path:

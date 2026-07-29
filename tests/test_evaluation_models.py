@@ -1,5 +1,5 @@
-from pydantic import ValidationError
 import pytest
+from pydantic import ValidationError
 
 from crosslingual_safety.evaluation.models import (
     MultilingualJudgment,

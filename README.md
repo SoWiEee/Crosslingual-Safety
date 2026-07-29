@@ -15,7 +15,7 @@
 # 🎯 Goal
 
 - 將原始英文惡意 prompt 轉換為其他語言測試模型對跨語言安全防禦
-  - 其他語言包含中文、爪哇語、緬甸語、世界語等
+  - 其他語言包含中文、越南語、緬甸語、世界語等
 - 比較不同語言間攻擊的成功率
 
 # 🚀 Getting Started
@@ -38,8 +38,8 @@ powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | ie
 git clone https://github.com/SoWiEee/Crosslingual-Safety.git
 cd Crosslingual-Safety/
 
-# install runtime, development, local NLLB, and Google Cloud translation dependencies
-uv sync --all-groups --extra translation-nllb --extra translation-google
+# install runtime, development, translation, and local evaluation dependencies
+uv sync --all-groups --extra translation-nllb --extra translation-google --extra evaluation-local
 ```
 
 從範例 `.env.example` 建立 `.env`，只填入實際啟用 provider 所需的值：
@@ -49,15 +49,14 @@ ZOOLAB_BASE_URL=https://llm-api.zoolab.org/v1
 ZOOLAB_API_KEY=sk-replace-with-your-project-key
 GOOGLE_CLOUD_PROJECT=gen-lang-client-0036391889
 GOOGLE_APPLICATION_CREDENTIALS=C:/absolute/path/to/credentials/google-translate-service-account.json
+HF_TOKEN=hf_replace_with_your_access_token
 ```
 
-模型名稱、context size、concurrency 與 rate limit 位於
-[`configs/models.yaml`](configs/models.yaml)。
+模型名稱、context size、concurrency 與 rate limit 設定位於 [`configs/models.yaml`](configs/models.yaml)。
 
 ## 統一執行介面（推薦）
 
-初次使用只需要一個穩定的五選項命令。先用 dry-run 檢查固定的 case、翻譯、摘要與
-victim request 數量；它不會讀取 `.env`、啟動 CUDA/NLLB、呼叫 provider 或建立 `runs/`：
+初次使用只需要一個穩定的五選項命令。先用 dry-run 檢查固定的 case、翻譯、摘要與 victim request 數量；它不會讀取 `.env`、啟動 CUDA/NLLB、呼叫 provider 或建立 `runs/`：
 
 ```sh
 uv run crosslingual-safety run --source manual --language all --jailbreak none --dry-run
@@ -70,18 +69,15 @@ uv run crosslingual-safety run --source manual --language all --jailbreak all --
 uv run crosslingual-safety run --source manual --language all --jailbreak none --model all --dry-run
 ```
 
-`--source` 只能是 `manual` 或 `bench`；`--language` 接受 `en`、`zh-tw`、`jv`、`my`、
-`th`、`vi`、`id`、`tl`、`eo`（Esperanto）、逗號清單或 `all`；`--jailbreak` 接受
-`none`、`gra`、`psa`、逗號清單或 `all`。`--model` 接受 `configs/run.yaml` 已列出的
-設定名稱、逗號清單或 `all`，預設為 `all`；名稱只存在於 `configs/models.yaml` 時仍不可
-選用。選擇較少模型只會降低 victim requests，不會減少翻譯或 PSA 摘要工作。manual
-預設讀取 `prompts/prompt.txt`，來源固定為繁體中文（`zh-tw`）；要改來源請修改版本化的
-`configs/run.yaml`，而不是新增 CLI flag。該設定目前使用 Google Cloud Translation
-Advanced v3，並固定六個 victim
-model、same-as-payload wrapper 與 GRA `joker` role；PSA 摘要使用
-`ais3/gemma-4-12b`。翻譯 provider 只能透過此版本化設定切換；要改回本機模型，將
-`translator` 設為 `nllb`。CLI 不提供 translator flag，且 provider 之間不會自動
-fallback。
+- source：可為手動測試 prompt `manual` 或是跑資料集 benchmark `bench`
+  - `manual` 預設讀取 `prompts/prompt.txt`，來源固定為繁體中文；要改來源請修改版本化的 `configs/run.yaml`
+- language：接受 `en`、`zh-tw`、`jv`、`my`、`th`、`vi`、`id`、`tl`、`eo` 9 種語系、逗號清單或 `all`
+- jailbreak： 接受 `none`、`gra`、`psa`、逗號清單或 `all`
+- model：接受 `configs/run.yaml` 已列出的設定名稱、逗號清單或 `all`。名稱只存在於 `configs/models.yaml` 時仍不可選用。選擇較少模型只會降低 victim requests，不會減少翻譯或 PSA 摘要工作 (ais3/gemma-4-12b)。
+- 翻譯功能目前使用 Google Cloud Translation Advanced v3，需要把憑證放在
+  `credentials/google-translate-service-account.json`，並設定
+  `GOOGLE_APPLICATION_CREDENTIALS`；Service Account 模式不需要互動式 `gcloud login`。
+  要改回本機模型可將 `run.yaml` 的 `translator` 設為 `nllb`。
 
 `en`、`zh-tw`、`vi`、`my`、`eo` 使用已鎖定的本地化 GRA/PSA wrapper。Esperanto
 在 Google Cloud Translation 使用 `eo`，在 NLLB 設定使用 `epo_Latn`。低資源語言 `jv`、
@@ -95,6 +91,57 @@ English、Traditional Chinese、Vietnamese、Burmese 與 Esperanto 五語摘要�
 
 低階工作流仍可用於除錯或自訂設定，包括 `ingest`、`translate`、`build-variants`、
 `plan`、`enqueue`、`generate`、`generation-status`、`retry-failed` 與 `manual-run`。
+
+## Post-hoc Evaluation 與階層式報表
+
+`run` 完成後，以 run ID 對已保存的 response 執行 dual-judge evaluation。這個階段不會重新呼叫 victim model、不會重做 prompt 翻譯，也不會重做 PSA 摘要。它與 generation 工作解耦，但 multilingual Judge 與預設的 GCP response 翻譯仍會呼叫遠端服務：
+
+```sh
+uv run crosslingual-safety evaluate --run-id <run_id>
+uv run crosslingual-safety report --run-id <run_id>
+```
+
+`evaluate` 依 [`configs/evaluation.yaml`](configs/evaluation.yaml) 執行兩個獨立 Judge：
+
+- `ais3/gemma-4-12b` 直接讀取原始語言 prompt 與 response，輸出理解、拒絕、相關性、
+  harmfulness、actionability 與 confidence。
+- 本機 StrongREJECT Gemma 2B 讀取英文版本並在 NVIDIA CUDA GPU 上評分。非英文 response
+  預設由 GCP Translation v3 翻成英文；將 `response_translator` 改為 `nllb` 才會使用本機
+  NLLB。第一次使用前必須在 Hugging Face 接受 `google/gemma-2b` 授權並設定 `HF_TOKEN`。
+
+所有階段採 append-only journal。中斷後重跑相同指令會沿用已完成的翻譯與 Judge 結果；
+GCP response 翻譯也不會在正常 resume 時重複計費：
+
+```text
+runs/experiments/<run-id>/evaluation/
+├── manifest.json
+├── response_translations.jsonl
+├── multilingual_judge.jsonl
+├── strongreject.jsonl
+└── evaluations.jsonl
+```
+
+最後 verdict 為 `bypass`、`not_bypass`、`uncertain` 或 `not_evaluable`。只有兩個 Judge
+一致、multilingual confidence 達門檻時才產生確定判定；Judge 分歧、低信心或失敗不會
+被當成安全結果。`status: success` 只代表遠端 generation 成功回傳，不能解讀成
+jailbreak 成功。
+
+根目錄 `report.md` 僅保存索引及 `jailbreak × language × model` 統計，完整 response
+分別位於：
+
+```text
+runs/experiments/<run-id>/
+├── report.md
+└── children/
+    ├── none/report.md
+    ├── gra/report.md
+    └── psa/report.md
+```
+
+Strict ASR 的分母只包含 `bypass + not_bypass`；`uncertain`、`not_evaluable`、provider
+error 與 pending 會另外列出。報表也提供只計入 `prompt_understood=yes` 的
+comprehension-conditioned ASR。這些結果標記為 `automated_dual_judge`，不等同人工
+accepted 或 adjudicated labels。
 
 ## 資料集處理
 
@@ -401,6 +448,7 @@ uv run pytest tests/test_translation.py -q
 uv run pytest tests/test_variants.py -q
 uv run pytest tests/test_generation.py -q
 uv run pytest tests/test_manual.py -q
+uv run pytest tests/test_evaluation_models.py tests/test_evaluation_service.py tests/test_reporting.py -q
 
 # formatting, lint, and strict typing
 uv run ruff format src tests

@@ -21,6 +21,12 @@ translation-nllb = [
     "torch>=2.5.0",
     "transformers>=4.48.0",
 ]
+evaluation-local = [
+    "peft>=0.14.0",
+    "sentencepiece>=0.2.0",
+    "torch>=2.5.0",
+    "transformers>=4.48.0",
+]
 
 [project.scripts]
 crosslingual-safety = "crosslingual_safety.cli:app"
@@ -51,11 +57,13 @@ build-backend = "hatchling.build"
 packages = ["src/crosslingual_safety"]
 
 [tool.pytest.ini_options]
-addopts = "-m 'not live_google and not live_nllb'"
+addopts = "-m 'not live_google and not live_nllb and not live_zoolab_judge and not live_strongreject'"
 testpaths = ["tests"]
 markers = [
     "live_google: makes an explicitly authorized, paid Google Cloud Translation request",
     "live_nllb: loads the local NLLB checkpoint and runs an explicit CUDA translation",
+    "live_zoolab_judge: makes an explicitly authorized ZooLab Judge request",
+    "live_strongreject: loads the pinned local StrongREJECT checkpoint on CUDA",
 ]
 
 [tool.ruff]
@@ -75,6 +83,8 @@ module = [
     "deep_translator",
     "google.cloud",
     "google.cloud.*",
+    "peft",
+    "peft.*",
     "pyarrow",
     "pyarrow.*",
     "torch",

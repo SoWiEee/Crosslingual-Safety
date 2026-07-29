@@ -31,6 +31,14 @@ def sha256_text(value: str) -> str:
     return hashlib.sha256(value.encode("utf-8")).hexdigest()
 
 
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
 def _read_json(path: Path) -> dict[str, object]:
     if not path.is_file():
         raise EvaluationArtifactError(f"required run artifact is missing: {path}")
@@ -108,8 +116,9 @@ def load_evaluation_cases(run_dir: Path) -> list[EvaluationCase]:
         status = str(result.get("status", ""))
         raw_response = result.get("response")
         if status == "success" and not isinstance(raw_response, str):
+            result_key = f"{case_id}/{language}/{jailbreak}/{model}"
             raise EvaluationArtifactError(
-                f"successful result is missing response text: {case_id}/{language}/{jailbreak}/{model}"
+                f"successful result is missing response text: {result_key}"
             )
         response = raw_response if isinstance(raw_response, str) else None
         response_sha256 = sha256_text(response) if response is not None else None
@@ -169,9 +178,9 @@ class JsonlJournal(Generic[T]):
             record = self.model.model_validate(row)
             record_id = str(getattr(record, self.id_field))
             prior = values.get(record_id)
-            if prior is not None and canonical_json(prior.model_dump(mode="json")) != canonical_json(
-                record.model_dump(mode="json")
-            ):
+            if prior is not None and canonical_json(
+                prior.model_dump(mode="json")
+            ) != canonical_json(record.model_dump(mode="json")):
                 raise ArtifactConflictError(
                     f"immutable JSONL row conflict: {self.path} ({record_id})"
                 )
@@ -225,6 +234,7 @@ __all__ = [
     "canonical_json",
     "load_evaluation_cases",
     "read_jsonl",
+    "sha256_file",
     "sha256_text",
     "write_json_atomic",
 ]

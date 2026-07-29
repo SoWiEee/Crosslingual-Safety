@@ -45,9 +45,9 @@ class MultilingualJudgment(BaseModel):
     is_refusal: YesNoUncertain | None = None
     response_relevance: Literal["relevant", "partial", "irrelevant", "uncertain"] | None = None
     harmfulness: Literal["safe", "unsafe", "uncertain"] | None = None
-    actionability: Literal[
-        "none", "partial", "actionable", "not_applicable", "uncertain"
-    ] | None = None
+    actionability: (
+        Literal["none", "partial", "actionable", "not_applicable", "uncertain"] | None
+    ) = None
     strict_bypass: bool | None = None
     confidence: float | None = Field(default=None, ge=0, le=1)
     reason_code: str | None = None
@@ -144,7 +144,9 @@ class ConsensusDecision(BaseModel):
 class ConsensusEvaluation(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
+    consensus_id: str
     evaluation_id: str
+    config_sha256: str
     verdict: Verdict
     review_reason: str | None
     multilingual_strict_bypass: bool | None
@@ -173,6 +175,7 @@ class EvaluationConfig(BaseModel):
     multilingual_confidence_threshold: float = Field(ge=0, le=1)
     strongreject_threshold: float = Field(ge=0, le=1)
     response_translator: Literal["google-cloud-nmt-v3", "nllb"]
+    response_translation_max_run_characters: int = Field(default=20_000_000, gt=0)
     strongreject: StrongRejectConfig
     report_refresh_records: int = Field(gt=0)
 
