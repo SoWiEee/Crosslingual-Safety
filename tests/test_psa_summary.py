@@ -32,7 +32,23 @@ def test_formal_psa_papers_have_locked_hashes_and_bounded_chunks() -> None:
     }
     assert specs["psa_attack_poetry_v2"].source_path == specs["psa_attack_poetry_v1"].source_path
     assert specs["psa_defense_r2d_v2"].source_path == specs["psa_defense_r2d_v1"].source_path
+    for v1_condition, v2_condition in (
+        ("psa_attack_poetry_v1", "psa_attack_poetry_v2"),
+        ("psa_defense_r2d_v1", "psa_defense_r2d_v2"),
+    ):
+        assert specs[v2_condition].summary_id == specs[v1_condition].summary_id
+        assert specs[v2_condition].title == specs[v1_condition].title
+        assert specs[v2_condition].expected_sha256 == specs[v1_condition].expected_sha256
+        assert specs[v2_condition].summarizer_model == specs[v1_condition].summarizer_model
     extracted = {condition: extract_paper(spec) for condition, spec in specs.items()}
+    assert (
+        extracted["psa_attack_poetry_v2"].source_sha256
+        == extracted["psa_attack_poetry_v1"].source_sha256
+    )
+    assert (
+        extracted["psa_defense_r2d_v2"].source_sha256
+        == extracted["psa_defense_r2d_v1"].source_sha256
+    )
     assert extracted["psa_attack_poetry_v1"].page_count == 16
     assert extracted["psa_defense_r2d_v1"].page_count == 19
     assert all(chunk.word_count <= 1000 for paper in extracted.values() for chunk in paper.chunks)
