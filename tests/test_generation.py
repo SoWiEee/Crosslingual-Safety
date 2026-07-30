@@ -44,7 +44,7 @@ def test_repository_zoolab_pilot_rate_limits() -> None:
         for name in victim_models
     } == {
         "llama31_8b": (4, 60),
-        "gemma_4_12b": (2, 40),
+        "gemma_4_12b": (4, 60),
         "gemma_4_26b": (2, 30),
         "nemotron_cascade_2_30b": (2, 30),
         "llama33_70b": (4, 60),
