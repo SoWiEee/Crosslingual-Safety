@@ -50,7 +50,11 @@ def _load_model(path: Path, name: str) -> ModelConfig:
     return ModelConfig.model_validate(raw[name])
 
 
-def _multilingual_judge(model: ModelConfig) -> ZooLabMultilingualJudge:
+def _multilingual_judge(
+    model: ModelConfig,
+    *,
+    max_tokens: int,
+) -> ZooLabMultilingualJudge:
     provider: ProviderAdapter
     if model.provider == "fake":
         if not model.test_only:
@@ -70,7 +74,7 @@ def _multilingual_judge(model: ModelConfig) -> ZooLabMultilingualJudge:
             timeout_seconds=model.timeout_seconds,
         )
         provider = ThrottledProvider(raw_provider, RateLimiter(model.requests_per_minute))
-    return ZooLabMultilingualJudge(provider, model.model_id)
+    return ZooLabMultilingualJudge(provider, model.model_id, max_tokens=max_tokens)
 
 
 def _response_translator(
@@ -109,7 +113,10 @@ def _dependencies(
 
     return EvaluationDependencies(
         translator=_response_translator(config, settings),
-        multilingual_judge=_multilingual_judge(model),
+        multilingual_judge=_multilingual_judge(
+            model,
+            max_tokens=config.multilingual_max_tokens,
+        ),
         strongreject_judge=LocalStrongRejectJudge(backend, config.strongreject),
         on_progress=refresh_report,
         multilingual_batch_size=model.concurrency,

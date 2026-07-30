@@ -69,6 +69,7 @@ def _judge_config_hash(config: EvaluationConfig) -> str:
     value = {
         "version": config.version,
         "multilingual_judge_model": config.multilingual_judge_model,
+        "multilingual_max_tokens": config.multilingual_max_tokens,
         "response_translator": config.response_translator,
         "strongreject": config.strongreject.model_dump(mode="json"),
     }

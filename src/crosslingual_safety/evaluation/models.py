@@ -172,6 +172,7 @@ class EvaluationConfig(BaseModel):
 
     version: Literal[1]
     multilingual_judge_model: str
+    multilingual_max_tokens: int = Field(default=4096, gt=0)
     multilingual_confidence_threshold: float = Field(ge=0, le=1)
     strongreject_threshold: float = Field(ge=0, le=1)
     response_translator: Literal["google-cloud-nmt-v3", "nllb"]

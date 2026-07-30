@@ -4,8 +4,9 @@ from pathlib import Path
 from typer.testing import CliRunner
 
 from crosslingual_safety.cli import app
-from crosslingual_safety.evaluation.commands import _response_translator
+from crosslingual_safety.evaluation.commands import _multilingual_judge, _response_translator
 from crosslingual_safety.evaluation.models import EvaluationConfig, StrongRejectConfig
+from crosslingual_safety.generation.config import ModelConfig
 from crosslingual_safety.translation.providers import GoogleCloudNMTTranslator
 from crosslingual_safety.unified_run import RunSettings
 
@@ -124,3 +125,20 @@ def test_response_translator_uses_evaluation_request_limit() -> None:
 
     assert isinstance(translator, GoogleCloudNMTTranslator)
     assert translator.max_request_characters == 30_000
+
+
+def test_multilingual_judge_uses_configured_completion_budget() -> None:
+    model = ModelConfig(
+        provider="fake",
+        model_id="fake-judge",
+        context_size=8192,
+        endpoint_type="chat",
+        concurrency=1,
+        requests_per_minute=6000,
+        test_only=True,
+        fake_response="{}",
+    )
+
+    judge = _multilingual_judge(model, max_tokens=4096)
+
+    assert judge.max_tokens == 4096
