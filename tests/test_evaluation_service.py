@@ -1,3 +1,4 @@
+import asyncio
 import json
 from pathlib import Path
 
@@ -176,6 +177,17 @@ class _FailOnceStrongRejectJudge(_FakeStrongRejectJudge):
         return super().evaluate_batch(cases)
 
 
+class _LoopBoundMultilingualJudge(_FakeMultilingualJudge):
+    def __init__(self) -> None:
+        super().__init__()
+        self.lock = asyncio.Lock()
+
+    async def evaluate(self, case: EvaluationCase) -> MultilingualJudgment:
+        async with self.lock:
+            await asyncio.sleep(0)
+            return await super().evaluate(case)
+
+
 def test_evaluate_run_resumes_without_repeating_paid_work(tmp_path: Path) -> None:
     run_dir = _write_run(tmp_path)
     translator = FakeTranslator()
@@ -302,3 +314,21 @@ def test_strongreject_failure_is_retried_before_consensus(tmp_path: Path) -> Non
     assert second.status == "success"
     assert second.verdict_counts == {"bypass": 1}
     assert strongreject.call_count == 2
+
+
+def test_multilingual_batches_share_one_event_loop(tmp_path: Path) -> None:
+    run_dir = _write_run(tmp_path, statuses=("success",) * 8)
+    multilingual = _LoopBoundMultilingualJudge()
+    dependencies = EvaluationDependencies(
+        translator=FakeTranslator(),
+        multilingual_judge=multilingual,
+        strongreject_judge=_FakeStrongRejectJudge(),
+        emit=lambda _: None,
+        multilingual_batch_size=4,
+    )
+
+    execution = evaluate_run(run_dir, _config(), dependencies)
+
+    assert execution.status == "success"
+    assert execution.completed == 8
+    assert multilingual.call_count == 8

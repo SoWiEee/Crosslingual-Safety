@@ -142,6 +142,16 @@ async def _evaluate_multilingual(
     return list(await asyncio.gather(*(judge.evaluate(case) for case in cases)))
 
 
+async def _evaluate_multilingual_batches(
+    cases: Sequence[EvaluationCase],
+    judge: MultilingualJudge,
+    batch_size: int,
+    on_batch: Callable[[list[MultilingualJudgment]], None],
+) -> None:
+    for offset in range(0, len(cases), batch_size):
+        on_batch(await _evaluate_multilingual(cases[offset : offset + batch_size], judge))
+
+
 def evaluate_run(
     run_dir: Path,
     config: EvaluationConfig,
@@ -243,11 +253,9 @@ def evaluate_run(
     if multilingual_pending:
         dependencies.emit(f"multilingual_judge pending={len(multilingual_pending)}")
         remote_batch_size = max(1, dependencies.multilingual_batch_size)
-        for offset in range(0, len(multilingual_pending), remote_batch_size):
-            batch = multilingual_pending[offset : offset + remote_batch_size]
-            for judgment in asyncio.run(
-                _evaluate_multilingual(batch, dependencies.multilingual_judge)
-            ):
+
+        def persist_multilingual_batch(judgments: list[MultilingualJudgment]) -> None:
+            for judgment in judgments:
                 if judgment.status != "success":
                     dependencies.emit(
                         "multilingual_judge_failed "
@@ -258,6 +266,15 @@ def evaluate_run(
                 multilingual[judgment.evaluation_id] = judgment
             if dependencies.on_progress is not None:
                 dependencies.on_progress(run_dir)
+
+        asyncio.run(
+            _evaluate_multilingual_batches(
+                multilingual_pending,
+                dependencies.multilingual_judge,
+                remote_batch_size,
+                persist_multilingual_batch,
+            )
+        )
 
     strongreject = {
         evaluation_id: judgment
