@@ -26,7 +26,7 @@ models:
     model_id: ais3/gemma-4-12b
     context_size: 262144
     endpoint_type: chat
-    concurrency: 4
+    concurrency: 8
     requests_per_minute: 60
 
   gemma_4_26b:
